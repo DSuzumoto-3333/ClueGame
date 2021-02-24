@@ -24,7 +24,7 @@ public class TestBoardCell {
 	}
 	
 	public Set<TestBoardCell> getAdjList(){
-		return adjacentCells;
+		return null;
 	}
 	
 	public void setInRoom(boolean isInRoom) {

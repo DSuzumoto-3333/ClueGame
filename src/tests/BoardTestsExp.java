@@ -27,6 +27,9 @@ class BoardTestsExp {
 		// Upper left board should only have two adjacent cells: (1,0) and (0,1)
 		TestBoardCell upperLeft = board.getCell(0, 0);
 		Set<TestBoardCell> adjacencyList = upperLeft.getAdjList();
+		if(adjacencyList == null) {
+			fail("Null adjacency list");
+		}
 		assertEquals(2, adjacencyList.size());
 		assertTrue(adjacencyList.contains(board.getCell(1, 0)));
 		assertTrue(adjacencyList.contains(board.getCell(0,1)));
