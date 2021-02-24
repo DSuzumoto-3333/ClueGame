@@ -11,6 +11,29 @@ public class TestBoard {
 	
 	public TestBoard() {
 		super();
+		BOARD_LAYOUT = new TestBoardCell[BOARD_WIDTH][BOARD_HEIGHT];
+		for(int i = 0; i < BOARD_HEIGHT; i++) {
+			for(int j = 0; j < BOARD_WIDTH; j++) {
+				BOARD_LAYOUT[i][j] = new TestBoardCell(i,j);
+			}
+		}
+		
+		for(int i = 0; i < BOARD_HEIGHT; i++) {
+			for(int j = 0; j < BOARD_WIDTH; j++) {
+				if(i > 0) {
+					BOARD_LAYOUT[i][j].addAdjacency(BOARD_LAYOUT[i-1][j]);
+				}
+				if(i < BOARD_HEIGHT - 1) {
+					BOARD_LAYOUT[i][j].addAdjacency(BOARD_LAYOUT[i+1][j]);
+				}
+				if(j > 0) {
+					BOARD_LAYOUT[i][j].addAdjacency(BOARD_LAYOUT[i][j-1]);
+				}
+				if(j < BOARD_WIDTH-1) {
+					BOARD_LAYOUT[i][j].addAdjacency(BOARD_LAYOUT[i][j+1]);
+				}
+			}
+		}
 	}
 	
 	public void calcTargets(TestBoardCell startCell, int length) {
@@ -23,6 +46,6 @@ public class TestBoard {
 	}
 	
 	public TestBoardCell getCell(int row, int col) {
-		return null;
+		return BOARD_LAYOUT[row][col];
 	}
 }

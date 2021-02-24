@@ -14,6 +14,9 @@ public class TestBoardCell {
 		super();
 		this.rowPos = rowPos;
 		this.colPos = colPos;
+		isOccupied = false;
+		isInRoom = false;
+		adjacentCells = new HashSet<TestBoardCell>();
 	}
 	
 	public void addAdjacency(TestBoardCell cell) {

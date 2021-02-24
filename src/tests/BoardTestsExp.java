@@ -117,7 +117,7 @@ class BoardTestsExp {
 		assertTrue(targets.contains(board.getCell(1, 0)));
 		assertTrue(targets.contains(board.getCell(2, 1)));
 		assertTrue(targets.contains(board.getCell(1, 2)));
-}
+	}
 	/*
 	 * Ensures that the targets calculated, as well as how many targets are calculated make sense.
 	 */
@@ -125,13 +125,13 @@ class BoardTestsExp {
 	public void testCalcTarget() {
 		board.calcTargets(new TestBoardCell(board.BOARD_WIDTH/2, board.BOARD_HEIGHT/2), 6);
 		
-		HashSet<TestBoardCell> targets = board.getTargets();
-		assertTrue(targets.size() > 0);
-		assertTrue(targets.size() < 99);
+		Set<TestBoardCell> targets = board.getTargets();
+		assertTrue(targets.size() > 0); // there must always be at least one target
+		assertTrue(targets.size() < board.BOARD_WIDTH * board.BOARD_HEIGHT); // simple sanity check, there cannot be as many targets are there are cells
 		
 		for (TestBoardCell target: targets) {
-			assertTrue(!target.getIsOccupied);	// a target may not be a spot that is already occupied by another player.
+			assertTrue(!target.getIsOccupied());	// a target may not be a spot that is already occupied by another player.
+		}
 	}
-	
 }
 
