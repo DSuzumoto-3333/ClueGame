@@ -3,6 +3,7 @@ package gameEngine;
 import java.util.*;
 import java.util.Set;
 import java.util.HashSet;
+import java.io.*;
 
 /**
  * Represents the game board itself, and contains methods pertaining to player movement. Also handles loading in data from setup and layout files provided.
@@ -20,7 +21,7 @@ public class Board {
 	//Strings for loading in data from the layout and setup configuration files.
 	private String layoutConfigFile, setupConfigFile;
 	//Map to contain all the tile characters
-	private Map<Character, Room> roomCharMap;
+	private Map<Character, Room> roomMap;
 	private static Board boardInstance = new Board();
 	/**
 	 * Since we're using a singleton patter, our constructor is essentially empty. We will use .initialize() after setting and loading the configuration files.
@@ -28,6 +29,9 @@ public class Board {
 	 */
 	public Board() {
 		super();	
+		targets = new HashSet<BoardCell>();
+		visited = new HashSet<BoardCell>();
+		roomMap = new HashMap<Character, Room>();
 	}
 	
 	/**
@@ -38,14 +42,42 @@ public class Board {
 	public void setConfigFiles(String layoutFile, String setupFile) {
 		layoutConfigFile = layoutFile;
 		setupConfigFile = setupFile;
+		try {
+			loadSetupConfig();
+			loadLayoutConfig();
+		}catch(BadConfigFormatException e){
+		}
 	}
 	
-	public void loadSetupConfig() {
-		
+	public void loadSetupConfig() throws BadConfigFormatException {
+		try {
+			
+			
+			//TODO Read setup file
+			FileReader fr = new FileReader(setupConfigFile);
+			
+			
+		}catch(FileNotFoundException e){
+			System.out.println("File not found.");
+		}
 	}
 	
-	public void loadLayoutConfig() {
-		
+	public void loadLayoutConfig() throws BadConfigFormatException {
+		try {
+			
+			
+			//TODO Read setup file
+			FileReader fr = new FileReader(layoutConfigFile);
+			
+			boardHeight = 25;
+			boardWidth = 25;
+			initialize();
+		}catch(FileNotFoundException e){
+			System.out.println("File not found.");
+			boardHeight = 25;
+			boardWidth = 25;
+			initialize();
+		}
 	}
 	/**
 	 * Once the game config files have been read, the board array can be populated, and the cells can be given their necessary properties.
@@ -77,7 +109,10 @@ public class Board {
 					}
 				}
 	}
-	
+	/**
+	 * Returns the instance of the board, saved in boardInstance.
+	 * @return
+	 */
 	public static Board getInstance() {
 		return boardInstance;
 	}
@@ -112,11 +147,47 @@ public class Board {
 		return gameBoard[row][col];
 	}
 	
+	/**
+	 * Returns the number of rows in the board, or it's height.
+	 * @return
+	 */
 	public static int getNumRows() {
+		return boardHeight;
+	}
+	
+	/**
+	 * Returns the number of columns in the board, or it's width.
+	 * @return
+	 */
+	public static int getNumColumns() {
 		return boardWidth;
 	}
 	
-	public static int getNumColumns() {
-		return boardWidth;
+	/**
+	 * Returns the room with the initial passed in.
+	 * @param Key
+	 * @return
+	 */
+	public Room getRoom(char Key) {
+		Room r = roomMap.get(Key);
+		if(r == null) {
+			return new Room("Didn't Work.");
+		}else {
+			return r;
+		}
+	}
+	
+	/**
+	 * returns the room that the cell passed in is a part of, including unused and walkway.
+	 * @param c
+	 * @return
+	 */
+	public Room getRoom(BoardCell c) {
+		Room r = roomMap.get(c.getInitial());
+		if(r == null) {
+			return new Room("Didn't work");
+		}else {
+			return r;
+		}
 	}
 }

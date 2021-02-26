@@ -30,39 +30,68 @@ public class BoardCell {
 	 * @param rowPos
 	 * @param colPos
 	 */
-	public BoardCell(int rowPos, int colPos, char c) {
+	public BoardCell(int rowPos, int colPos) {
 		super();
 		//Set the provided position
 		this.rowPos = rowPos;
 		this.colPos = colPos;
 		//Set occupied to false by default
 		isOccupied = false;		
-		//Set to not be in room by default (overridden by setRoom)
-		isInRoom = false;
-		//Initial is set here so that Walkways and Unused spaces (W and X) are set without needing an extra method.
-		roomInitial = c;
-		roomLabel = false;
-		roomCenter = false;
-		secretPassage = ' ';
+		doorDirection = DoorDirection.NONE;
+		//Initialize the adjacency set
+		adjacentCells = new HashSet<BoardCell>();
 	}
 	
 	/**
-	 * Used to finish instantiating room tiles. This is done so that the constructor is not incredibly bulky with mainly unused attributes for walkway tiles, and so that
-	 * We don't need a constructor separately for room label, room center, room, door, and walkway/unused tiles.
+	 * Used to initialize a room instance. Caries all the data a room tile needs at minimum.
 	 * @param initial
-	 * @param direction
 	 * @param label
 	 * @param center
-	 * @param passage
 	 */
-	public void setRoom(char initial, DoorDirection direction, boolean label, boolean center, char passage) {
+	
+	public void setRoom(char initial, boolean label, boolean center) {
 		isInRoom = true;
 		roomInitial = initial;
-		doorDirection = direction;
 		roomLabel = label;
 		roomCenter = center;
+	}
+	
+	/**
+	 * If a room tile is a door, give it a DoorDirection that is not NONE
+	 * @param d
+	 */
+	public void setDoor(DoorDirection d) {
+		doorDirection = d;
+	}
+	
+	/**
+	 * Initialize a walkway tile, all room related data is set to false and it's given the label W
+	 */
+	public void setWalkway() {
+		isInRoom = false;
+		roomInitial = 'W';
+		roomLabel = false;
+		roomCenter = false;
+	}
+	
+	/**
+	 * Initialize an unusable tile, all room related data is set to false and it's given the label X
+	 */
+	public void setUnused() {
+		isInRoom = false;
+		roomInitial = 'X';
+		roomLabel = false;
+		roomCenter = false;
+	}
+	
+	/**
+	 * If the tile is a secret passage, set the char to the connected room's character.
+	 * @param passage
+	 */
+	public void setSecredPassage(char passage) {
 		secretPassage = passage;
 	}
+	
 	/**
 	 * Adds a cell to the list of cells adjacent to the callee cell.
 	 * @param cell
@@ -145,6 +174,10 @@ public class BoardCell {
 	 */
 	public char getSecretPassage() {
 		return secretPassage;
+	}
+	
+	public char getInitial() {
+		return roomInitial;
 	}
 	
 }
