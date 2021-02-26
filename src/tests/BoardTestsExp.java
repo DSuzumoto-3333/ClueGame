@@ -11,7 +11,12 @@ import java.util.Random;
 import java.util.Set;
 import java.util.HashSet;
 
+import experiment.TestBoard;
+import experiment.TestBoardCell;
+
 class BoardTestsExp {
+
+
 	TestBoard board;
 
 	@BeforeEach
@@ -24,6 +29,7 @@ class BoardTestsExp {
 	 */
 	@Test
 	public void testPositions() {
+		TestBoard board = new TestBoard();
 		// Upper left board should only have two adjacent cells: (1,0) and (0,1)
 		TestBoardCell upperLeft = board.getCell(0, 0);
 		Set<TestBoardCell> adjacencyList = upperLeft.getAdjList();
@@ -73,6 +79,7 @@ class BoardTestsExp {
 	 */
 	@Test
 	public void testCantEnterOccupiedCell() {
+		TestBoard board = new TestBoard();
 		//Set the bottom 3 rows of the game board to occupied
 		for (int i = 1; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
@@ -93,6 +100,7 @@ class BoardTestsExp {
 	 */
 	@Test
 	public void testMustGoAroundOccupiedCell() {
+		TestBoard board = new TestBoard();
 		//Set the position (2,1 to occupied)
 		board.getCell(2, 1).setIsOccupied(true);
 		//Calculate a 4-tile roll and return the valid targets.
@@ -110,6 +118,7 @@ class BoardTestsExp {
 	 */
 	@Test
 	public void testCalcTargetLengthCheck() {
+		TestBoard board = new TestBoard();
 		//Test a movement of 1 tile
 		TestBoardCell startCell = board.getCell(1, 1);
 		board.calcTargets(startCell, 1);
@@ -126,10 +135,10 @@ class BoardTestsExp {
 	 */
 	@Test 
 	public void testCalcTarget() {
-		board.calcTargets(new TestBoardCell(board.BOARD_WIDTH/2, board.BOARD_HEIGHT/2), 6);
+		TestBoard board = new TestBoard();
+		board.calcTargets(new TestBoardCell(board.BOARD_WIDTH/2, board.BOARD_HEIGHT/2), 1);
 		
 		Set<TestBoardCell> targets = board.getTargets();
-		assertTrue(targets.size() > 0); // there must always be at least one target
 		assertTrue(targets.size() < board.BOARD_WIDTH * board.BOARD_HEIGHT); // simple sanity check, there cannot be as many targets are there are cells
 		
 		for (TestBoardCell target: targets) {
