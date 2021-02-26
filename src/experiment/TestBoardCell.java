@@ -92,7 +92,6 @@ public class TestBoardCell {
 	public void setIsOccupied(boolean isOccupied) {
 		this.isOccupied = isOccupied;
 	}
-	
-	
+
 	
 }

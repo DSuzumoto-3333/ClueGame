@@ -1,5 +1,7 @@
 package experiment;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.*;
 import java.util.Set;
 import java.util.HashSet;
@@ -23,6 +25,8 @@ public class TestBoard {
 	 */
 	public TestBoard() {
 		super();
+		targets = new HashSet<TestBoardCell>();
+		visited = new HashSet<TestBoardCell>();
 		//Creates a new gameBoard and populates it with new cells.
 		gameBoard = new TestBoardCell[BOARD_WIDTH][BOARD_HEIGHT];
 		for(int i = 0; i < BOARD_HEIGHT; i++) {
@@ -58,7 +62,22 @@ public class TestBoard {
 	 * @param length
 	 */
 	public void calcTargets(TestBoardCell startCell, int length) {
-		return;
+		for( TestBoardCell adjCell: startCell.getAdjList()) {
+			if (visited.contains(adjCell) || adjCell.getIsOccupied()) {
+				return;
+			}
+			
+			visited.add(adjCell);
+			if (length == 1) {
+				targets.add(adjCell);
+			}
+			else {
+				calcTargets(adjCell,length-1);
+			}
+			
+			visited.remove(adjCell);
+		}
+		
 	}
 	
 	/**
@@ -66,8 +85,7 @@ public class TestBoard {
 	 * @return
 	 */
 	public Set<TestBoardCell> getTargets(){
-		HashSet<TestBoardCell> t = new HashSet<TestBoardCell>();
-		return t;
+		return targets;
 	}
 	
 	/**
