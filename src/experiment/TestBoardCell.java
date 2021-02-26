@@ -5,6 +5,8 @@ import java.util.HashSet;
 
 /**
  * A test class to understand the basic concepts of the code we'll be using to simulate the game board
+ * @author Derek Suzumoto
+ * @author Luke Wakumoto
  */
 public class TestBoardCell {
 	//Cell Position
