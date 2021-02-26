@@ -62,13 +62,18 @@ public class TestBoard {
 	 * @param length
 	 */
 	public void calcTargets(TestBoardCell startCell, int length) {
-		if(length == 0 && !startCell.getIsOccupied()) {
-			targets.add(startCell);
+		//If we're at length=0, the program can't move anymore. If the cell is valid, add it to targets.
+		if(length == 0) {
+			if(!startCell.getIsOccupied()) {
+				targets.add(startCell);
+			}
 			return;
 		}else {
+			//Grab every cell directly adjacent to the start cell, and put the start cell in visited so we don't backtrack.
 			Set<TestBoardCell> T = startCell.getAdjList();
 			visited.add(startCell);
 			for(TestBoardCell t : T) {
+				//For every cell in the T, if it's not occupied or a tile we've visited before, run calcTargets from it's perspective, and with length - 1
 				if(!t.getIsOccupied() && !visited.contains(t)) {
 					calcTargets(t, length-1);
 				}
