@@ -62,20 +62,17 @@ public class TestBoard {
 	 * @param length
 	 */
 	public void calcTargets(TestBoardCell startCell, int length) {
-		for( TestBoardCell adjCell: startCell.getAdjList()) {
-			if (visited.contains(adjCell) || adjCell.getIsOccupied()) {
-				return;
+		if(length == 0 && !startCell.getIsOccupied()) {
+			targets.add(startCell);
+			return;
+		}else {
+			Set<TestBoardCell> T = startCell.getAdjList();
+			visited.add(startCell);
+			for(TestBoardCell t : T) {
+				if(!t.getIsOccupied() && !visited.contains(t)) {
+					calcTargets(t, length-1);
+				}
 			}
-			
-			visited.add(adjCell);
-			if (length == 1) {
-				targets.add(adjCell);
-			}
-			else {
-				calcTargets(adjCell,length-1);
-			}
-			
-			visited.remove(adjCell);
 		}
 		
 	}

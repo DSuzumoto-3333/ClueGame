@@ -10,7 +10,7 @@ import java.util.HashSet;
  */
 public class TestBoardCell {
 	//Cell Position
-	private int rowPos, colPos;
+	public int rowPos, colPos;
 	//Determine if player is occupying the cell
 	private boolean isOccupied;
 	//The room the cell is in, if any

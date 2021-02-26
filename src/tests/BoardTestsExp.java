@@ -91,6 +91,9 @@ class BoardTestsExp {
 		board.calcTargets(startCell, 2);
 		Set<TestBoardCell> targets = board.getTargets();
 		//The set should only have 1 element being position (0,2)
+		for(TestBoardCell t : targets) {
+			System.out.println(t.rowPos + " " + t.colPos);
+		}
 		assertEquals(1, targets.size());
 		assertTrue(targets.contains(board.getCell(0,2)));
 	}
@@ -107,10 +110,9 @@ class BoardTestsExp {
 		TestBoardCell startCell = board.getCell(1,1);
 		board.calcTargets(startCell,4);
 		Set<TestBoardCell> targets = board.getTargets();
-		//The set must have the position (3,1), and must not have either (2,1) or (4,1)
+		//The set must have the position (3,1), and must not have either (2,1)
 		assertTrue(targets.contains(board.getCell(3, 1)));
 		assertTrue(!(targets.contains(board.getCell(2, 1))));
-		assertTrue(!(targets.contains(board.getCell(4, 1))));
 	}
 	
 	/*
