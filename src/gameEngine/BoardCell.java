@@ -88,7 +88,7 @@ public class BoardCell {
 	 * If the tile is a secret passage, set the char to the connected room's character.
 	 * @param passage
 	 */
-	public void setSecredPassage(char passage) {
+	public void setSecretPassage(char passage) {
 		secretPassage = passage;
 	}
 	
