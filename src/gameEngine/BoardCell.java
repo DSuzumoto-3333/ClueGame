@@ -120,7 +120,7 @@ public class BoardCell {
 	 * Returns whether or not a room is occupied.
 	 * @return
 	 */
-	public boolean getIsOccupied() {
+	public boolean getOccupied() {
 		return isOccupied;
 	}
 
@@ -128,7 +128,7 @@ public class BoardCell {
 	 * Sets the tile to occupied if passed in true, unsets if tile is occupied if passed in false.
 	 * @param isOccupied
 	 */
-	public void setIsOccupied(boolean isOccupied) {
+	public void setOccupied(boolean isOccupied) {
 		this.isOccupied = isOccupied;
 	}
 	
