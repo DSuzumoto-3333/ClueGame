@@ -19,16 +19,24 @@ public class TestBoard {
 	private TestBoardCell[][] gameBoard;
 	//Sets for calculating viable targets to move to.
 	private Set<TestBoardCell> targets, visited;
+	private static TestBoard instance = new TestBoard();
 	
 	/**
 	 * Simple constructor, instantiates the game board by filling gameBoard with tiles, and populates each tile's adjacency list.
 	 */
 	public TestBoard() {
 		super();
+	}
+	
+	public void initialize() {
+		gameBoard = new TestBoardCell[BOARD_HEIGHT] [BOARD_WIDTH];
+		//Sets for calculating viable targets to move to.
 		targets = new HashSet<TestBoardCell>();
 		visited = new HashSet<TestBoardCell>();
-		//Creates a new gameBoard and populates it with new cells.
-		gameBoard = new TestBoardCell[BOARD_WIDTH][BOARD_HEIGHT];
+		
+		targets.clear();
+		visited.clear();
+		
 		for(int i = 0; i < BOARD_HEIGHT; i++) {
 			for(int j = 0; j < BOARD_WIDTH; j++) {
 				gameBoard[i][j] = new TestBoardCell(i,j);
@@ -99,4 +107,9 @@ public class TestBoard {
 	public TestBoardCell getCell(int row, int col) {
 		return gameBoard[row][col];
 	}
+	
+	public static TestBoard getBoardInstance() {
+		return instance;
+	}
+
 }

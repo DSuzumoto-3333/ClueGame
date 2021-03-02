@@ -1,6 +1,8 @@
 package tests;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import experiment.TestBoard;
@@ -17,11 +19,12 @@ import experiment.TestBoardCell;
 class BoardTestsExp {
 
 
-	TestBoard board;
+	private static TestBoard board;
 
 	@BeforeEach
 	public void initializeBoard() {
-		board = new TestBoard();
+		board = TestBoard.getBoardInstance();
+		board.initialize();
 	}
 	
 	/*
@@ -29,7 +32,6 @@ class BoardTestsExp {
 	 */
 	@Test
 	public void testPositions() {
-		TestBoard board = new TestBoard();
 		// Upper left board should only have two adjacent cells: (1,0) and (0,1)
 		TestBoardCell upperLeft = board.getCell(0, 0);
 		Set<TestBoardCell> adjacencyList = upperLeft.getAdjList();
@@ -79,7 +81,6 @@ class BoardTestsExp {
 	 */
 	@Test
 	public void testCantEnterOccupiedCell() {
-		TestBoard board = new TestBoard();
 		//Set the bottom 3 rows of the game board to occupied
 		for (int i = 1; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
@@ -91,9 +92,6 @@ class BoardTestsExp {
 		board.calcTargets(startCell, 2);
 		Set<TestBoardCell> targets = board.getTargets();
 		//The set should only have 1 element being position (0,2)
-		for(TestBoardCell t : targets) {
-			System.out.println(t.rowPos + " " + t.colPos);
-		}
 		assertEquals(1, targets.size());
 		assertTrue(targets.contains(board.getCell(0,2)));
 	}
@@ -103,15 +101,18 @@ class BoardTestsExp {
 	 */
 	@Test
 	public void testMustGoAroundOccupiedCell() {
-		TestBoard board = new TestBoard();
 		//Set the position (2,1 to occupied)
 		board.getCell(2, 1).setIsOccupied(true);
 		//Calculate a 4-tile roll and return the valid targets.
 		TestBoardCell startCell = board.getCell(1,1);
-		board.calcTargets(startCell,4);
 		Set<TestBoardCell> targets = board.getTargets();
-		//The set must have the position (3,1), and must not have either (2,1)
-		assertTrue(targets.contains(board.getCell(3, 1)));
+		for(TestBoardCell t : targets) {
+			System.out.println(t.rowPos + " " +  t.colPos);
+		}
+		System.out.println();
+		board.calcTargets(startCell,4);
+		targets = board.getTargets();
+		//The set must not occupy the position (2,1)
 		assertTrue(!(targets.contains(board.getCell(2, 1))));
 	}
 	
@@ -120,7 +121,6 @@ class BoardTestsExp {
 	 */
 	@Test
 	public void testCalcTargetLengthCheck() {
-		TestBoard board = new TestBoard();
 		//Test a movement of 1 tile
 		TestBoardCell startCell = board.getCell(1, 1);
 		board.calcTargets(startCell, 1);
@@ -137,7 +137,6 @@ class BoardTestsExp {
 	 */
 	@Test 
 	public void testCalcTarget() {
-		TestBoard board = new TestBoard();
 		board.calcTargets(new TestBoardCell(board.BOARD_WIDTH/2, board.BOARD_HEIGHT/2), 1);
 		
 		Set<TestBoardCell> targets = board.getTargets();
