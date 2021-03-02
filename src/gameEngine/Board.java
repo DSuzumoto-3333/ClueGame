@@ -69,8 +69,8 @@ public class Board {
 						
 						//If the line specifies a room, create a room with the provided name and initial, saved to roomMap (Must filter out spaces)
 						if(data[0].equals("Room") || data[0].equals("Space")) {
-							Room r = new Room(data[1].replaceAll("\\s+",""));
-							roomMap.put(data[2].replaceAll("\\s+","").charAt(0), r);
+							Room r = new Room(data[1].replaceFirst("\\s+",""));
+							roomMap.put(data[2].replaceFirst("\\s+","").charAt(0), r);
 						}
 						//If something other than a room or space is read, throw a new BadConfigFormatException
 						else if (!data[0].equals("Space")) {
@@ -141,7 +141,7 @@ public class Board {
 							
 							//Check to see if it's a doorway.
 							if(data[j].length() == 2) {
-								char direction = data[j].charAt(0);
+								char direction = data[j].charAt(1);
 								
 								//Set the door direction to the indicated direction.
 								switch(direction){
