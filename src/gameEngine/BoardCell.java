@@ -176,6 +176,10 @@ public class BoardCell {
 		return secretPassage;
 	}
 	
+	/**
+	 * Returns the initial of the tile used to signify it.
+	 * @return
+	 */
 	public char getInitial() {
 		return roomInitial;
 	}

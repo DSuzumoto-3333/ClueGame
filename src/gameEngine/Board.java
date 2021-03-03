@@ -79,7 +79,7 @@ public class Board {
 						}
 						//If something other than a room or space is read, throw a new BadConfigFormatException
 						else if (!data[0].equals("Space")) {
-							throw new BadConfigFormatException("Attempted to specify tile of unknown type: " + data[0] + " in " + setupConfigFile + "On line " + i);
+							throw new BadConfigFormatException("Attempted to specify tile of unknown type: " + data[0] + " in " + setupConfigFile + " On line " + i);
 						}
 					}
 					
@@ -93,9 +93,18 @@ public class Board {
 			}
 			s.close();
 		}
-		//If the file is not found, print error to console.
+		//If the file is not found, print error to console and log it.
 		catch(FileNotFoundException e){
-			System.out.println("File not found.");
+			System.out.println("File not found. Writing error to data/errorlog.txt...");
+			try {
+				FileWriter fw = new FileWriter("data/errorlog.txt", true);
+				fw.write("File " + setupConfigFile + " not found. Please check the data directory.\n");
+				fw.flush();
+			}catch (IOException e2) {
+				System.out.println("Could not write to file.");
+			}finally {
+				System.out.println("Done.");
+			}
 		}
 	}
 	
@@ -201,7 +210,7 @@ public class Board {
 							}
 							//If it's not found in roomMap, throw a new exception.
 							else {
-								throw new BadConfigFormatException("Invalid line format on line " + i + " in " + layoutConfigFile + ", Invalid room specified.");
+								throw new BadConfigFormatException("Invalid line format on line " + i + " in " + layoutConfigFile + ", Invalid room of type " + Initial + " specified.");
 							}
 						}
 					}
@@ -213,20 +222,41 @@ public class Board {
 				i++;
 			}
 		}
-		//If the file is not found, print error to console.
+		//If the file is not found, print error to console, and log it.
 		catch(FileNotFoundException e){
-			System.out.println("File not found.");
+			System.out.println("File not found. Writing error to data/errorlog.txt...");
+			try {
+				FileWriter fw = new FileWriter("data/errorlog.txt", true);
+				fw.write("File " + layoutConfigFile + " not found. Please check the data directory.\n");
+				fw.flush();
+			}catch (IOException e2) {
+				System.out.println("Could not write to file.");
+			}finally {
+				System.out.println("Done.");
+			}
 		}
 	}
 	/**
 	 * Once the game config files have been read, the board array can be populated, and the cells can be given their necessary properties.
 	 */
 	public void initialize() {
+		//Try to load both files, catching BadConfigFormatExceptions here
 		try {
 			loadSetupConfig();
 			loadLayoutConfig();
-		}catch (BadConfigFormatException e) {
-			System.out.println(e);
+		}
+		//In the event of a bad input file, print out the error message to the console, and write the error to a log.
+		catch (BadConfigFormatException e) {
+			System.out.println(e.getMessage() + " Writing error to data/errorlog.txt...");
+			try {
+				FileWriter fw = new FileWriter("data/errorlog.txt", true);
+				fw.write(e.getMessage() + "\n");
+				fw.close();
+			}catch (IOException e2) {
+				System.out.println("Could not write to file.");
+			}finally {
+				System.out.println("Done.");
+			}
 		}
 		
 	}
@@ -300,5 +330,9 @@ public class Board {
 	 */
 	public Room getRoom(BoardCell c) {
 		return roomMap.get(c.getInitial());
+	}
+	
+	public Set<BoardCell> getAdjList(int row, int col){
+		return new HashSet<BoardCell>();
 	}
 }
