@@ -1,0 +1,16 @@
+INDEX VERSION 1.131+C:\Users\Luke Wakumoto\eclipse-workspace\ClueGame\.metadata\.plugins\org.eclipse.jdt.core
+887428167.index
+2328251206.index
+2145597090.index
+2428043606.index
+1303301614.index
+2793551479.index
+3222599661.index
+1781499894.index
+1239445418.index
+210343313.index
+2971701134.index
+2671949263.index
+737332027.index
+2963747340.index
+1292495120.index

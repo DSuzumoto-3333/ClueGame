@@ -1,0 +1,7 @@
+.classpath
+.project
+*.class
+.settings
+gitlog.txt
+readme.txt
+
