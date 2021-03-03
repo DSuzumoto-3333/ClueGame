@@ -278,7 +278,25 @@ class BoardAdjTargetTest {
 		 */
 		@Test
 		void testLeaveRooms(){
+			//Starting from the pool room, we should be able to move to various tiles outside of the room when leaving.
+			BoardCell startCell = board.getRoom('O').getCenterCell();
+			BoardCell walkwayCell = board.getCell(11, 15);
+			Set<BoardCell> targets;
+			int size;
 			
+			//A roll of 1 should only return the doorway cell.
+			board.calcTargets(startCell, 1);
+			targets = board.getTargets();
+			size = targets.size();
+			assertEquals(size,1);
+			assertTrue(targets.contains(walkwayCell));
+			
+			//A roll of 2 should return 3 separate targets, and not include the doorway.
+			board.calcTargets(startCell, 2);
+			targets = board.getTargets();
+			size = targets.size();
+			assertEquals(size,3);
+			assertTrue(!targets.contains(walkwayCell));
 		}
 		
 		/**
@@ -286,7 +304,50 @@ class BoardAdjTargetTest {
 		 */
 		@Test
 		void testSecretPassage() {
+			//Grab the centers of the rooms necessary for testing
+			BoardCell studyCenter = board.getRoom('S').getCenterCell();
+			BoardCell parlorCenter = board.getRoom('P').getCenterCell();
+			Set<BoardCell> targets;
 			
+			//Starting in the study, any roll we get should have moving to the parlor as a valid target.
+			board.calcTargets(studyCenter, 1);
+			targets = board.getTargets();
+			assertTrue(targets.contains(parlorCenter));
+			board.calcTargets(studyCenter, 2);
+			targets = board.getTargets();
+			assertTrue(targets.contains(parlorCenter));
+			board.calcTargets(studyCenter, 3);
+			targets = board.getTargets();
+			assertTrue(targets.contains(parlorCenter));
+			board.calcTargets(studyCenter, 4);
+			targets = board.getTargets();
+			assertTrue(targets.contains(parlorCenter));
+			board.calcTargets(studyCenter, 5);
+			targets = board.getTargets();
+			assertTrue(targets.contains(parlorCenter));
+			board.calcTargets(studyCenter, 6);
+			targets = board.getTargets();
+			assertTrue(targets.contains(parlorCenter));
+			
+			//And visa versa
+			board.calcTargets(parlorCenter, 1);
+			targets = board.getTargets();
+			assertTrue(targets.contains(studyCenter));
+			board.calcTargets(parlorCenter, 2);
+			targets = board.getTargets();
+			assertTrue(targets.contains(studyCenter));
+			board.calcTargets(parlorCenter, 3);
+			targets = board.getTargets();
+			assertTrue(targets.contains(studyCenter));
+			board.calcTargets(parlorCenter, 4);
+			targets = board.getTargets();
+			assertTrue(targets.contains(studyCenter));
+			board.calcTargets(parlorCenter, 5);
+			targets = board.getTargets();
+			assertTrue(targets.contains(studyCenter));
+			board.calcTargets(parlorCenter, 6);
+			targets = board.getTargets();
+			assertTrue(targets.contains(studyCenter));
 		}
 		
 		/**
