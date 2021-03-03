@@ -15,6 +15,8 @@ import gameEngine.BoardCell;
 class BoardAdjTargetTest {
 
 	private static Board board;
+	public static final int WIDTH = 26;
+	public static final int HEIGHT = 23;
 
 	@BeforeAll
 	public static void setUp() {
@@ -94,70 +96,115 @@ class BoardAdjTargetTest {
 			assertTrue(testList.contains(board.getCell(5 , 12)));
 		}
 		
-		/*
-		 * Cells in the room, but not in the center should not have any adjacencies
-		 * These cells are marked in Orange in the spreadsheet
+		/**
+		 * Test the adjacency lists of tiles within rooms that are not the center tile. They should have empty adjacency lists.
 		 */
 		@Test
-		public void testAdjacencytoOffcenterRoom() {
-			Set<BoardCell> testList = board.getAdjList(23, 20);
+		void testAdjacencyRoom() {
+			//Pick a random cell in the garden and get it's adjacency list.
+			Set<BoardCell> adj = board.getAdjList(4, 0);
+			//Assert that it's adjacency list has a size of 0.
+			assertEquals(0,adj.size());
 			
-			assertEquals(0, testList.size());
+			//Pick a random cell in the garden and get it's adjacency list.
+			adj = board.getAdjList(9, 0);
+			//Assert that it's adjacency list has a size of 0.
+			assertEquals(0,adj.size());
+			
+			//Pick a random cell in the garden and get it's adjacency list.
+			adj = board.getAdjList(17, 0);
+			//Assert that it's adjacency list has a size of 0.
+			assertEquals(0,adj.size());
+			
+			//Pick a random cell in the garden and get it's adjacency list.
+			adj = board.getAdjList(0, 12);
+			//Assert that it's adjacency list has a size of 0.
+			assertEquals(0,adj.size());
+			
+			//Pick a random cell in the garden and get it's adjacency list.
+			adj = board.getAdjList(9, 12);
+			//Assert that it's adjacency list has a size of 0.
+			assertEquals(0,adj.size());
+			
+			//Pick a random cell in the garden and get it's adjacency list.
+			adj = board.getAdjList(17, 12);
+			//Assert that it's adjacency list has a size of 0.
+			assertEquals(0,adj.size());
+			
+			//Pick a random cell in the garden and get it's adjacency list.
+			adj = board.getAdjList(24, 0);
+			//Assert that it's adjacency list has a size of 0.
+			assertEquals(0,adj.size());
+			
+			//Pick a random cell in the garden and get it's adjacency list.
+			adj = board.getAdjList(24, 9);
+			//Assert that it's adjacency list has a size of 0.
+			assertEquals(0,adj.size());
+			
+			//Pick a random cell in the garden and get it's adjacency list.
+			adj = board.getAdjList(24, 17);
+			//Assert that it's adjacency list has a size of 0.
+			assertEquals(0,adj.size());
 		}
 		
-		/*
-		 * These cells are next to a room and not a doorway, and shouldn't have any access to any cells in the room
-		 * These cells are marked in Dark Green in the spreadsheet
+		/**
+		 * Test to ensure that walkway tiles that are not doors cannot enter into rooms.
 		 */
 		@Test
-		public void testCellNextToRoom() {
-			Set<BoardCell> testList = board.getAdjList(5, 1);
+		void testAdjacencyOutsideRooms() {
+			//Pick a tile just outside of the parlor and below the kitchen.
+			Set<BoardCell> t = board.getAdjList(16, 3);
+			//It should have an adjacency list with 3 tiles, (15,3), (16,2), (16,4)
+			assertEquals(3, t.size());
+			assertTrue(t.contains(board.getCell(15, 3)));
+			assertTrue(t.contains(board.getCell(16, 2)));
+			assertTrue(t.contains(board.getCell(16, 4)));
 			
-			assertEquals(3, testList.size());
-			assertTrue(testList.contains(board.getCell(5 , 0))); 
-			assertTrue(testList.contains(board.getCell(5 , 2)));
-			assertTrue(testList.contains(board.getCell(4 , 1)));
-			assertTrue(!testList.contains(board.getCell(6, 1))); // This spot is in the room, so it should be invalid
+			//Pick a tile just outside of the parlor to it's right.
+			t = board.getAdjList(15, 8);
+			//It should have an adjacency list with 3 tiles, (14,8), (16,8), (15,9)
+			assertEquals(3, t.size());
+			assertTrue(t.contains(board.getCell(14, 8)));
+			assertTrue(t.contains(board.getCell(16, 8)));
+			assertTrue(t.contains(board.getCell(15, 9)));
 			
-			testList = board.getAdjList(9, 11);
+			//Pick a tile just above the pool, below the pantry.
+			t = board.getAdjList(8, 14);
+			//It should have an adjacency list with 3 tiles, (8,13), (8,15), (7,14)
+			assertEquals(3, t.size());
+			assertTrue(t.contains(board.getCell(8, 13)));
+			assertTrue(t.contains(board.getCell(8, 15)));
+			assertTrue(t.contains(board.getCell(7, 14)));
 			
-			assertEquals(3, testList.size());
-			assertTrue(testList.contains(board.getCell(9 , 10)));
-			assertTrue(testList.contains(board.getCell(9 , 12)));
-			assertTrue(testList.contains(board.getCell(8 , 11)));
-			assertTrue(!testList.contains(board.getCell(10 , 11))); // This spot is in the room, so it should be invalid
-			
-			testList = board.getAdjList(17, 7);
-			
-			assertEquals(3, testList.size());
-			assertTrue(testList.contains(board.getCell(16 , 7))); 
-			assertTrue(testList.contains(board.getCell(18 , 7)));
-			assertTrue(testList.contains(board.getCell(17 , 8)));
-			assertTrue(!testList.contains(board.getCell(17 , 6))); // This spot is in the room, so it should be invalid
+			//Pick a tile just outside of the Lounge, to the right of the Ballroom
+			t = board.getAdjList(19, 19);
+			//It should have an adjacency list with 3 tiles, (19,18), (18,19), (20,19)
+			assertEquals(3, t.size());
+			assertTrue(t.contains(board.getCell(19, 18)));
+			assertTrue(t.contains(board.getCell(18, 19)));
+			assertTrue(t.contains(board.getCell(20, 19)));
 		}
 		
-		/*
-		 * These cells are on the edge of the board and thus should have a limited number of adjacencies
-		 * These cells are marked in Berry in the spreadsheet
+		/**
+		 * Test to ensure that the adjacency lists of every tile on the edge of the board have a maximum of 3 tiles adjacent.
 		 */
 		@Test
-		public void testCellOnEdgeofBoard() {
-			Set<BoardCell> testList = board.getAdjList(15, 0);
-			
-			assertEquals(2, testList.size());
-			assertTrue(testList.contains(board.getCell(15 , 1))); 
-			assertTrue(testList.contains(board.getCell(16 , 0)));
-			assertTrue(!testList.contains(board.getCell(14 , 0))); // This spot is in a room, so it should be invalid
-			assertTrue(!testList.contains(board.getCell(15, -1))); // This spot is off the board, so it should be invalid
-			
-			testList = board.getAdjList(18, 22);
-			
-			assertEquals(3, testList.size());
-			assertTrue(testList.contains(board.getCell(17 , 22)));
-			assertTrue(testList.contains(board.getCell(19 , 22)));
-			assertTrue(testList.contains(board.getCell(18 , 21)));
-			assertTrue(!testList.contains(board.getCell(18 , 23))); // This spot is in the room, so it should be invalid
-			
+		void testAdjacenciesAtEdge() {
+			Set<BoardCell> left, right;
+			for(int i = 0; i < HEIGHT; i++) {
+				left = board.getAdjList(i, 0);
+				right = board.getAdjList(i, 25);
+				if(left.size() > 3 || right.size() > 3) {
+					fail("Invalid adjacency list");
+				}
+			}
+			for(int j = 0; j < WIDTH; j++) {
+				left = board.getAdjList(0, j);
+				right = board.getAdjList(22, j);
+				if(left.size() > 3 || right.size() > 3) {
+					fail("Invalid adjacency list");
+				}
+			}
 		}
 		
 		/*
