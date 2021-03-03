@@ -32,15 +32,24 @@ class BoardAdjTargetTest {
 	 */
 	
 
-	// Ensure that player does not move around within room
-	// These cells are DARK GREEN on the planning spreadsheet
+	// Test adjacencies of various pieces in the walkways; these pieces are colored Majenta in the sheet
+	
 		@Test
-		public void testAdjacenciesRooms()
+		public void testAdjacenciesWalkway()
 		{
-			// we want to test a couple of different rooms.
-			// First, the study that only has a single door but a secret room
-			Set<BoardCell> testList = board.getAdjList(5,1);
-			assertEquals(3, testList.size());
+			// we want to test a couple cells and make sure their adjencies make sense
+			Set<BoardCell> testList = board.getAdjList(3 , 9);
+			assertEquals(4, testList.size());
+			assertTrue(testList.contains(board.getCell(2, 9)));
+			assertTrue(testList.contains(board.getCell(4 , 9)));
+			assertTrue(testList.contains(board.getCell(3 , 10)));
+			assertTrue(testList.contains(board.getCell(3 , 8)));
+			
+			testList = board.getAdjList(11 , 8);
+			assertEquals(43, testList.size());
+			assertTrue(testList.contains(board.getCell(11 , 8)));
+			assertTrue(testList.contains(board.getCell(11 , 8)));
+			assertTrue(testList.contains(board.getCell(11 , 8)));
 
 		}
 	}
