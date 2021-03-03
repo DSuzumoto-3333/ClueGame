@@ -244,6 +244,7 @@ public class Board {
 		try {
 			loadSetupConfig();
 			loadLayoutConfig();
+			setAdjLists();
 		}
 		//In the event of a bad input file, print out the error message to the console, and write the error to a log.
 		catch (BadConfigFormatException e) {
@@ -259,6 +260,67 @@ public class Board {
 			}
 		}
 		
+	}
+	
+	/**
+	 * A method to set every tile in the gameBoard's adjacency lists. Non-central room tiles will not have adjacency lists, and neither will unused tiles.
+	 */
+	public void setAdjLists() {
+		//Iterate through every tile.
+		for(int i = 0; i < boardHeight; i++) {
+			for(int j = 0; j < boardWidth; j++) {
+				//All walkway and door tiles will have an adjacency list.
+				BoardCell current = gameBoard[i][j];
+				if(current.getInitial() == 'W') {
+					BoardCell nextTo;
+					
+					//Check tile above.
+					if(i > 0) {
+						checkAdjTile(current, i - 1, j);
+					}
+					
+					//Check tile below
+					if(i < boardHeight - 1) {
+						checkAdjTile(current, i + 1, j);
+					}
+					
+					//Check tile to the left
+					if(j > 0) {
+						checkAdjTile(current, i, j - 1);
+					}
+					
+					//Check tile to the right
+					if(j < boardWidth - 1) {
+						checkAdjTile(current, i, j + 1);
+					}
+				}
+				
+				//Otherwise, if the tile has a secret passage, link the secret passage tile of this room to the center of the other room.
+				else if (!(current.getSecretPassage() == 'X')){
+					BoardCell secret = getRoom(current.getSecretPassage()).getCenterCell();
+					secret.addAdjacency(current);
+					current.addAdjacency(secret);
+				}
+			}
+		}
+	}
+	
+	public void checkAdjTile(BoardCell current, int i, int j) {
+		System.out.println(i + " " + j);
+		BoardCell nextTo = gameBoard[i][j];
+		
+		//If the tile above exists, and is another walkway tile, add it to the adjacency list.
+		if(nextTo.getInitial() == 'W') {
+			current.addAdjacency(nextTo);
+		}
+		
+		//If the tile above is a room tile, and the current tile is a doorway, add the center of the room to the adjacency list.
+		else if(current.isDoorway() && !(nextTo.getInitial() == 'X')){
+			BoardCell center = getRoom(nextTo).getCenterCell();
+			current.addAdjacency(center);
+			//Also add the door to the center's adjacency list.
+			center.addAdjacency(current);
+		}
 	}
 	/**
 	 * Returns the instance of the board, saved in boardInstance.
@@ -331,14 +393,13 @@ public class Board {
 	public Room getRoom(BoardCell c) {
 		return roomMap.get(c.getInitial());
 	}
-	
+	/**
+	 * Returns the adjacency list of the tile at the position provided.
+	 * @param row
+	 * @param col
+	 * @return
+	 */
 	public Set<BoardCell> getAdjList(int row, int col){
-		Set<BoardCell> t = new HashSet<BoardCell>();
-		t.add(new BoardCell(0,0));
-		t.add(new BoardCell(0,1));
-		t.add(new BoardCell(0,2));
-		t.add(new BoardCell(0,4));
-		t.add(new BoardCell(0,3));
-		return t;
+		return gameBoard[row][col].getAdjList();
 	}
 }

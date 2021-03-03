@@ -40,6 +40,7 @@ public class BoardCell {
 		doorDirection = DoorDirection.NONE;
 		//Initialize the adjacency set
 		adjacentCells = new HashSet<BoardCell>();
+		secretPassage = 'X';
 	}
 	
 	/**
