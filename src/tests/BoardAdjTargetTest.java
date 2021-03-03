@@ -355,7 +355,50 @@ class BoardAdjTargetTest {
 		 */
 		@Test
 		void testOccupiedTiles() {
+			//First, we want to see if the player's movement is inhibited in walkways by other players.
+			//Grab a tile in a random part of the walkway, and surround it on 2 sides with occupied tiles
+			BoardCell startCell = board.getCell(7, 5);
+			board.getCell(7, 4).setOccupied(true);
+			board.getCell(7, 6).setOccupied(true);
+			Set<BoardCell> targets;
+			int size;
+			//A roll of 1 should only return 1 target, (8,5)
+			board.calcTargets(startCell, 1);
+			targets = board.getTargets();
+			size = targets.size();
+			assertEquals(size,1);
+			assertTrue(targets.contains(board.getCell(8, 5)));
 			
+			//Then, grab another tile right outside of a door. Occupy the door tile.
+			startCell = board.getCell(12, 15);
+			BoardCell doorCell = board.getCell(11, 15);
+			doorCell.setOccupied(true);
+			BoardCell poolCenter = board.getRoom('O').getCenterCell();
+			//No roll should be able to enter the pool room or land on the doorway.
+			board.calcTargets(startCell, 1);
+			targets = board.getTargets();
+			assertTrue(!(targets.contains(poolCenter)));
+			assertTrue(!(targets.contains(doorCell)));
+			board.calcTargets(startCell, 2);
+			targets = board.getTargets();
+			assertTrue(!(targets.contains(poolCenter)));
+			assertTrue(!(targets.contains(doorCell)));
+			board.calcTargets(startCell, 3);
+			targets = board.getTargets();
+			assertTrue(!(targets.contains(poolCenter)));
+			assertTrue(!(targets.contains(doorCell)));
+			board.calcTargets(startCell, 4);
+			targets = board.getTargets();
+			assertTrue(!(targets.contains(poolCenter)));
+			assertTrue(!(targets.contains(doorCell)));
+			board.calcTargets(startCell, 5);
+			targets = board.getTargets();
+			assertTrue(!(targets.contains(poolCenter)));
+			assertTrue(!(targets.contains(doorCell)));
+			board.calcTargets(startCell, 6);
+			targets = board.getTargets();
+			assertTrue(!(targets.contains(poolCenter)));
+			assertTrue(!(targets.contains(doorCell)));
 		}
 	}
 

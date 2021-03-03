@@ -333,6 +333,12 @@ public class Board {
 	}
 	
 	public Set<BoardCell> getAdjList(int row, int col){
-		return new HashSet<BoardCell>();
+		Set<BoardCell> t = new HashSet<BoardCell>();
+		t.add(new BoardCell(0,0));
+		t.add(new BoardCell(0,1));
+		t.add(new BoardCell(0,2));
+		t.add(new BoardCell(0,4));
+		t.add(new BoardCell(0,3));
+		return t;
 	}
 }
