@@ -1,4 +1,4 @@
-﻿// Rooms and room cards
+// Rooms and Room Cards
 Room, Garden, G
 Room, Kitchen, K
 Room, Parlor, P
@@ -8,6 +8,6 @@ Room, Ballroom, B
 Room, Study, S
 Room, Closet, C
 Room, Lounge, L
-//Other spaces on board
+// Other Spaces on Board
 Space, Unused, X
 Space, Walkway, W

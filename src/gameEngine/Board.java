@@ -60,6 +60,11 @@ public class Board {
 			while(s.hasNextLine()) {
 				line = s.nextLine();
 				
+				//If the line is null, the bottom of the file has been reached.
+				if(line.length() == 0) {
+					break;
+				}
+				
 				//If the line doesn't start with a slash indicating that it's a comment, split it.
 				if(!(line.charAt(0) == '/')) {
 					String[] data = line.split(",");
