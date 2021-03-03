@@ -331,4 +331,8 @@ public class Board {
 	public Room getRoom(BoardCell c) {
 		return roomMap.get(c.getInitial());
 	}
+	
+	public Set<BoardCell> getAdjList(int row, int col){
+		return new HashSet<BoardCell>();
+	}
 }
