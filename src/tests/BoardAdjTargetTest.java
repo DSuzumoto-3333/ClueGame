@@ -236,7 +236,41 @@ class BoardAdjTargetTest {
 		 */
 		@Test
 		void testEnterRooms() {
+			//Test various rolls from (12,16) to see if they can enter the pool
+			BoardCell startCell = board.getCell(12, 16);
+			BoardCell poolCenter = board.getRoom('O').getCenterCell();
+			Set<BoardCell> targets;
 			
+			//A roll of 1 should not be able to enter 
+			board.calcTargets(startCell, 1);
+			targets = board.getTargets();
+			assertTrue(!(targets.contains(poolCenter)));
+			
+			//A roll of 2 should not be able to enter, but will occupy the doorway.
+			board.calcTargets(startCell, 2);
+			targets = board.getTargets();
+			assertTrue(!(targets.contains(poolCenter)));
+			assertTrue(targets.contains(board.getCell(11, 15)));
+			
+			//A roll of 3 should be able to enter 
+			board.calcTargets(startCell, 3);
+			targets = board.getTargets();
+			assertTrue(targets.contains(poolCenter));
+			
+			//A roll of 4 should be able to enter 
+			board.calcTargets(startCell, 4);
+			targets = board.getTargets();
+			assertTrue(targets.contains(poolCenter));
+			
+			//A roll of 5 should be able to enter 
+			board.calcTargets(startCell, 5);
+			targets = board.getTargets();
+			assertTrue(targets.contains(poolCenter));
+			
+			//A roll of 6 should be able to enter 
+			board.calcTargets(startCell, 6);
+			targets = board.getTargets();
+			assertTrue(targets.contains(poolCenter));
 		}
 		
 		/**
