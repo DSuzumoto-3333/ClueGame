@@ -207,9 +207,61 @@ class BoardAdjTargetTest {
 			}
 		}
 		
-		/*
-		 * The next following tests will focus on the targets at specific cells
+		/**
+		 * Randomly selected locations to test the expected return of calculating targets down a walkway.
 		 */
+		@Test
+		void testWalkwayMovement() {
+			//Grab tile from (10,8 and calculate a few different rolls)
+			BoardCell startCell = board.getCell(10, 8);
+			//A 1-long roll should only provide 3 targets, (9,8), (10,7), and (11,8)
+			board.calcTargets(startCell, 1);
+			Set<BoardCell> targets = board.getTargets();
+			assertEquals(targets.size(),3);
+			assertTrue(targets.contains(board.getCell(9, 8)));
+			assertTrue(targets.contains(board.getCell(10, 7)));
+			assertTrue(targets.contains(board.getCell(11, 8)));
+			//A 2 long roll should only provide 4 targets, (8,8), (9,7), (11, 7), and (12,8)
+			board.calcTargets(startCell, 2);
+			targets = board.getTargets();
+			assertEquals(targets.size(),3);
+			assertTrue(targets.contains(board.getCell(8, 8)));
+			assertTrue(targets.contains(board.getCell(9, 7)));
+			assertTrue(targets.contains(board.getCell(11, 7)));
+			assertTrue(targets.contains(board.getCell(12, 8)));
+		}
+		
+		/**
+		 * Randomly selected locations to test if the user can enter a room
+		 */
+		@Test
+		void testEnterRooms() {
+			
+		}
+		
+		/**
+		 * Test that leaving a room works as expected
+		 */
+		@Test
+		void testLeaveRooms(){
+			
+		}
+		
+		/**
+		 * Test that using a secret passage works as expected
+		 */
+		@Test
+		void testSecretPassage() {
+			
+		}
+		
+		/**
+		 * Test that players can block other players' movements.
+		 */
+		@Test
+		void testOccupiedTiles() {
+			
+		}
 	}
 
 
