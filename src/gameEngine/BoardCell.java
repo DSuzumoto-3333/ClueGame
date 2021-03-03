@@ -185,4 +185,9 @@ public class BoardCell {
 		return roomInitial;
 	}
 	
+	@Override
+	public String toString() {
+		return rowPos + " " + colPos;
+	}
+	
 }

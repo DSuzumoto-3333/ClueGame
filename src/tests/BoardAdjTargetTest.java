@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import gameEngine.Board;
 import gameEngine.BoardCell;
 
-class BoardAdjTargetTest {
+public class BoardAdjTargetTest {
 
 	private static Board board;
 	public static final int WIDTH = 26;
@@ -34,12 +34,12 @@ class BoardAdjTargetTest {
 	 */
 	
 
-	// Test adjacencies of various pieces in the walkways; these pieces are colored Majenta in the sheet
+	// Test adjacencies of various pieces in the walkways; these pieces are colored magenta in the sheet
 	
 		@Test
 		public void testAdjacenciesWalkway()
 		{
-			// we want to test a couple cells and make sure their adjencies make sense
+			// we want to test a couple cells and make sure their adjacencies make sense
 			Set<BoardCell> testList = board.getAdjList(4 , 8);
 			assertEquals(4, testList.size());
 			assertTrue(testList.contains(board.getCell(2 , 8)));
@@ -106,43 +106,43 @@ class BoardAdjTargetTest {
 			//Assert that it's adjacency list has a size of 0.
 			assertEquals(0,adj.size());
 			
-			//Pick a random cell in the garden and get it's adjacency list.
+			//Pick a random cell in the kitchen and get it's adjacency list.
 			adj = board.getAdjList(9, 0);
 			//Assert that it's adjacency list has a size of 0.
 			assertEquals(0,adj.size());
 			
-			//Pick a random cell in the garden and get it's adjacency list.
+			//Pick a random cell in the parlor and get it's adjacency list.
 			adj = board.getAdjList(17, 0);
 			//Assert that it's adjacency list has a size of 0.
 			assertEquals(0,adj.size());
 			
-			//Pick a random cell in the garden and get it's adjacency list.
+			//Pick a random cell in the pantry and get it's adjacency list.
 			adj = board.getAdjList(0, 12);
 			//Assert that it's adjacency list has a size of 0.
 			assertEquals(0,adj.size());
 			
-			//Pick a random cell in the garden and get it's adjacency list.
+			//Pick a random cell in the pool and get it's adjacency list.
 			adj = board.getAdjList(9, 12);
 			//Assert that it's adjacency list has a size of 0.
 			assertEquals(0,adj.size());
 			
-			//Pick a random cell in the garden and get it's adjacency list.
+			//Pick a random cell in the ballroom and get it's adjacency list.
 			adj = board.getAdjList(17, 12);
 			//Assert that it's adjacency list has a size of 0.
 			assertEquals(0,adj.size());
 			
-			//Pick a random cell in the garden and get it's adjacency list.
-			adj = board.getAdjList(24, 0);
+			//Pick a random cell in the study and get it's adjacency list.
+			adj = board.getAdjList(0,24);
 			//Assert that it's adjacency list has a size of 0.
 			assertEquals(0,adj.size());
 			
-			//Pick a random cell in the garden and get it's adjacency list.
-			adj = board.getAdjList(24, 9);
+			//Pick a random cell in the closet and get it's adjacency list.
+			adj = board.getAdjList(9, 24);
 			//Assert that it's adjacency list has a size of 0.
 			assertEquals(0,adj.size());
 			
-			//Pick a random cell in the garden and get it's adjacency list.
-			adj = board.getAdjList(24, 17);
+			//Pick a random cell in the lounge and get it's adjacency list.
+			adj = board.getAdjList(17, 24);
 			//Assert that it's adjacency list has a size of 0.
 			assertEquals(0,adj.size());
 		}

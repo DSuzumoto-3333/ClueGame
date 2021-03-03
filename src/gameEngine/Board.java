@@ -23,15 +23,13 @@ public class Board {
 	//Map to contain all the tile characters
 	private Map<Character, Room> roomMap;
 	private static Board boardInstance = new Board();
+	private enum tileDirection {UP, DOWN, LEFT, RIGHT};
 	/**
 	 * Since we're using a singleton patter, our constructor is essentially empty. We will use .initialize() after setting and loading the configuration files.
 	 * This allows us to re-use the same instance, as we don't want to have multiple game-boards, but for the sake of testing bad config files, we need to redefine it.
 	 */
 	public Board() {
 		super();	
-		targets = new HashSet<BoardCell>();
-		visited = new HashSet<BoardCell>();
-		roomMap = new HashMap<Character, Room>();
 	}
 	
 	/**
@@ -241,6 +239,10 @@ public class Board {
 	 */
 	public void initialize() {
 		//Try to load both files, catching BadConfigFormatExceptions here
+		targets = new HashSet<BoardCell>();
+		visited = new HashSet<BoardCell>();
+		roomMap = new HashMap<Character, Room>();
+		
 		try {
 			loadSetupConfig();
 			loadLayoutConfig();
@@ -272,41 +274,38 @@ public class Board {
 				//All walkway and door tiles will have an adjacency list.
 				BoardCell current = gameBoard[i][j];
 				if(current.getInitial() == 'W') {
-					BoardCell nextTo;
-					
 					//Check tile above.
 					if(i > 0) {
-						checkAdjTile(current, i - 1, j);
+						checkAdjTile(current, i - 1, j, tileDirection.UP);
 					}
 					
 					//Check tile below
 					if(i < boardHeight - 1) {
-						checkAdjTile(current, i + 1, j);
+						checkAdjTile(current, i + 1, j, tileDirection.DOWN);
 					}
 					
 					//Check tile to the left
 					if(j > 0) {
-						checkAdjTile(current, i, j - 1);
+						checkAdjTile(current, i, j - 1, tileDirection.LEFT);
 					}
 					
 					//Check tile to the right
 					if(j < boardWidth - 1) {
-						checkAdjTile(current, i, j + 1);
+						checkAdjTile(current, i, j + 1, tileDirection.RIGHT);
 					}
 				}
 				
 				//Otherwise, if the tile has a secret passage, link the secret passage tile of this room to the center of the other room.
 				else if (!(current.getSecretPassage() == 'X')){
 					BoardCell secret = getRoom(current.getSecretPassage()).getCenterCell();
-					secret.addAdjacency(current);
-					current.addAdjacency(secret);
+					BoardCell center = getRoom(current).getCenterCell();
+					secret.addAdjacency(center);
 				}
 			}
 		}
 	}
 	
-	public void checkAdjTile(BoardCell current, int i, int j) {
-		System.out.println(i + " " + j);
+	public void checkAdjTile(BoardCell current, int i, int j, tileDirection t) {
 		BoardCell nextTo = gameBoard[i][j];
 		
 		//If the tile above exists, and is another walkway tile, add it to the adjacency list.
@@ -316,10 +315,40 @@ public class Board {
 		
 		//If the tile above is a room tile, and the current tile is a doorway, add the center of the room to the adjacency list.
 		else if(current.isDoorway() && !(nextTo.getInitial() == 'X')){
-			BoardCell center = getRoom(nextTo).getCenterCell();
-			current.addAdjacency(center);
-			//Also add the door to the center's adjacency list.
-			center.addAdjacency(current);
+			switch(t) {
+			case UP:
+				if(current.getDoorDirection() == DoorDirection.UP) {
+					BoardCell center = getRoom(nextTo).getCenterCell();
+					current.addAdjacency(center);
+					//Also add the door to the center's adjacency list.
+					center.addAdjacency(current);
+				}
+				break;
+			case DOWN:
+				if(current.getDoorDirection() == DoorDirection.DOWN) {
+					BoardCell center = getRoom(nextTo).getCenterCell();
+					current.addAdjacency(center);
+					//Also add the door to the center's adjacency list.
+					center.addAdjacency(current);
+				}
+				break;
+			case LEFT:
+				if(current.getDoorDirection() == DoorDirection.LEFT) {
+					BoardCell center = getRoom(nextTo).getCenterCell();
+					current.addAdjacency(center);
+					//Also add the door to the center's adjacency list.
+					center.addAdjacency(current);
+				}
+				break;
+			case RIGHT:
+				if(current.getDoorDirection() == DoorDirection.RIGHT) {
+					BoardCell center = getRoom(nextTo).getCenterCell();
+					current.addAdjacency(center);
+					//Also add the door to the center's adjacency list.
+					center.addAdjacency(current);
+				}
+				break;
+			}
 		}
 	}
 	/**
