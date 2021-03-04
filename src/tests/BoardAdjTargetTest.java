@@ -28,72 +28,29 @@ public class BoardAdjTargetTest {
 		board.initialize();
 	}
 
-	
-	/*
-	 * These first few tests will test various adjacency logic and ensure that it works properly
-	 */
-	
-
-	// Test adjacencies of various pieces in the walkways; these pieces are colored magenta in the sheet
-	
-		@Test
-		public void testAdjacenciesWalkway()
-		{
-			// we want to test a couple cells and make sure their adjacencies make sense
-			Set<BoardCell> testList = board.getAdjList(4 , 8);
-			assertEquals(4, testList.size());
-			assertTrue(testList.contains(board.getCell(2 , 8)));
-			assertTrue(testList.contains(board.getCell(3 , 8)));
-			assertTrue(testList.contains(board.getCell(4 , 9)));
-			assertTrue(testList.contains(board.getCell(4 , 10)));
-			
-			testList = board.getAdjList(16 , 8);
-			assertEquals(4, testList.size());
-			assertTrue(testList.contains(board.getCell(15 , 8)));
-			assertTrue(testList.contains(board.getCell(16 , 8)));
-			assertTrue(testList.contains(board.getCell(16 , 9)));
-			assertTrue(testList.contains(board.getCell(16 , 10)));
-
-		}
 		
-		
-		/*
-		 * Cells that are in the center of rooms should be adjacent both to secret passages and to doorways.
-		 * These cells are marked in Cyan in the spreadsheet
-		 */
-		@Test
-		public void testAdjacencytoSecretPassage() {
-			Set<BoardCell> testList = board.getAdjList(5, 20);
-			
-			assertEquals(4, testList.size());
-			assertTrue(testList.contains(board.getCell(7 , 22))); // The Secret Passage
-			assertTrue(testList.contains(board.getCell(16 , 15))); // The Doorways
-			assertTrue(testList.contains(board.getCell(19 , 20)));
-			assertTrue(testList.contains(board.getCell(19 , 19)));
-			
-		}
-		
-		/*
-		 * Cells that are doorways should be adjacent to the center of the room as well as any cells directly outside the doorway
-		 * These cells are marked in Light Blue in the spreadsheet
+		/**
+		 * Test to determine that doors hold all the propper adjacencies, including both the walkway tiles surrounding them, and the room center that they are connected to.
 		 */
 		@Test
 		public void testAdjacencyDoorway() {
-			Set<BoardCell> testList = board.getAdjList(21, 12);
+			//Grab the adjacency list of the door entering the closet from the west.
+			Set<BoardCell> adj = board.getAdjList(12, 21);
+			//The list should have 4 entries, the center of the room, and the 3 surrounding tiles.
+			assertEquals(adj.size(),4);
+			assertTrue(adj.contains(board.getCell(12, 20)));
+			assertTrue(adj.contains(board.getCell(11, 21)));
+			assertTrue(adj.contains(board.getCell(13, 21)));
+			assertTrue(adj.contains(board.getRoom('C').getCenterCell()));
 			
-			assertEquals(4, testList.size());
-			assertTrue(testList.contains(board.getCell(24 , 12))); // The Center of the room
-			assertTrue(testList.contains(board.getCell(21 , 11)));
-			assertTrue(testList.contains(board.getCell(21 , 13)));
-			assertTrue(testList.contains(board.getCell(20 , 12)));
-			
-			testList = board.getAdjList(4, 12);
-			
-			assertEquals(4, testList.size());
-			assertTrue(testList.contains(board.getCell(1 , 12))); // The Center of the room
-			assertTrue(testList.contains(board.getCell(4 , 11)));
-			assertTrue(testList.contains(board.getCell(4 , 13)));
-			assertTrue(testList.contains(board.getCell(5 , 12)));
+			//Repeat the same for the door entering the kitchen from the east.
+			adj = board.getAdjList(12, 4);
+			//The list should have 4 entries, the center of the room, and the 3 surrounding tiles.
+			assertEquals(adj.size(),4);
+			assertTrue(adj.contains(board.getCell(12, 5)));
+			assertTrue(adj.contains(board.getCell(11, 4)));
+			assertTrue(adj.contains(board.getCell(13, 4)));
+			assertTrue(adj.contains(board.getRoom('K').getCenterCell()));
 		}
 		
 		/**
@@ -212,23 +169,31 @@ public class BoardAdjTargetTest {
 		 */
 		@Test
 		void testWalkwayMovement() {
-			//Grab tile from (10,8 and calculate a few different rolls)
-			BoardCell startCell = board.getCell(10, 8);
-			//A 1-long roll should only provide 3 targets, (9,8), (10,7), and (11,8)
+			//Grab tile from (10,9) and calculate a few different rolls
+			BoardCell startCell = board.getCell(10, 9);
+			
+			//A 1-long roll should only provide 3 targets, (9,9), (10,8), and (11,9)
 			board.calcTargets(startCell, 1);
 			Set<BoardCell> targets = board.getTargets();
 			assertEquals(targets.size(),3);
-			assertTrue(targets.contains(board.getCell(9, 8)));
-			assertTrue(targets.contains(board.getCell(10, 7)));
-			assertTrue(targets.contains(board.getCell(11, 8)));
-			//A 2 long roll should only provide 4 targets, (8,8), (9,7), (11, 7), and (12,8)
+			assertTrue(targets.contains(board.getCell(9, 9)));
+			assertTrue(targets.contains(board.getCell(10, 8)));
+			assertTrue(targets.contains(board.getCell(11, 9)));
+			
+			//A 2 long roll should only provide 4 targets, (8,9), (9,8), (11, 8), and (12,9)
 			board.calcTargets(startCell, 2);
 			targets = board.getTargets();
-			assertEquals(targets.size(),3);
-			assertTrue(targets.contains(board.getCell(8, 8)));
-			assertTrue(targets.contains(board.getCell(9, 7)));
-			assertTrue(targets.contains(board.getCell(11, 7)));
-			assertTrue(targets.contains(board.getCell(12, 8)));
+			assertEquals(targets.size(),4);
+			assertTrue(targets.contains(board.getCell(8, 9)));
+			assertTrue(targets.contains(board.getCell(9, 8)));
+			assertTrue(targets.contains(board.getCell(11, 8)));
+			assertTrue(targets.contains(board.getCell(12, 9)));
+			
+			//A 3 long role should return 9 targets, and one of them should be (13,9)
+			board.calcTargets(startCell, 3);
+			targets = board.getTargets();
+			assertEquals(targets.size(),9);
+			assertTrue(targets.contains(board.getCell(13, 9)));
 		}
 		
 		/**
@@ -237,7 +202,7 @@ public class BoardAdjTargetTest {
 		@Test
 		void testEnterRooms() {
 			//Test various rolls from (12,16) to see if they can enter the pool
-			BoardCell startCell = board.getCell(12, 16);
+			BoardCell startCell = board.getCell(12, 17);
 			BoardCell poolCenter = board.getRoom('O').getCenterCell();
 			Set<BoardCell> targets;
 			
@@ -250,7 +215,7 @@ public class BoardAdjTargetTest {
 			board.calcTargets(startCell, 2);
 			targets = board.getTargets();
 			assertTrue(!(targets.contains(poolCenter)));
-			assertTrue(targets.contains(board.getCell(11, 15)));
+			assertTrue(targets.contains(board.getCell(11, 16)));
 			
 			//A roll of 3 should be able to enter 
 			board.calcTargets(startCell, 3);
@@ -280,23 +245,26 @@ public class BoardAdjTargetTest {
 		void testLeaveRooms(){
 			//Starting from the pool room, we should be able to move to various tiles outside of the room when leaving.
 			BoardCell startCell = board.getRoom('O').getCenterCell();
-			BoardCell walkwayCell = board.getCell(11, 15);
+			BoardCell Door1 = board.getCell(11, 16);
+			BoardCell Door2 = board.getCell(15, 12);
 			Set<BoardCell> targets;
 			int size;
 			
-			//A roll of 1 should only return the doorway cell.
+			//A roll of 1 should only return the doorway cells.
 			board.calcTargets(startCell, 1);
 			targets = board.getTargets();
 			size = targets.size();
-			assertEquals(size,1);
-			assertTrue(targets.contains(walkwayCell));
+			assertEquals(size,2);
+			assertTrue(targets.contains(Door1));
+			assertTrue(targets.contains(Door2));
 			
-			//A roll of 2 should return 3 separate targets, and not include the doorway.
+			//A roll of 2 should return 6 separate targets, and not include the doorway.
 			board.calcTargets(startCell, 2);
 			targets = board.getTargets();
 			size = targets.size();
-			assertEquals(size,3);
-			assertTrue(!targets.contains(walkwayCell));
+			assertEquals(size,6);
+			assertTrue(!targets.contains(Door1));
+			assertTrue(!targets.contains(Door2));
 		}
 		
 		/**
@@ -357,23 +325,27 @@ public class BoardAdjTargetTest {
 		void testOccupiedTiles() {
 			//First, we want to see if the player's movement is inhibited in walkways by other players.
 			//Grab a tile in a random part of the walkway, and surround it on 2 sides with occupied tiles
-			BoardCell startCell = board.getCell(7, 5);
-			board.getCell(7, 4).setOccupied(true);
-			board.getCell(7, 6).setOccupied(true);
+			BoardCell startCell = board.getCell(7, 6);
+			board.getCell(7, 5).setOccupied(true);
+			board.getCell(7, 7).setOccupied(true);
 			Set<BoardCell> targets;
 			int size;
-			//A roll of 1 should only return 1 target, (8,5)
+			
+			//A roll of 1 should only return 1 target, (8,6)
 			board.calcTargets(startCell, 1);
 			targets = board.getTargets();
 			size = targets.size();
 			assertEquals(size,1);
-			assertTrue(targets.contains(board.getCell(8, 5)));
+			assertTrue(targets.contains(board.getCell(8, 6)));
+			board.getCell(7, 5).setOccupied(false);
+			board.getCell(7, 7).setOccupied(false);
 			
 			//Then, grab another tile right outside of a door. Occupy the door tile.
 			startCell = board.getCell(12, 15);
 			BoardCell doorCell = board.getCell(11, 15);
 			doorCell.setOccupied(true);
 			BoardCell poolCenter = board.getRoom('O').getCenterCell();
+			
 			//No roll should be able to enter the pool room or land on the doorway.
 			board.calcTargets(startCell, 1);
 			targets = board.getTargets();
@@ -399,6 +371,8 @@ public class BoardAdjTargetTest {
 			targets = board.getTargets();
 			assertTrue(!(targets.contains(poolCenter)));
 			assertTrue(!(targets.contains(doorCell)));
+			
+			doorCell.setOccupied(false);
 		}
 	}
 

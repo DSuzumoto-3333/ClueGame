@@ -2,6 +2,9 @@ package gameEngine;
 
 import java.util.*;
 import java.util.Set;
+
+import experiment.TestBoardCell;
+
 import java.util.HashSet;
 import java.io.*;
 
@@ -17,7 +20,8 @@ public class Board {
 	//The game board itself
 	private BoardCell[][] gameBoard;
 	//Sets for calculating viable targets to move to.
-	private Set<BoardCell> targets, visited;
+	private Set<BoardCell> targets;
+	private Stack<BoardCell> visited;
 	//Strings for loading in data from the layout and setup configuration files.
 	private String layoutConfigFile, setupConfigFile;
 	//Map to contain all the tile characters
@@ -240,7 +244,7 @@ public class Board {
 	public void initialize() {
 		//Try to load both files, catching BadConfigFormatExceptions here
 		targets = new HashSet<BoardCell>();
-		visited = new HashSet<BoardCell>();
+		visited = new Stack<BoardCell>();
 		roomMap = new HashMap<Character, Room>();
 		
 		try {
@@ -367,7 +371,63 @@ public class Board {
 	 * @param length
 	 */
 	public void calcTargets(BoardCell startCell, int length) {
-		return;
+		//Push the current cell to the top of the visited stack.
+		visited.push(startCell);
+		
+		//If we have made it to the end of our roll, determine if the cell is a valid target
+		if(length == 0) {
+			
+			//If the cell is not occupied, or if it is a room (which can be occupied by multiple people), the cell is a valid target
+			if(!(startCell.getOccupied()) || startCell.isRoomCenter()) {
+				//The cell is added to the targets set.
+				targets.add(startCell);
+			}
+		}
+		
+		//If the end of the roll has not been reached, but the cell is a room center, determine if the roll can stop here.
+		else if(startCell.isRoomCenter()){
+			
+			//If more tiles than just the room center have been visited, the player is not starting on the room center, and can opt to enter the new room.
+			if(!(visited.size() == 1)) {
+				targets.add(startCell);
+			}
+			
+			//If the only tile in visited is the current room center, the player is starting in this room, and must leave.
+			else{ 
+				//Grab every tile in the cell's adjacency list, and iterate through them.
+				Set<BoardCell> T = startCell.getAdjList();
+				for(BoardCell t : T) {
+					
+					//Ensure that the cell grabbed is not one already visited.
+					if(!(visited.contains(t))) {
+						
+						//If the cell isn't occupied, move to it and continue searching for targets.
+						if(!(t.getOccupied())) {
+							calcTargets(t, length-1);
+						}
+						
+						//If the cell is occupied, but it is also the center of a room, move to it and determine if it is a viable target.
+						else if (t.isRoomCenter()) {
+							calcTargets(t, length-1);
+						}
+					}
+				}
+			}
+		}else {
+			//Grab every cell directly adjacent to the start cell, and put the start cell in visited so we don't backtrack.
+			Set<BoardCell> T = startCell.getAdjList();
+			for(BoardCell t : T) {
+				//For every cell in the T, if it's not occupied or a tile we've visited before, run calcTargets from it's perspective, and with length - 1
+				if(!(visited.contains(t))) {
+					if(!(t.getOccupied())) {
+						calcTargets(t, length-1);
+					}else if (t.isRoomCenter()) {
+						calcTargets(t, length-1);
+					}
+				}
+			}
+		}
+		visited.pop();
 	}
 	
 	/**
@@ -375,7 +435,9 @@ public class Board {
 	 * @return
 	 */
 	public Set<BoardCell> getTargets(){
-		HashSet<BoardCell> t = new HashSet<BoardCell>();
+		Set<BoardCell> t = new HashSet<BoardCell>(targets);
+		targets.clear();
+		visited.clear();
 		return t;
 	}
 	
