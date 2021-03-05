@@ -8,7 +8,7 @@ public class BadConfigFormatException extends Exception {
 	
 	/**
 	 * A constructor that can take in a specific error message to throw.
-	 * @param Message
+	 * @param Message - A message that adequately describes the issue found in the config files.
 	 */
 	public BadConfigFormatException(String Message) {
 		super(Message);

@@ -9,7 +9,8 @@ import java.util.HashSet;
 import java.io.*;
 
 /**
- * Represents the game board itself, and contains methods pertaining to player movement. Also handles loading in data from setup and layout files provided.
+ * Represents the game board itself, and contains methods pertaining to player movement. Also handles loading in data from setup and layout files provided. The board uses a singleton design,
+ * so the method .getInstance() must be used rather than creating a new instance through the constructor.
  * @author Derek Suzumoto
  * @author Luke Wakumoto
  */
@@ -27,10 +28,12 @@ public class Board {
 	//Map to contain all the tile characters
 	private Map<Character, Room> roomMap;
 	private static Board boardInstance = new Board();
+	//A small enumeration used in calculating adjacencies to denote the direction the tile being tested is with respect to the current tile.
 	private enum tileDirection {UP, DOWN, LEFT, RIGHT};
-	/**
-	 * Since we're using a singleton patter, our constructor is essentially empty. We will use .initialize() after setting and loading the configuration files.
-	 * This allows us to re-use the same instance, as we don't want to have multiple game-boards, but for the sake of testing bad config files, we need to redefine it.
+	/*
+	 * Since we're using a singleton pattern, our constructor is essentially empty. We will use .initialize() after setting and loading the configuration files.
+	 * This allows us to re-use the same instance, as we don't want to have multiple game-boards, but leaves us the freedom to re-call .setConfigFiles() and .initialize() and "reset"
+	 * The board.
 	 */
 	public Board() {
 		super();	
@@ -38,8 +41,8 @@ public class Board {
 	
 	/**
 	 * Takes in the string for the layout and setup files, and sets the instance variable strings to them.
-	 * @param layoutFile
-	 * @param setupFile
+	 * @param layoutFile - A string containing the name of a .cvs file that holds information about every cell and their attributes. Assumed to be in the "data/" directory.
+	 * @param setupFile - A string containing the name of a .txt file that holds the name and character of every room on the board, as well as defines Walkway and Unused spaces. Assumed to be in the "data/" directory.
 	 */
 	public void setConfigFiles(String layoutFile, String setupFile) {
 		layoutConfigFile = "data/" + layoutFile;
@@ -47,8 +50,8 @@ public class Board {
 	}
 	
 	/**
-	 * A void method used to read in the provided room configuration file, and populate roomMap with new room objects.
-	 * @throws BadConfigFormatException
+	 * A void method used to read in the provided room configuration file, and populate roomMap with new room objects. 
+	 * @throws BadConfigFormatException - In the event that the setup file is bad, the program will throw an exception with a message explaining the problem.
 	 */
 	public void loadSetupConfig() throws BadConfigFormatException {
 		try {
@@ -95,24 +98,15 @@ public class Board {
 			}
 			s.close();
 		}
-		//If the file is not found, print error to console and log it.
+		//If the file is not found, throw a new BadConfigFormatException.
 		catch(FileNotFoundException e){
-			System.out.println("File not found. Writing error to data/errorlog.txt...");
-			try {
-				FileWriter fw = new FileWriter("data/errorlog.txt", true);
-				fw.write("File " + setupConfigFile + " not found. Please check the data directory.\n");
-				fw.flush();
-			}catch (IOException e2) {
-				System.out.println("Could not write to file.");
-			}finally {
-				System.out.println("Done.");
-			}
+			throw new BadConfigFormatException("File 'data/" + setupConfigFile + " not found. Please check the data directory.");
 		}
 	}
 	
 	/**
-	 * A void method used to read in the board configuration file, and prepare the gameBoard to be populated.
-	 * @throws BadConfigFormatException
+	 * A void method used to read in the board configuration file, create a new gameBoard array, and populate it with cells based on the config data.
+	 * @throws BadConfigFormatException - In the event that the setup file is bad, the program will throw an exception with a message explaining the problem.
 	 */
 	public void loadLayoutConfig() throws BadConfigFormatException {
 		try {
@@ -224,22 +218,14 @@ public class Board {
 				i++;
 			}
 		}
-		//If the file is not found, print error to console, and log it.
+		//If the file is not found, throw a new BadConfigFormatException.
 		catch(FileNotFoundException e){
-			System.out.println("File not found. Writing error to data/errorlog.txt...");
-			try {
-				FileWriter fw = new FileWriter("data/errorlog.txt", true);
-				fw.write("File " + layoutConfigFile + " not found. Please check the data directory.\n");
-				fw.flush();
-			}catch (IOException e2) {
-				System.out.println("Could not write to file.");
-			}finally {
-				System.out.println("Done.");
-			}
+			throw new BadConfigFormatException("File 'data/" + setupConfigFile + " not found. Please check the data directory.");
 		}
 	}
 	/**
-	 * Once the game config files have been read, the board array can be populated, and the cells can be given their necessary properties.
+	 * Method to handle any thrown BadConfigFormatExceptions from loadSetupConfig() and loadLayoutConfig(). Can be recalled to clear and reset the game board, or load a new board if setConfigFiles() is called first. 
+	 * After config file data is loaded, the method also calls for adjacency lists to be populated.
 	 */
 	public void initialize() {
 		//Try to load both files, catching BadConfigFormatExceptions here
@@ -269,7 +255,9 @@ public class Board {
 	}
 	
 	/**
-	 * A method to set every tile in the gameBoard's adjacency lists. Non-central room tiles will not have adjacency lists, and neither will unused tiles.
+	 * A method to set every tile in the gameBoard's adjacency lists. Non-central room tiles and unused tiles will have empty adjacency lists. Walkway tiles will only hold adjacencies with other walkway tiles,
+	 * Unless the walkway is a door, in which case it will also hold it's corresponding room's center tile. Room centers will hold adjacency to all doors connecting to the room, and the room center of any rooms
+	 * linked by secret passage. 
 	 */
 	public void setAdjLists() {
 		//Iterate through every tile.
@@ -309,6 +297,13 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * A method used to determine if a tile will be a valid adjacency to the current tile.
+	 * @param current - The board cell that will have it's adjacency list added to if the tile tested is valid.
+	 * @param i - The row position of the cell that is being tested for valid adjacency.
+	 * @param j - The column position of the cell that is being tested for valid adjacency.
+	 * @param t - The direction that the tile being tested is in with respect to the current tile. 
+	 */
 	public void checkAdjTile(BoardCell current, int i, int j, tileDirection t) {
 		BoardCell nextTo = gameBoard[i][j];
 		
@@ -317,7 +312,7 @@ public class Board {
 			current.addAdjacency(nextTo);
 		}
 		
-		//If the tile above is a room tile, and the current tile is a doorway, add the center of the room to the adjacency list.
+		//If the tile next to the current tile is a room tile, and the current tile is a doorway facing the proper direction, add the center of the room to the adjacency list.
 		else if(current.isDoorway() && !(nextTo.getInitial() == 'X')){
 			switch(t) {
 			case UP:
@@ -356,8 +351,8 @@ public class Board {
 		}
 	}
 	/**
-	 * Returns the instance of the board, saved in boardInstance.
-	 * @return
+	 * Returns the instance of the board, saved in boardInstance. This is the easiest way for us to access the singleton instance of the game board.
+	 * @return - The static, single Board object instance.
 	 */
 	public static Board getInstance() {
 		return boardInstance;
@@ -367,8 +362,8 @@ public class Board {
 	 * Moves through the board, checking for all possible paths a player could take away from the starting cell, and
 	 * adds all possible locations to targets. Adds tiles that have already been visited by the calculation function, 
 	 * but can't be landed on by the player, to visited.
-	 * @param startCell
-	 * @param length
+	 * @param startCell - The starting position to calculate a roll from.
+	 * @param length - The length of the roll, an integer from 0-6.
 	 */
 	public void calcTargets(BoardCell startCell, int length) {
 		//Push the current cell to the top of the visited stack.
@@ -427,25 +422,29 @@ public class Board {
 				}
 			}
 		}
+		//Pop the tile once all the paths branching from below are analyzed so that a different path can use this tile again.
 		visited.pop();
 	}
 	
 	/**
-	 * Returns the targets set.
-	 * @return
+	 * Returns a set of board cells representing the possible places a player could move to after using calcTargets() given a certain starting point and roll length.
+	 * @return - A set of board cells the player can move to.
 	 */
 	public Set<BoardCell> getTargets(){
+		//Use the copy constructor to make a deep copy of the targets set
 		Set<BoardCell> t = new HashSet<BoardCell>(targets);
+		//Clear targets and visited so that the next time calcTargets() is called, both are empty again.
 		targets.clear();
 		visited.clear();
+		//Return the deep copy, rather than a pointer to the now-cleared targets set.
 		return t;
 	}
 	
 	/**
 	 * Grabs a cell from the gameBoard at row, col, and returns it.
-	 * @param row
-	 * @param col
-	 * @return
+	 * @param row - The row position of the desired cell
+	 * @param col - The column position of the desired cell.
+	 * @return - A board cell that occupies the desired location.
 	 */
 	public BoardCell getCell(int row, int col) {
 		return gameBoard[row][col];
@@ -453,7 +452,7 @@ public class Board {
 	
 	/**
 	 * Returns the number of rows in the board, or it's height.
-	 * @return
+	 * @return - An int representing the height of the board.
 	 */
 	public static int getNumRows() {
 		return boardHeight;
@@ -461,7 +460,7 @@ public class Board {
 	
 	/**
 	 * Returns the number of columns in the board, or it's width.
-	 * @return
+	 * @return - An int representing the width of the board.
 	 */
 	public static int getNumColumns() {
 		return boardWidth;
@@ -469,8 +468,8 @@ public class Board {
 	
 	/**
 	 * Returns the room with the initial passed in.
-	 * @param Key
-	 * @return
+	 * @param Key - The char initial of the desired room
+	 * @return - The room identified by the character provided, null if not found.
 	 */
 	public Room getRoom(char Key) {
 		return roomMap.get(Key);
@@ -478,17 +477,17 @@ public class Board {
 	
 	/**
 	 * returns the room that the cell passed in is a part of, including unused and walkway.
-	 * @param c
-	 * @return
+	 * @param c - A board cell
+	 * @return - The room the board cell occupies, including "Walkway" and "Unused", as both are specified in roomMap.
 	 */
 	public Room getRoom(BoardCell c) {
 		return roomMap.get(c.getInitial());
 	}
 	/**
 	 * Returns the adjacency list of the tile at the position provided.
-	 * @param row
-	 * @param col
-	 * @return
+	 * @param row - The row position of the desired cell
+	 * @param col - The column position of the desired cell
+	 * @return - The adjacency list of the tile at (row, col)
 	 */
 	public Set<BoardCell> getAdjList(int row, int col){
 		return gameBoard[row][col].getAdjList();
