@@ -18,9 +18,9 @@ public class BadConfigFormatException extends Exception {
 		super(Message);
 		System.out.println(Message + "\n Writing error to data/errorlog.txt...");
 		try {
-			FileWriter fw = new FileWriter("data/errorlog.txt", true);
-			fw.write(Message + "\n");
-			fw.close();
+			FileWriter writer = new FileWriter("data/errorlog.txt", true);
+			writer.write(Message + "\n");
+			writer.close();
 		}catch (IOException e) {
 			System.out.println("Could not write to file.");
 		}finally {

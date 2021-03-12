@@ -81,8 +81,8 @@ public class Board {
 						
 						//If the line specifies a room, create a room with the provided name and initial, saved to roomMap (Must filter out spaces)
 						if(data[0].equals("Room") || data[0].equals("Space")) {
-							Room r = new Room(data[1].replaceFirst("\\s+",""));
-							roomMap.put(data[2].replaceFirst("\\s+","").charAt(0), r);
+							Room room = new Room(data[1].replaceFirst("\\s+",""));
+							roomMap.put(data[2].replaceFirst("\\s+","").charAt(0), room);
 						}
 						//If something other than a room or space is read, throw a new BadConfigFormatException
 						else if (!data[0].equals("Space")) {
@@ -174,9 +174,9 @@ public class Board {
 						
 						//If it's a room specified, check to see if it's valid and set it as a room tile.
 						else {
-							Room r = roomMap.get(Initial);
+							Room room = roomMap.get(Initial);
 							//Make sure the room is specified in roomMap.
-							if(!(r == null)) {
+							if(!(room == null)) {
 								//Determine if the room is the center tile or label tile, or if it is part of a secret passage.
 								if(data[j].length() == 1) {
 									gameBoard[i][j].setRoom(Initial, false, false);
@@ -184,18 +184,18 @@ public class Board {
 								//If the room is the center tile, save the tile in the room, and mark the tile as a center tile
 								else if (data[j].charAt(1) == '*') {
 									gameBoard[i][j].setRoom(Initial, false, true);
-									r.setCenterCell(gameBoard[i][j]);
+									room.setCenterCell(gameBoard[i][j]);
 								}
 								//If the room is the label tile, save the tile in the room, and mark the tile as a label tile.
 								else if (data[j].charAt(1) == '#') {
 									gameBoard[i][j].setRoom(Initial, true, false);
-									r.setLabelCell(gameBoard[i][j]);
+									room.setLabelCell(gameBoard[i][j]);
 								}
 								//If the room specifies something else, determine if it is either invalid or a secret passage.
 								else {
-									r = roomMap.get(data[j].charAt(1));
+									room = roomMap.get(data[j].charAt(1));
 									//If it's a valid secret passage, set the cells secretPassage char.
-									if(!(r == null)) {
+									if(!(room == null)) {
 										gameBoard[i][j].setRoom(Initial, false, false);
 										gameBoard[i][j].setSecretPassage(data[j].charAt(1));
 									}
