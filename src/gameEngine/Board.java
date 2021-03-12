@@ -240,16 +240,7 @@ public class Board {
 		}
 		//In the event of a bad input file, print out the error message to the console, and write the error to a log.
 		catch (BadConfigFormatException e) {
-			System.out.println(e.getMessage() + " Writing error to data/errorlog.txt...");
-			try {
-				FileWriter fw = new FileWriter("data/errorlog.txt", true);
-				fw.write(e.getMessage() + "\n");
-				fw.close();
-			}catch (IOException e2) {
-				System.out.println("Could not write to file.");
-			}finally {
-				System.out.println("Done.");
-			}
+			System.out.println("Invalid config file detected. Please check the log file in data for more information.");
 		}
 		
 	}
