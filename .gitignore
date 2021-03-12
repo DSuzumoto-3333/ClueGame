@@ -1,11 +1,10 @@
+data/errorlog.txt
 .classpath
 .project
 *.class
 .settings
 gitlog.txt
 readme.txt
-/data/errorlog.txt
-
 /bin/
-data/errorlog.txt
+
 
