@@ -32,12 +32,18 @@ public class BoardCell {
 	 */
 	public BoardCell(int rowPos, int colPos) {
 		super();
+		
 		//Set the provided position
 		this.rowPos = rowPos;
 		this.colPos = colPos;
-		//Set occupied to false by default
+		
+		//Set certain traits to false by default
 		isOccupied = false;		
+		isInRoom = false;
+		roomLabel = false;
+		roomCenter = false;
 		doorDirection = DoorDirection.NONE;
+		
 		//Initialize the adjacency set
 		adjacentCells = new HashSet<BoardCell>();
 		secretPassage = 'X';
@@ -71,20 +77,14 @@ public class BoardCell {
 	 * Initialize a walkway tile, all room related data is set to false and it's given the label W. This is a void method, and returns nothing.
 	 */
 	public void setWalkway() {
-		isInRoom = false;
 		roomInitial = 'W';
-		roomLabel = false;
-		roomCenter = false;
 	}
 	
 	/**
 	 * Initialize an unusable tile, all room related data is set to false and it's given the label X. This is a void method, and returns nothing.
 	 */
 	public void setUnused() {
-		isInRoom = false;
 		roomInitial = 'X';
-		roomLabel = false;
-		roomCenter = false;
 	}
 	
 	/**
