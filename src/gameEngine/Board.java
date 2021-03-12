@@ -348,6 +348,17 @@ public class Board {
 	public static Board getInstance() {
 		return boardInstance;
 	}
+	/**
+	 * Wrapper method for the calcTargetsRecursive() method. Clears both targets and visited, then runs the first iteration of
+	 * calcTargetsRecursive. Sets the target list to a list of possible board cells based on a player's roll that the player could move to.
+	 * @param startCell
+	 * @param length
+	 */
+	public void calcTargets(BoardCell startCell, int length) {
+		targets.clear();
+		visited.clear();
+		calcTargetsRecursive(startCell, length);
+	}
 	
 	/**
 	 * Moves through the board, checking for all possible paths a player could take away from the starting cell, and
@@ -356,7 +367,7 @@ public class Board {
 	 * @param startCell - The starting position to calculate a roll from.
 	 * @param length - The length of the roll, an integer from 0-6.
 	 */
-	public void calcTargets(BoardCell startCell, int length) {
+	public void calcTargetsRecursive(BoardCell startCell, int length) {
 		//Push the current cell to the top of the visited stack.
 		visited.push(startCell);
 		
@@ -422,13 +433,7 @@ public class Board {
 	 * @return - A set of board cells the player can move to.
 	 */
 	public Set<BoardCell> getTargets(){
-		//Use the copy constructor to make a deep copy of the targets set
-		Set<BoardCell> t = new HashSet<BoardCell>(targets);
-		//Clear targets and visited so that the next time calcTargets() is called, both are empty again.
-		targets.clear();
-		visited.clear();
-		//Return the deep copy, rather than a pointer to the now-cleared targets set.
-		return t;
+		return targets;
 	}
 	
 	/**
