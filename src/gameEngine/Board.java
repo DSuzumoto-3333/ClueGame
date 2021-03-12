@@ -30,7 +30,8 @@ public class Board {
 	private static Board boardInstance = new Board();
 	//A small enumeration used in calculating adjacencies to denote the direction the tile being tested is with respect to the current tile.
 	private enum tileDirection {UP, DOWN, LEFT, RIGHT};
-	/*
+	
+	/**
 	 * Since we're using a singleton pattern, our constructor is essentially empty. We will use .initialize() after setting and loading the configuration files.
 	 * This allows us to re-use the same instance, as we don't want to have multiple game-boards, but leaves us the freedom to re-call .setConfigFiles() and .initialize() and "reset"
 	 * The board.
@@ -56,17 +57,18 @@ public class Board {
 	public void loadSetupConfig() throws BadConfigFormatException {
 		try {
 			//Open the file and prepare a string to read the line into. Add a line counter in case of errors.
-			FileReader fr = new FileReader(setupConfigFile);
-			Scanner s = new Scanner(fr);
+			FileReader reader = new FileReader(setupConfigFile);
+			Scanner scanner = new Scanner(reader);
 			String line;
 			int i = 0;
 			
 			//Read all lines in the file.
-			while(s.hasNextLine()) {
-				line = s.nextLine();
+			while(scanner.hasNextLine()) {
+				line = scanner.nextLine();
 				
 				//If the line is null, the bottom of the file has been reached.
 				if(line.length() == 0) {
+					scanner.close();
 					break;
 				}
 				
@@ -96,7 +98,6 @@ public class Board {
 				//Increment the counter and close the file.
 				i++;
 			}
-			s.close();
 		}
 		//If the file is not found, throw a new BadConfigFormatException.
 		catch(FileNotFoundException e){
@@ -111,15 +112,15 @@ public class Board {
 	public void loadLayoutConfig() throws BadConfigFormatException {
 		try {
 			//Open the layout file and create an ArrayList of strings to hold each line in the file.
-			FileReader fr = new FileReader(layoutConfigFile);
-			Scanner s = new Scanner(fr);
+			FileReader reader = new FileReader(layoutConfigFile);
+			Scanner scanner = new Scanner(reader);
 			ArrayList<String> board = new ArrayList<String>();
 			
 			//Save each line from the file to board, and close.
-			while(s.hasNextLine()) {
-				board.add(s.nextLine());
+			while(scanner.hasNextLine()) {
+				board.add(scanner.nextLine());
 			}
-			s.close();
+			scanner.close();
 			
 			//The height of the board is the number of rows, and the width is the length of each row.
 			boardHeight = board.size();
