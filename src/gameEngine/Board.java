@@ -294,9 +294,9 @@ public class Board {
 	 * @param current - The board cell that will have it's adjacency list added to if the tile tested is valid.
 	 * @param i - The row position of the cell that is being tested for valid adjacency.
 	 * @param j - The column position of the cell that is being tested for valid adjacency.
-	 * @param t - The direction that the tile being tested is in with respect to the current tile. 
+	 * @param direction - The direction that the tile being tested is in with respect to the current tile. 
 	 */
-	public void checkAdjTile(BoardCell current, int i, int j, tileDirection t) {
+	public void checkAdjTile(BoardCell current, int i, int j, tileDirection direction) {
 		BoardCell nextTo = gameBoard[i][j];
 		
 		//If the tile above exists, and is another walkway tile, add it to the adjacency list.
@@ -306,7 +306,7 @@ public class Board {
 		
 		//If the tile next to the current tile is a room tile, and the current tile is a doorway facing the proper direction, add the center of the room to the adjacency list.
 		else if(current.isDoorway() && !(nextTo.getInitial() == 'X')){
-			switch(t) {
+			switch(direction) {
 			case UP:
 				if(current.getDoorDirection() == DoorDirection.UP) {
 					BoardCell center = getRoom(nextTo).getCenterCell();
@@ -349,17 +349,7 @@ public class Board {
 	public static Board getInstance() {
 		return boardInstance;
 	}
-	/**
-	 * Wrapper method for the calcTargetsRecursive() method. Clears both targets and visited, then runs the first iteration of
-	 * calcTargetsRecursive. Sets the target list to a list of possible board cells based on a player's roll that the player could move to.
-	 * @param startCell
-	 * @param length
-	 */
-	public void calcTargets(BoardCell startCell, int length) {
-		targets.clear();
-		visited.clear();
-		calcTargetsRecursive(startCell, length);
-	}
+
 	
 	/**
 	 * Moves through the board, checking for all possible paths a player could take away from the starting cell, and
@@ -368,7 +358,7 @@ public class Board {
 	 * @param startCell - The starting position to calculate a roll from.
 	 * @param length - The length of the roll, an integer from 0-6.
 	 */
-	public void calcTargetsRecursive(BoardCell startCell, int length) {
+	public void calcTargets(BoardCell startCell, int length) {
 		//Push the current cell to the top of the visited stack.
 		visited.push(startCell);
 		
@@ -382,44 +372,26 @@ public class Board {
 			}
 		}
 		
-		//If the end of the roll has not been reached, but the cell is a room center, determine if the roll can stop here.
-		else if(startCell.isRoomCenter()){
-			
-			//If more tiles than just the room center have been visited, the player is not starting on the room center, and can opt to enter the new room.
-			if(!(visited.size() == 1)) {
-				targets.add(startCell);
-			}
-			
-			//If the only tile in visited is the current room center, the player is starting in this room, and must leave.
-			else{ 
-				//Grab every tile in the cell's adjacency list, and iterate through them.
-				Set<BoardCell> T = startCell.getAdjList();
-				for(BoardCell t : T) {
-					
-					//Ensure that the cell grabbed is not one already visited.
-					if(!(visited.contains(t))) {
-						
-						//If the cell isn't occupied, move to it and continue searching for targets.
-						if(!(t.getOccupied())) {
-							calcTargets(t, length-1);
-						}
-						
-						//If the cell is occupied, but it is also the center of a room, move to it and determine if it is a viable target.
-						else if (t.isRoomCenter()) {
-							calcTargets(t, length-1);
-						}
-					}
-				}
-			}
-		}else {
-			//Grab every cell directly adjacent to the start cell, and put the start cell in visited so we don't backtrack.
+		//If the end of the roll has not been reached, but the cell is a room center, determine if the roll can stop here (If the room center is the start of the roll, we must leave).
+		else if(startCell.isRoomCenter() && visited.size() > 1){
+			targets.add(startCell);
+		
+		
+		}else{ 
+			//Grab every tile in the cell's adjacency list, and iterate through them.
 			Set<BoardCell> T = startCell.getAdjList();
 			for(BoardCell t : T) {
-				//For every cell in the T, if it's not occupied or a tile we've visited before, run calcTargets from it's perspective, and with length - 1
+				
+				//Ensure that the cell grabbed is not one already visited.
 				if(!(visited.contains(t))) {
+					
+					//If the cell isn't occupied, move to it and continue searching for targets.
 					if(!(t.getOccupied())) {
 						calcTargets(t, length-1);
-					}else if (t.isRoomCenter()) {
+					}
+					
+					//If the cell is occupied, but it is also the center of a room, move to it and determine if it is a viable target.
+					else if (t.isRoomCenter()) {
 						calcTargets(t, length-1);
 					}
 				}
@@ -434,7 +406,11 @@ public class Board {
 	 * @return - A set of board cells the player can move to.
 	 */
 	public Set<BoardCell> getTargets(){
-		return targets;
+		Set<BoardCell> targetsCopy = new HashSet<BoardCell>(targets);
+		targets.clear();
+		visited.clear();
+		
+		return targetsCopy;
 	}
 	
 	/**
@@ -474,11 +450,11 @@ public class Board {
 	
 	/**
 	 * returns the room that the cell passed in is a part of, including unused and walkway.
-	 * @param c - A board cell
+	 * @param cell - A board cell
 	 * @return - The room the board cell occupies, including "Walkway" and "Unused", as both are specified in roomMap.
 	 */
-	public Room getRoom(BoardCell c) {
-		return roomMap.get(c.getInitial());
+	public Room getRoom(BoardCell cell) {
+		return roomMap.get(cell.getInitial());
 	}
 	/**
 	 * Returns the adjacency list of the tile at the position provided.
