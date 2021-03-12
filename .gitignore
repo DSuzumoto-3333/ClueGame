@@ -4,5 +4,8 @@
 .settings
 gitlog.txt
 readme.txt
+/data/errorlog.txt
 
 /bin/
+data/errorlog.txt
+

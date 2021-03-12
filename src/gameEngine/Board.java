@@ -350,7 +350,11 @@ public class Board {
 		return boardInstance;
 	}
 
-	
+	public void calcTargets(BoardCell startCell, int length) {
+		targets.clear();
+		visited.clear();
+		calcTargetsRecursive(startCell, length);
+	}
 	/**
 	 * Moves through the board, checking for all possible paths a player could take away from the starting cell, and
 	 * adds all possible locations to targets. Adds tiles that have already been visited by the calculation function, 
@@ -358,7 +362,7 @@ public class Board {
 	 * @param startCell - The starting position to calculate a roll from.
 	 * @param length - The length of the roll, an integer from 0-6.
 	 */
-	public void calcTargets(BoardCell startCell, int length) {
+	public void calcTargetsRecursive(BoardCell startCell, int length) {
 		//Push the current cell to the top of the visited stack.
 		visited.push(startCell);
 		
@@ -380,20 +384,10 @@ public class Board {
 		}else{ 
 			//Grab every tile in the cell's adjacency list, and iterate through them.
 			Set<BoardCell> T = startCell.getAdjList();
-			for(BoardCell t : T) {
-				
-				//Ensure that the cell grabbed is not one already visited.
-				if(!(visited.contains(t))) {
-					
-					//If the cell isn't occupied, move to it and continue searching for targets.
-					if(!(t.getOccupied())) {
-						calcTargets(t, length-1);
-					}
-					
-					//If the cell is occupied, but it is also the center of a room, move to it and determine if it is a viable target.
-					else if (t.isRoomCenter()) {
-						calcTargets(t, length-1);
-					}
+			for(BoardCell t : T) {	
+				//If the cell isn't in visited, and is either not occupied or a room center, run calcTargetsRecursive() again.
+				if(!(visited.contains(t)) && (!t.getOccupied() || t.isRoomCenter())) {
+					calcTargetsRecursive(t, length-1);
 				}
 			}
 		}
@@ -406,11 +400,7 @@ public class Board {
 	 * @return - A set of board cells the player can move to.
 	 */
 	public Set<BoardCell> getTargets(){
-		Set<BoardCell> targetsCopy = new HashSet<BoardCell>(targets);
-		targets.clear();
-		visited.clear();
-		
-		return targetsCopy;
+		return targets;
 	}
 	
 	/**
