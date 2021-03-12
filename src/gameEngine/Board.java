@@ -115,45 +115,40 @@ public class Board {
 			FileReader reader = new FileReader(layoutConfigFile);
 			Scanner scanner = new Scanner(reader);
 			ArrayList<String> board = new ArrayList<String>();
-			
+
 			//Save each line from the file to board, and close.
 			while(scanner.hasNextLine()) {
 				board.add(scanner.nextLine());
 			}
 			scanner.close();
-			
+
 			//The height of the board is the number of rows, and the width is the length of each row.
 			boardHeight = board.size();
 			boardWidth = board.get(0).split(",").length;
-			
+
 			//Iterate through board and begin creating tiles. Store them in gameBoard. Initialize a line counter.
 			gameBoard = new BoardCell[boardHeight][boardWidth];
 			int i = 0;
 			for(String line : board) {
 				//Split the line into tiles and ensure there are the right amount of tiles specified.
 				String[] data = line.split(",");
-				
+
 				if(data.length == boardWidth) {
 					for(int j = 0; j < data.length; j++) {
-						//Check the first char in the cell's data 
-						char Initial = data[j].charAt(0);
-						
 						//Put a new cell in gameBoard at i,j
 						gameBoard[i][j] = new BoardCell(i,j);
-						
-						//If it's X, specify an unused tile at i,j in gameBoard.
-						if(Initial == 'X') {
+
+						switch(data[j].charAt(0)) {
+						case 'X':
 							gameBoard[i][j].setUnused();
-						}
-						
-						//If it's a W, create a walkway tile.
-						else if(Initial == 'W') {
+							break;
+						case 'W':
 							gameBoard[i][j].setWalkway();
-							
+
 							//Check to see if it's a doorway.
 							if(data[j].length() == 2) {
 								char direction = data[j].charAt(1);
-								
+
 								//Set the door direction to the indicated direction.
 								switch(direction){
 								case '^':
@@ -170,10 +165,10 @@ public class Board {
 									break;
 								}
 							}
-						}
-						
-						//If it's a room specified, check to see if it's valid and set it as a room tile.
-						else {
+							break;
+
+						default:
+							char Initial = data[j].charAt(0);
 							Room room = roomMap.get(Initial);
 							//Make sure the room is specified in roomMap.
 							if(!(room == null)) {
@@ -181,24 +176,24 @@ public class Board {
 								if(data[j].length() == 1) {
 									gameBoard[i][j].setRoom(Initial, false, false);
 								}
-								
+
 								else {
 									//If the room cell has two character specified, determine what type of cell it is. 
 									switch(data[j].charAt(1)) {
-									
+
 									//If it's a center cell, set it as such and save it in the room object.
 									case '*':
 										gameBoard[i][j].setRoom(Initial, false, true);
 										room.setCenterCell(gameBoard[i][j]);
 										break;
-										
-									//If it's a label cell, set it as such and save it in the room object.
+
+										//If it's a label cell, set it as such and save it in the room object.
 									case '#':
 										gameBoard[i][j].setRoom(Initial, true, false);
 										room.setLabelCell(gameBoard[i][j]);
 										break;
-										
-									//If it's a secret passage, determine if the secret passage is valid.
+
+										//If it's a secret passage, determine if the secret passage is valid.
 									default:
 										room = roomMap.get(data[j].charAt(1));
 										//If it's a valid secret passage, set the cells secretPassage char.
@@ -214,13 +209,13 @@ public class Board {
 									}
 								}
 							}
-							//If it's not found in roomMap, throw a new exception.
 							else {
 								throw new BadConfigFormatException("Invalid line format on line " + i + " in " + layoutConfigFile + ", Invalid room of type " + Initial + " specified.");
 							}
 						}
 					}
 				}
+
 				//Throw an error if an invalid entry is detected.
 				else {
 					throw new BadConfigFormatException("Invalid line format on line " + i + " in " + layoutConfigFile + ", wrong number of tiles specified.");
