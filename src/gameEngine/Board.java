@@ -177,31 +177,40 @@ public class Board {
 							Room room = roomMap.get(Initial);
 							//Make sure the room is specified in roomMap.
 							if(!(room == null)) {
-								//Determine if the room is the center tile or label tile, or if it is part of a secret passage.
+								//If the room tile has only one character, it's just an empty room tile.
 								if(data[j].length() == 1) {
 									gameBoard[i][j].setRoom(Initial, false, false);
 								}
-								//If the room is the center tile, save the tile in the room, and mark the tile as a center tile
-								else if (data[j].charAt(1) == '*') {
-									gameBoard[i][j].setRoom(Initial, false, true);
-									room.setCenterCell(gameBoard[i][j]);
-								}
-								//If the room is the label tile, save the tile in the room, and mark the tile as a label tile.
-								else if (data[j].charAt(1) == '#') {
-									gameBoard[i][j].setRoom(Initial, true, false);
-									room.setLabelCell(gameBoard[i][j]);
-								}
-								//If the room specifies something else, determine if it is either invalid or a secret passage.
+								
 								else {
-									room = roomMap.get(data[j].charAt(1));
-									//If it's a valid secret passage, set the cells secretPassage char.
-									if(!(room == null)) {
-										gameBoard[i][j].setRoom(Initial, false, false);
-										gameBoard[i][j].setSecretPassage(data[j].charAt(1));
-									}
-									//If it's not, throw a new exception.
-									else {
-										throw new BadConfigFormatException("Invalid line format on line " + i + " in " + layoutConfigFile + ", Secret passage to invalid room specified.");
+									//If the room cell has two character specified, determine what type of cell it is. 
+									switch(data[j].charAt(1)) {
+									
+									//If it's a center cell, set it as such and save it in the room object.
+									case '*':
+										gameBoard[i][j].setRoom(Initial, false, true);
+										room.setCenterCell(gameBoard[i][j]);
+										break;
+										
+									//If it's a label cell, set it as such and save it in the room object.
+									case '#':
+										gameBoard[i][j].setRoom(Initial, true, false);
+										room.setLabelCell(gameBoard[i][j]);
+										break;
+										
+									//If it's a secret passage, determine if the secret passage is valid.
+									default:
+										room = roomMap.get(data[j].charAt(1));
+										//If it's a valid secret passage, set the cells secretPassage char.
+										if(!(room == null)) {
+											gameBoard[i][j].setRoom(Initial, false, false);
+											gameBoard[i][j].setSecretPassage(data[j].charAt(1));
+										}
+										//If it's not, throw a new exception.
+										else {
+											throw new BadConfigFormatException("Invalid line format on line " + i + " in " + layoutConfigFile + ", Secret passage to invalid room specified.");
+										}
+										break;
 									}
 								}
 							}
