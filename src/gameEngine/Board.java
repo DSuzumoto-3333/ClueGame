@@ -3,8 +3,6 @@ package gameEngine;
 import java.util.*;
 import java.util.Set;
 
-import experiment.TestBoardCell;
-
 import java.util.HashSet;
 import java.io.*;
 
@@ -30,6 +28,10 @@ public class Board {
 	private static Board boardInstance = new Board();
 	//A small enumeration used in calculating adjacencies to denote the direction the tile being tested is with respect to the current tile.
 	private enum tileDirection {UP, DOWN, LEFT, RIGHT};
+	//Set to hold all player objects involved in the game
+	private Set<Player> players;
+	//Sets to hold the deck of cards initialized in, and the solution to the game
+	private Set<Card> deck, solution;
 	
 	/**
 	 * Since we're using a singleton pattern, our constructor is essentially empty. We will use .initialize() after setting and loading the configuration files.
@@ -75,28 +77,50 @@ public class Board {
 				//If the line doesn't start with a slash indicating that it's a comment, split it.
 				if(!(line.charAt(0) == '/')) {
 					String[] data = line.split(",");
-					
-					//Ensure there are 3 strings in data, and that the entry is valid.
-					if(data.length == 3) {
-						
-						//If the line specifies a room, create a room with the provided name and initial, saved to roomMap (Must filter out spaces)
-						if(data[0].equals("Room") || data[0].equals("Space")) {
+					System.out.println(data[0]);
+
+					//If the line specifies a room, create a room with the provided name and initial, saved to roomMap (Must filter out spaces)
+					Room room;
+					switch(data[0]) {
+					case "Room":
+						room = new Room(data[1].replaceFirst("\\s+",""));
+						roomMap.put(data[2].replaceFirst("\\s+","").charAt(0), room);
+						break;
+					case "Space":
+						room = new Room(data[1].replaceFirst("\\s+",""));
+						roomMap.put(data[2].replaceFirst("\\s+","").charAt(0), room);
+						break;
+					case "Weapon":
+						//Todo Code
+						if(1 == 0);
+						break;
+					case "Player":
+						//Todo Code
+						if(1 == 0);
+						break;
+					case "NPC":
+						//Todo Code
+						if(1 == 0);
+						break;
+					default:
+						throw new BadConfigFormatException("Attempted to specify tile of unknown type: " + data[0] + " in " + setupConfigFile + " On line " + i);
+					}
+
+					/*
+						if(data[0].equals("Room")) {
 							Room room = new Room(data[1].replaceFirst("\\s+",""));
 							roomMap.put(data[2].replaceFirst("\\s+","").charAt(0), room);
 						}
 						//If something other than a room or space is read, throw a new BadConfigFormatException
-						else if (!data[0].equals("Space")) {
+						else if (data[0].equals("Space")) {
+							Room room = new Room(data[1].replaceFirst("\\s+",""));
+							roomMap.put(data[2].replaceFirst("\\s+","").charAt(0), room);
+						}else{
 							throw new BadConfigFormatException("Attempted to specify tile of unknown type: " + data[0] + " in " + setupConfigFile + " On line " + i);
-						}
-					}
-					
-					//If the entry has too many or two few data points, throw an error
-					else{
-						throw new BadConfigFormatException("Invalid line format on line " + i + " in " + setupConfigFile);
-					}
+						}*/
 				}
-				//Increment the counter and close the file.
-				i++;
+			//Increment the counter and close the file.
+			i++;
 			}
 		}
 		//If the file is not found, throw a new BadConfigFormatException.
@@ -458,5 +482,19 @@ public class Board {
 	 */
 	public Set<BoardCell> getAdjList(int row, int col){
 		return gameBoard[row][col].getAdjList();
+	}
+	/**
+	 * Returns the list of players in the game.
+	 * @return
+	 */
+	public Set<Player> getPlayers(){
+		return players;
+	}
+	/**
+	 * Returns the solution to the game.
+	 * @return
+	 */
+	public Set<Card> getSolution(){
+		return solution;
 	}
 }
