@@ -17,7 +17,7 @@ public class Card {
 	}
 	
 	public boolean equals(Card target) {
-		if (target.name.equals(name)) {
+		if (target.name.equals(name) && target.type.equals(type)) {
 			return true;
 		}else {
 			return false;

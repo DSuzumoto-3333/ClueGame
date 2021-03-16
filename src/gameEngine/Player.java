@@ -27,4 +27,8 @@ public abstract class Player {
 	public Set<Card> getHand(){
 		return hand;
 	}
+	
+	public boolean equals(Player p) {
+		return false;
+	}
 }
