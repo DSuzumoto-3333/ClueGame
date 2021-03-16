@@ -28,8 +28,6 @@ public class Board {
 	//Map to contain all the tile characters
 	private Map<Character, Room> roomMap;
 	private static Board boardInstance = new Board();
-	//A small enumeration used in calculating adjacencies to denote the direction the tile being tested is with respect to the current tile.
-	private enum tileDirection {UP, DOWN, LEFT, RIGHT};
 	//Set to hold all player objects involved in the game
 	private Set<Player> players;
 	//ArrayList to hold all the cards in the game's deck.
@@ -362,24 +360,26 @@ public class Board {
 				//All walkway and door tiles will have an adjacency list.
 				BoardCell current = gameBoard[i][j];
 				if(current.getInitial() == 'W') {
+					//Pass in a DoorDirection to specify the direction the next tile is from the current tile, useful for linking doors to the proper rooms.
+					
 					//Check tile above.
 					if(i > 0) {
-						checkAdjTile(current, i - 1, j, tileDirection.UP);
+						checkAdjTile(current, i - 1, j, DoorDirection.UP);
 					}
 					
 					//Check tile below
 					if(i < boardHeight - 1) {
-						checkAdjTile(current, i + 1, j, tileDirection.DOWN);
+						checkAdjTile(current, i + 1, j, DoorDirection.DOWN);
 					}
 					
 					//Check tile to the left
 					if(j > 0) {
-						checkAdjTile(current, i, j - 1, tileDirection.LEFT);
+						checkAdjTile(current, i, j - 1, DoorDirection.LEFT);
 					}
 					
 					//Check tile to the right
 					if(j < boardWidth - 1) {
-						checkAdjTile(current, i, j + 1, tileDirection.RIGHT);
+						checkAdjTile(current, i, j + 1, DoorDirection.RIGHT);
 					}
 				}
 				
@@ -400,7 +400,7 @@ public class Board {
 	 * @param j - The column position of the cell that is being tested for valid adjacency.
 	 * @param direction - The direction that the tile being tested is in with respect to the current tile. 
 	 */
-	public void checkAdjTile(BoardCell current, int i, int j, tileDirection direction) {
+	public void checkAdjTile(BoardCell current, int i, int j, DoorDirection direction) {
 		BoardCell nextTo = gameBoard[i][j];
 		
 		//If the tile above exists, and is another walkway tile, add it to the adjacency list.
@@ -409,42 +409,15 @@ public class Board {
 		}
 		
 		//If the tile next to the current tile is a room tile, and the current tile is a doorway facing the proper direction, add the center of the room to the adjacency list.
-		else if(current.isDoorway() && !(nextTo.getInitial() == 'X')){
-			switch(direction) {
-			case UP:
-				if(current.getDoorDirection() == DoorDirection.UP) {
-					BoardCell center = getRoom(nextTo).getCenterCell();
-					current.addAdjacency(center);
-					//Also add the door to the center's adjacency list.
-					center.addAdjacency(current);
-				}
-				break;
-			case DOWN:
-				if(current.getDoorDirection() == DoorDirection.DOWN) {
-					BoardCell center = getRoom(nextTo).getCenterCell();
-					current.addAdjacency(center);
-					//Also add the door to the center's adjacency list.
-					center.addAdjacency(current);
-				}
-				break;
-			case LEFT:
-				if(current.getDoorDirection() == DoorDirection.LEFT) {
-					BoardCell center = getRoom(nextTo).getCenterCell();
-					current.addAdjacency(center);
-					//Also add the door to the center's adjacency list.
-					center.addAdjacency(current);
-				}
-				break;
-			case RIGHT:
-				if(current.getDoorDirection() == DoorDirection.RIGHT) {
-					BoardCell center = getRoom(nextTo).getCenterCell();
-					current.addAdjacency(center);
-					//Also add the door to the center's adjacency list.
-					center.addAdjacency(current);
-				}
-				break;
-			}
-		}
+		else if(current.isDoorway() && 
+				!(nextTo.getInitial() == 'X') &&
+				!(nextTo.getInitial() == 'W') &&
+				current.getDoorDirection().equals(direction)){
+			BoardCell center = getRoom(nextTo).getCenterCell();
+			current.addAdjacency(center);;
+			center.addAdjacency(current);
+		}		
+		
 	}
 
 	public void calcTargets(BoardCell startCell, int length) {
