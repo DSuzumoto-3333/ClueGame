@@ -11,3 +11,19 @@ Room, Lounge, L
 // Other Spaces on Board
 Space, Unused, X
 Space, Walkway, W
+// Weapons
+Weapon, Knife
+Weapon, Sword
+Weapon, Axe
+Weapon, Pistol
+Weapon, Hunting Rifle
+Weapon, Shurikens 
+// Players
+Player, Ramona Rodriguez
+NPC, Leland Blake
+NPC, Irene Wright
+NPC, Blake Greene
+NPC, Holly Greene
+NPC, Rosalie Vaughn
+NPC, Fernando Elliot
+
