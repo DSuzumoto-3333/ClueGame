@@ -140,28 +140,35 @@ class gameSetupTests {
 		
 		//Ensure the players have the proper data
 		//Create a hard-coded list of correct player objects.
-		Player[] correctPlayers = new Player[6];
+		Set<Player> correctPlayers = new HashSet<Player>();
 		//Create all the necessary colors
 		Color color1 = new Color(86, 42, 144);
 		Color color2 = new Color(247, 39, 34);
 		Color color3 = new Color(60, 141, 47);
 		Color color4 = new Color(242, 241, 38);
 		Color color5 = new Color(37, 78, 165);
-		Color color6 = new Color(25, 116, 0);
+		Color color6 = new Color(255, 116, 0);
 		//Create correct player objects with the proper names and colors.
-		correctPlayers[0] = new HumanPlayer("Ramona Rodriguez", color1);
-		correctPlayers[1] = new ComputerPlayer("Leland Blake", color2);
-		correctPlayers[2] = new ComputerPlayer("Irene Wright", color3);
-		correctPlayers[3] = new ComputerPlayer("Blake Greene", color4);
-		correctPlayers[4] = new ComputerPlayer("Rosalie Vaughn", color5);
-		correctPlayers[5] = new ComputerPlayer("Fernando Elliot", color6);
+		correctPlayers.add(new HumanPlayer("Ramona Rodriguez", color1));
+		correctPlayers.add(new ComputerPlayer("Leland Blake", color2));
+		correctPlayers.add(new ComputerPlayer("Irene Wright", color3));
+		correctPlayers.add(new ComputerPlayer("Blake Greene", color4));
+		correctPlayers.add(new ComputerPlayer("Rosalie Vaughn", color5));
+		correctPlayers.add(new ComputerPlayer("Fernando Elliot", color6));
 		
-		//Ensure that every player is properly loaded in.
-		int i = 0;
+		//Check each player in players against each player in correctPlayers. If they are equal, add to foundInBoth.
+		Set<Player> foundInBoth = new HashSet<Player>();
 		for(Player player : players) {
-			assertTrue(player.equals(correctPlayers[i]));
-			i++;
+			for(Player player2 : correctPlayers) {
+				if(player.equals(player2)) {
+					foundInBoth.add(player);
+				}
+			}
 		}
+		//All 6 players should appear here.
+		assertEquals(6, foundInBoth.size());
+		
+		
 	}
 	/**
 	 * Test to ensure that the player's hand updates and behaves as expected.

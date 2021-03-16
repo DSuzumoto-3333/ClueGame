@@ -28,7 +28,13 @@ public abstract class Player {
 		return hand;
 	}
 	
-	public boolean equals(Player p) {
-		return false;
+	public String getName() {
+		return name;
 	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public abstract boolean equals (Player player);
 }
