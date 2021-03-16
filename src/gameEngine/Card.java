@@ -28,17 +28,4 @@ public class Card {
 		return type;
 	}
 	
-	@Override
-	public String toString() {
-		switch(type) {
-		case ROOM:
-			return name + " ROOM";
-		case PERSON:
-			return name + "P ERSON";
-		case WEAPON:
-			return name + " WEAPON";
-		default:
-			return name + " UNDEFINED";
-		}
-	}
 }
