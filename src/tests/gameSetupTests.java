@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 
+import java.awt.Color;
+
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -94,18 +96,20 @@ class gameSetupTests {
 			}else {
 				correctCards.add(new Card(name, CardType.PERSON));
 			}
+			i++;
 		}
 		
+		//Check each card in cards against each card in correctCards
 		Set<Card> foundInBoth = new HashSet<Card>();
 		for(Card card : cards) {
 			for(Card card2 : correctCards) {
 				if(card.equals(card2)) {
 					foundInBoth.add(card);
-					System.out.println(card.toString());
 				}
 			}
 		}
 		
+		//Each card in correctCards should've found a match in cards.
 		assertEquals(21, foundInBoth.size());
 		
 	}
@@ -113,7 +117,52 @@ class gameSetupTests {
 	/**
 	 * Test to ensure that all player objects are loaded, are of the appropriate type, and are fully and correctly filled out.
 	 */
-	
+	@Test
+	public void testPlayers() {
+		//Get the set of players from the board.
+		Set<Player> players = board.getPlayers();
+		
+		//The set should have 6 objects,
+		assertEquals(6, players.size());
+		//Count the instances of both types of player objects
+		int npcCount = 0;
+		int plrCount = 0;
+		for(Player player : players) {
+			if(player instanceof ComputerPlayer) {
+				npcCount ++;
+			}else if(player instanceof HumanPlayer) {
+				plrCount ++;
+			}
+		}
+		//There should be 5 ComputerPlayers and 1 HumanPlayer
+		assertEquals(5,npcCount);
+		assertEquals(1,plrCount);
+		
+		//Ensure the players have the proper data
+		//Create a hard-coded list of correct player objects.
+		Player[] correctPlayers = new Player[6];
+		//Create all the necessary colors
+		Color color1 = new Color(86, 42, 144);
+		Color color2 = new Color(247, 39, 34);
+		Color color3 = new Color(60, 141, 47);
+		Color color4 = new Color(242, 241, 38);
+		Color color5 = new Color(37, 78, 165);
+		Color color6 = new Color(25, 116, 0);
+		//Create correct player objects with the proper names and colors.
+		correctPlayers[0] = new HumanPlayer("Ramona Rodriguez", color1);
+		correctPlayers[1] = new ComputerPlayer("Leland Blake", color2);
+		correctPlayers[2] = new ComputerPlayer("Irene Wright", color3);
+		correctPlayers[3] = new ComputerPlayer("Blake Greene", color4);
+		correctPlayers[4] = new ComputerPlayer("Rosalie Vaughn", color5);
+		correctPlayers[5] = new ComputerPlayer("Fernando Elliot", color6);
+		
+		//Ensure that every player is properly loaded in.
+		int i = 0;
+		for(Player player : players) {
+			assertTrue(player.equals(correctPlayers[i]));
+			i++;
+		}
+	}
 	/**
 	 * Test to ensure that the player's hand updates and behaves as expected.
 	 */
