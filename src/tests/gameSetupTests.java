@@ -82,37 +82,32 @@ class gameSetupTests {
 							"Closet", "Lounge", "Knife", "Sword", "Axe", "Pistol", "Hunting Rifle", 
 							"Shurikens", "Ramona Rodriguez", "Leland Blake", "Irene Wright", 
 							"Blake Greene", "Rosalie Vaughn", "Fernando Elliot" };
-		/* Declare a map of cards to hold both a card object and a boolean.
-		 * This will allow us to keep track of whether or not each individual card has an equivalent
-		 * Card in the set of cards.
-		 */
-		Map<Card,Boolean> correctCards = new HashMap<Card,Boolean>();
-		//Iterate through the list, populating the set with the default value being false.
-		for(int i = 0; i < 21; i++) {
-			//The first 9 entries specify room cards.
+		//Create a set called correctCards of the expected deck.
+		Set<Card> correctCards = new HashSet<Card>();
+		//Populate correctCards
+		int i = 0;
+		for(String name : names) {
 			if(i < 9) {
-				correctCards.put(new Card(names[i], CardType.ROOM),false);
-			}
-			//The next 6 specify weapons.
-			else if (i <= 9 && i < 15) {
-				correctCards.put(new Card(names[i], CardType.WEAPON),false);
-			}
-			//The last 6 are players.
-			else {
-				correctCards.put(new Card(names[i], CardType.PERSON),false);
+				correctCards.add(new Card(name, CardType.ROOM));
+			}else if (i > 8 && i < 15){
+				correctCards.add(new Card(name, CardType.WEAPON));
+			}else {
+				correctCards.add(new Card(name, CardType.PERSON));
 			}
 		}
-		//Iterate through all the cards and determine if there is one matching the key of the map
+		
+		Set<Card> foundInBoth = new HashSet<Card>();
 		for(Card card : cards) {
-			//If the map has a key value that matches card, set the boolean to true to flag that it has been found.
-			if(correctCards.containsKey(card)){
-				correctCards.put(card, true);
+			for(Card card2 : correctCards) {
+				if(card.equals(card2)) {
+					foundInBoth.add(card);
+					System.out.println(card.toString());
+				}
 			}
 		}
-		//Assert that every single card in correctCards has been found in cards.
-		for(Map.Entry<Card,Boolean> entry : correctCards.entrySet()) {
-			assertTrue(entry.getValue());
-		}
+		
+		assertEquals(21, foundInBoth.size());
+		
 	}
 	
 	/**

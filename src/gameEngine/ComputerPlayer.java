@@ -1,19 +1,12 @@
 package gameEngine;
 
+import java.awt.Color;
 import java.util.Set;
+import java.util.HashSet;
 
-public class ComputerPlayer extends Player {
+public class ComputerPlayer extends Player{
 
-	@Override
-	public void updateHand(Card card) {
-		// TODO Auto-generated method stub
-
+	public ComputerPlayer(String name, Color color) {
+		super(name, color);
 	}
-
-	@Override
-	public Set<Card> getHand() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

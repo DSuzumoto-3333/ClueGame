@@ -17,13 +17,12 @@ Weapon, Sword
 Weapon, Axe
 Weapon, Pistol
 Weapon, Hunting Rifle
-Weapon, Shurikens 
+Weapon, Shurikens
 // Players
-Player, Ramona Rodriguez
-NPC, Leland Blake
-NPC, Irene Wright
-NPC, Blake Greene
-NPC, Holly Greene
-NPC, Rosalie Vaughn
-NPC, Fernando Elliot
+Player, Ramona Rodriguez, 86, 42, 144
+NPC, Leland Blake, 247, 39, 34
+NPC, Irene Wright, 60, 141, 47
+NPC, Blake Greene, 242, 241, 38
+NPC, Rosalie Vaughn, 37, 78, 165
+NPC, Fernando Elliot, 255, 116, 0
 

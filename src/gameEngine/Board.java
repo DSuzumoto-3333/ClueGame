@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.HashSet;
 import java.io.*;
 
+import java.awt.Color;
+
 /**
  * Represents the game board itself, and contains methods pertaining to player movement. Also handles loading in data from setup and layout files provided. The board uses a singleton design,
  * so the method .getInstance() must be used rather than creating a new instance through the constructor.
@@ -30,8 +32,10 @@ public class Board {
 	private enum tileDirection {UP, DOWN, LEFT, RIGHT};
 	//Set to hold all player objects involved in the game
 	private Set<Player> players;
-	//Sets to hold the deck of cards initialized in, and the solution to the game
-	private Set<Card> deck, solution;
+	//ArrayList to hold all the cards in the game's deck.
+	private ArrayList<Card> deck;
+	//A set to hold the answer to the game's mystery, or the solution.
+	private Set<Card> solution;
 	
 	/**
 	 * Since we're using a singleton pattern, our constructor is essentially empty. We will use .initialize() after setting and loading the configuration files.
@@ -50,6 +54,38 @@ public class Board {
 	public void setConfigFiles(String layoutFile, String setupFile) {
 		layoutConfigFile = "data/" + layoutFile;
 		setupConfigFile = "data/" + setupFile;
+	}
+	
+	/**
+	 * Method to handle any thrown BadConfigFormatExceptions from loadSetupConfig() and loadLayoutConfig(). Can be recalled to clear and reset the game board, or load a new board if setConfigFiles() is called first. 
+	 * After config file data is loaded, the method also calls for adjacency lists to be populated.
+	 */
+	public void initialize() {
+		//Allocate memory for instance variables
+		targets = new HashSet<BoardCell>();
+		visited = new Stack<BoardCell>();
+		roomMap = new HashMap<Character, Room>();
+		players = new HashSet<Player>();
+		deck = new ArrayList<Card>();
+		
+		//Try to load the setup and layout config files, and initialize the game instance variables. Catch and handle BadConfigFormatExceptions here.
+		try {
+			//Load the setup file first.
+			loadSetupConfig();
+			
+			//Then generate the game board based on the rooms specified in the setup file
+			loadLayoutConfig();
+			
+			//Once the files are loaded properly, parse the newly generated board and build adjacency lists.
+			setAdjLists();
+			
+			//Deal the cards and determine the solution to the game.
+			dealCards();
+		}
+		//In the event of a bad input file, print out the error message to the console, and write the error to a log.
+		catch (BadConfigFormatException e) {
+			System.out.println("Invalid config file detected. Please check the log file in data for more information.");
+		}
 	}
 	
 	/**
@@ -77,47 +113,108 @@ public class Board {
 				//If the line doesn't start with a slash indicating that it's a comment, split it.
 				if(!(line.charAt(0) == '/')) {
 					String[] data = line.split(",");
-					System.out.println(data[0]);
 
-					//If the line specifies a room, create a room with the provided name and initial, saved to roomMap (Must filter out spaces)
+					//Pre-declare a few commonly used variables.
 					Room room;
+					char initial;
+					//Since the 2nd entry is always a name, format it here to remove the space at the beginning.
+					String name = data[1].replaceFirst("\\s+","");
 					switch(data[0]) {
+					
+					//If the entry declares a room
 					case "Room":
-						room = new Room(data[1].replaceFirst("\\s+",""));
-						roomMap.put(data[2].replaceFirst("\\s+","").charAt(0), room);
+						//Verify the entry has the proper length
+						if(data.length == 3) {
+							//Create a new room and put it in the map with the key being it's initial.
+							room = new Room(name);
+							initial = data[2].replaceFirst("\\s+","").charAt(0);
+							roomMap.put(initial, room);
+
+							//Create a room card, and add it to the deck.
+							deck.add(new Card(name, CardType.ROOM));
+						}
+						//Throw an exception if the entry is not the correct length.
+						else {
+							scanner.close();
+							throw new BadConfigFormatException("Invalid format in " + setupConfigFile + " on line " + i + ": Line contains the wrong number of entries for a Room object.");
+						}
 						break;
+						
+					//If the entry declares a non-room space
 					case "Space":
-						room = new Room(data[1].replaceFirst("\\s+",""));
-						roomMap.put(data[2].replaceFirst("\\s+","").charAt(0), room);
+						//Verify the entry has the proper length
+						if(data.length == 3) {
+							//Create a new room and put it in the map with the key being it's initial.
+							room = new Room(name);
+							initial = data[2].replaceFirst("\\s+","").charAt(0);
+							roomMap.put(initial, room);
+						}
+						//Throw an exception if the entry is not the correct length.
+						else {
+							scanner.close();
+							throw new BadConfigFormatException("Invalid format in " + setupConfigFile + " on line " + i + ": Line contains the wrong number of entries for a Space object.");
+						}
 						break;
+						
+					//If the entry declares a weapon
 					case "Weapon":
-						//Todo Code
-						if(1 == 0);
+						//Verify the entry has the proper length
+						if(data.length == 2) {
+							//Add a new weapon card to the deck.
+							deck.add(new Card(name, CardType.WEAPON));
+						}
+						//Throw an exception if the entry is not the correct length.
+						else {
+							scanner.close();
+							throw new BadConfigFormatException("Invalid format in " + setupConfigFile + " on line " + i + ": Line contains the wrong number of entries for a Weapon object.");
+						}
 						break;
+						
 					case "Player":
-						//Todo Code
-						if(1 == 0);
+						
+						if(data.length == 5) {
+							//Create a new person object
+							//Read in all the RGB values the file provides, and convert them to ints.
+							int redVal = Integer.parseInt(data[2].replaceFirst("\\s+","").replace(",",""));
+							int greenVal = Integer.parseInt(data[3].replaceFirst("\\s+","").replace(",",""));
+							int blueVal = Integer.parseInt(data[4].replaceFirst("\\s+","").replace(",",""));
+							//Create the new player object.
+							players.add(new HumanPlayer(name, new Color(redVal, greenVal, blueVal)));
+							
+							//Add a new weapon card to the deck.
+							deck.add(new Card(name, CardType.PERSON));
+						}
+						//Throw an exception if the entry is not the correct length.
+						else {
+							scanner.close();
+							throw new BadConfigFormatException("Invalid format in " + setupConfigFile + " on line " + i + ": Line contains the wrong number of entries for a Player object.");
+						}
 						break;
+						
 					case "NPC":
-						//Todo Code
-						if(1 == 0);
+						if(data.length == 5) {
+							//Create a new person object
+							//Read in all the RGB values the file provides, and convert them to ints.
+							int redVal = Integer.parseInt(data[2].replaceFirst("\\s+","").replace(",",""));
+							int greenVal = Integer.parseInt(data[3].replaceFirst("\\s+","").replace(",",""));
+							int blueVal = Integer.parseInt(data[4].replaceFirst("\\s+","").replace(",",""));
+							//Create the new player object.
+							players.add(new ComputerPlayer(name, new Color(redVal, greenVal, blueVal)));
+							
+							//Add a new weapon card to the deck.
+							deck.add(new Card(name, CardType.PERSON));
+						}
+						//Throw an exception if the entry is not the correct length.
+						else {
+							scanner.close();
+							throw new BadConfigFormatException("Invalid format in " + setupConfigFile + " on line " + i + ": Line contains the wrong number of entries for an NPC object.");
+						}
 						break;
+						
 					default:
 						throw new BadConfigFormatException("Attempted to specify tile of unknown type: " + data[0] + " in " + setupConfigFile + " On line " + i);
 					}
 
-					/*
-						if(data[0].equals("Room")) {
-							Room room = new Room(data[1].replaceFirst("\\s+",""));
-							roomMap.put(data[2].replaceFirst("\\s+","").charAt(0), room);
-						}
-						//If something other than a room or space is read, throw a new BadConfigFormatException
-						else if (data[0].equals("Space")) {
-							Room room = new Room(data[1].replaceFirst("\\s+",""));
-							roomMap.put(data[2].replaceFirst("\\s+","").charAt(0), room);
-						}else{
-							throw new BadConfigFormatException("Attempted to specify tile of unknown type: " + data[0] + " in " + setupConfigFile + " On line " + i);
-						}*/
 				}
 			//Increment the counter and close the file.
 			i++;
@@ -252,27 +349,6 @@ public class Board {
 			throw new BadConfigFormatException("File 'data/" + setupConfigFile + " not found. Please check the data directory.");
 		}
 	}
-	/**
-	 * Method to handle any thrown BadConfigFormatExceptions from loadSetupConfig() and loadLayoutConfig(). Can be recalled to clear and reset the game board, or load a new board if setConfigFiles() is called first. 
-	 * After config file data is loaded, the method also calls for adjacency lists to be populated.
-	 */
-	public void initialize() {
-		//Try to load both files, catching BadConfigFormatExceptions here
-		targets = new HashSet<BoardCell>();
-		visited = new Stack<BoardCell>();
-		roomMap = new HashMap<Character, Room>();
-		
-		try {
-			loadSetupConfig();
-			loadLayoutConfig();
-			setAdjLists();
-		}
-		//In the event of a bad input file, print out the error message to the console, and write the error to a log.
-		catch (BadConfigFormatException e) {
-			System.out.println("Invalid config file detected. Please check the log file in data for more information.");
-		}
-		
-	}
 	
 	/**
 	 * A method to set every tile in the gameBoard's adjacency lists. Non-central room tiles and unused tiles will have empty adjacency lists. Walkway tiles will only hold adjacencies with other walkway tiles,
@@ -370,13 +446,6 @@ public class Board {
 			}
 		}
 	}
-	/**
-	 * Returns the instance of the board, saved in boardInstance. This is the easiest way for us to access the singleton instance of the game board.
-	 * @return - The static, single Board object instance.
-	 */
-	public static Board getInstance() {
-		return boardInstance;
-	}
 
 	public void calcTargets(BoardCell startCell, int length) {
 		targets.clear();
@@ -421,6 +490,80 @@ public class Board {
 		}
 		//Pop the tile once all the paths branching from below are analyzed so that a different path can use this tile again.
 		visited.pop();
+	}
+	/**
+	 * Grabs 3 cards, one of each CardType, to be the answer to the game and stores it in solution. Then it randomly gives each player 3 cards, removing cards that have been
+	 * dealt or saved in the solution set as it goes.
+	 */
+	public void dealCards() throws BadConfigFormatException{
+		//Declare a set to count how many types of cards the setup file specified.
+		Set<CardType> types = new HashSet<CardType>();
+		for(Card card : deck) {
+			//If a card in the deck specifies a new type of card, add it to the set.
+			if(!(types.contains(card.getType()))) {
+				types.add(card.getType());
+			}
+		}
+		
+		//Ensure that the setup file specified all 3 types of cards expected: (room, weapon, and person)
+		if(types.size() == 3) {
+			//Allocate memory for the solution set.
+			solution = new HashSet<Card>();
+			
+		
+			//Add one card of each type to the set, removing each card from the deck so it is not used again.
+			solution.add(getCardOfType(CardType.ROOM));
+			solution.add(getCardOfType(CardType.PERSON));
+			solution.add(getCardOfType(CardType.WEAPON));
+			
+			Random rand = new Random();
+			for(Player player : players) {
+				for(int i = 0; i < 3; i++) {
+					int random = rand.nextInt(deck.size());
+					player.updateHand(new Card(deck.get(random)));
+					deck.remove(random);
+				}
+			}
+		}
+		//If not, throw a new BadConfigFormatException.
+		else {
+			throw new BadConfigFormatException("Error: Setup file " + setupConfigFile + " does not specify all 3 required types of cards.");
+		}
+		
+		
+	}
+	
+	/**
+	 * Used to grab a card of a certain type from the deck. Once a random card of the correct type is found, it will remove it from the deck and return a deep copy.
+	 * Will continue to loop until a card of the correct type is found.
+	 * @param type
+	 * @return
+	 */
+	public Card getCardOfType(CardType type) {
+		//Loop until the correct type of card is found.
+		Random rand = new Random();
+		while(true) {
+			//Generate a random number.
+			int random = rand.nextInt(deck.size());
+			
+			//If the card at that index in the deck is the proper type, return it.
+			if(deck.get(random).getType() == type) {
+				//Use a copy constructor to make a deep copy.
+				Card card = new Card(deck.get(random));
+				//Remove the card from the deck so it's not used again.
+				deck.remove(random);
+				//Return the new card.
+				return card;
+			}
+		}
+	}
+	
+	/**
+	 * Returns the instance of the board, saved in boardInstance. This is the easiest way for us to access the singleton instance of the game board.
+	 * @return - The static, single Board object instance.
+	 */
+	public static Board getInstance() {
+		return boardInstance;
 	}
 	
 	/**

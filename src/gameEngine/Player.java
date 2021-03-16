@@ -5,16 +5,26 @@ import java.util.Set;
 import java.util.HashSet;
 
 public abstract class Player {
+	private int row, col;
 	private String name;
 	private Color color;
-	private int row, col;
 	private Set<Card> hand;
+	public static final int MAX_CARDS = 3;
 	
-	public Player() {
-		
+	public Player(String playerName, Color playerColor) {
+		super();
+		name = playerName;
+		color = playerColor;
+		hand = new HashSet<Card>();
 	}
 	
-	public abstract void updateHand(Card card);
+	public void updateHand(Card card) {
+		if(!(hand.size() == MAX_CARDS)) {
+			hand.add(card);
+		}
+	}
 	
-	public abstract Set<Card> getHand();
+	public Set<Card> getHand(){
+		return hand;
+	}
 }
