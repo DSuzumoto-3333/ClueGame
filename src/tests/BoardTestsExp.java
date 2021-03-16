@@ -133,7 +133,8 @@ class BoardTestsExp {
 		assertTrue(targets.contains(board.getCell(1, 2)));
 	}
 	/*
-	 * Ensures that the targets calculated, as well as how many targets are calculated make sense.
+	 * Tests the functions of the method Calc Target
+	 * This ensures that the location of the targets make logical sense within the context of the rules of the game.
 	 */
 	@Test 
 	public void testCalcTarget() {
