@@ -32,7 +32,7 @@ class FileInitTest {
 	}
 	
 	/**
-	 * Test that each room has the proper center saved.
+	 * Make sure that each room has a center
 	 */
 	@Test
 	void testRoomCenters() {
@@ -83,7 +83,7 @@ class FileInitTest {
 	}
 	
 	/**
-	 * Test that each room has the proper label cell saved.
+	 * Make sure each room has a label
 	 */
 	@Test
 	void testBoardLabels() {
@@ -205,7 +205,7 @@ class FileInitTest {
 	}
 	
 	/**
-	 * Test to determine that the secret passages are linked.
+	 * Make sure that the secret cells are linked
 	 */
 	@Test
 	void testSecretPassageLinked() {
@@ -280,7 +280,7 @@ class FileInitTest {
 	}
 	
 	/**
-	 * Test to ensure that the loaded board size matches the anticipated board size.
+	 * Make sure that the size of the loaded board matches that of the size of the input file.
 	 */
 	@Test
 	void testLoadedBoardSize() {

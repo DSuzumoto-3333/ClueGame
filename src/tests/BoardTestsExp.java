@@ -28,7 +28,8 @@ class BoardTestsExp {
 	}
 	
 	/*
-	 * Tests adjacencies for several different locations, including edges
+	 * Tests adjecency logic for a bunch of edge cases such as ledges and walls. 
+	 * It ensures that cells don't count cells that are outside of the grid as "adjacent".
 	 */
 	@Test
 	public void testPositions() {
@@ -77,7 +78,7 @@ class BoardTestsExp {
 	}
 	
 	/*
-	 * Test to ensure that if a tile is occupied by another player, it cannot be moved to.
+	 * This test ensures that the player cannot enter an occupied cell and that this is taken into account in calcTargets();
 	 */
 	@Test
 	public void testCantEnterOccupiedCell() {
@@ -133,7 +134,8 @@ class BoardTestsExp {
 		assertTrue(targets.contains(board.getCell(1, 2)));
 	}
 	/*
-	 * Ensures that the targets calculated, as well as how many targets are calculated make sense.
+	 * Tests the functions of the method Calc Target
+	 * This ensures that the location of the targets make logical sense within the context of the rules of the game.
 	 */
 	@Test 
 	public void testCalcTarget() {
