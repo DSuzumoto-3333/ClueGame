@@ -114,4 +114,16 @@ class gameSetupTests {
 			assertTrue(entry.getValue());
 		}
 	}
+	
+	/**
+	 * Test to ensure that all player objects are loaded, are of the appropriate type, and are fully and correctly filled out.
+	 */
+	
+	/**
+	 * Test to ensure that the player's hand updates and behaves as expected.
+	 */
+	
+	/**
+	 * Test to ensure that the solution to the game is always valid, and that cards are not both in the solution and the hand of a player.
+	 */
 }
