@@ -170,9 +170,9 @@ class gameSetupTests {
 		// Make sure that the player's hand updates when cards are added to it
 		Set<Player> players = board.getPlayers();
 
-		// Each player should have an empty hand at the beginning
+		// Each player should have 3 cards at the beginning
 		for (Player p: players) {
-			assert(p.getHand().size() == 0);
+			assert(p.getHand().size() == 3);
 		}
 		
 
