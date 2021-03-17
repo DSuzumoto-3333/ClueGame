@@ -414,7 +414,7 @@ public class Board {
 				!(nextTo.getInitial() == 'W') &&
 				current.getDoorDirection().equals(direction)){
 			BoardCell center = getRoom(nextTo).getCenterCell();
-			current.addAdjacency(center);;
+			current.addAdjacency(center);
 			center.addAdjacency(current);
 		}		
 		
