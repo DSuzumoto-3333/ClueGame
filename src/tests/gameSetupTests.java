@@ -149,6 +149,7 @@ class gameSetupTests {
 		Color color5 = new Color(37, 78, 165);
 		Color color6 = new Color(255, 116, 0);
 		//Create correct player objects with the proper names and colors.
+<<<<<<< HEAD
 		correctPlayers.add(new HumanPlayer("Ramona Rodriguez", color1));
 		correctPlayers.add(new ComputerPlayer("Leland Blake", color2));
 		correctPlayers.add(new ComputerPlayer("Irene Wright", color3));
@@ -158,6 +159,16 @@ class gameSetupTests {
 		
 		//Check each player in players against each player in correctPlayers. If they are equal, add to foundInBoth.
 		Set<Player> foundInBoth = new HashSet<Player>();
+=======
+		correctPlayers[0] = new HumanPlayer("Ramona Rodriguez", color1);
+		correctPlayers[1] = new ComputerPlayer("Leland Blake", color2);
+		correctPlayers[2] = new ComputerPlayer("Irene Wright", color3);
+		correctPlayers[3] = new ComputerPlayer("Blake Greene", color4);
+		correctPlayers[4] = new ComputerPlayer("Rosalie Vaughn", color5);
+		correctPlayers[5] = new ComputerPlayer("Fernando Elliot", color6);
+		//Ensure that every player is properly loaded in.
+		int i = 0;
+>>>>>>> d39fad44e9aa50255bcd22a75e0fbfd0eb2278fc
 		for(Player player : players) {
 			for(Player player2 : correctPlayers) {
 				if(player.equals(player2)) {
@@ -173,6 +184,7 @@ class gameSetupTests {
 	 */
 	@Test
 	public void testPlayerHand() {
+<<<<<<< HEAD
 		//Create a dummy human player.
 		Player testPlayer = new HumanPlayer("Test", Color.BLACK);
 		//Get it's hand.
@@ -221,7 +233,35 @@ class gameSetupTests {
 		assertTrue(testHand.contains(cards[2]));
 	}
 	
+=======
+		// Make sure that the player's hand updates when cards are added to it
+		Set<Player> players = board.getPlayers();
+
+		// Each player should have 3 cards at the beginning
+		for (Player p: players) {
+			assert(p.getHand().size() == 3);
+		}
+		
+
+	}
+>>>>>>> d39fad44e9aa50255bcd22a75e0fbfd0eb2278fc
 	/**
 	 * Test to ensure that the solution to the game is always valid, and that cards are not both in the solution and the hand of a player.
 	 */
+	@Test
+	public void testSolution() {
+		// Make sure that the cards aren't in both the player's deck and the solution
+		Set<Card> solution = board.getSolution();
+		Set<Player> players = board.getPlayers();
+		
+		// ensures that each card in each players hand does not match with any card found in the solution
+		for (Player p: players) {
+			for (Card playerCard: p.getHand()) {
+				for (Card solutionCard: solution) {
+					assertFalse(playerCard.equals(solutionCard));
+				}
+			}
+		}
+	}
+	
 }
