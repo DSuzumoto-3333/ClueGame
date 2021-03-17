@@ -166,13 +166,60 @@ class gameSetupTests {
 			}
 		}
 		//All 6 players should appear here.
-		assertEquals(6, foundInBoth.size());
-		
-		
+		assertEquals(6, foundInBoth.size());	
 	}
 	/**
 	 * Test to ensure that the player's hand updates and behaves as expected.
 	 */
+	@Test
+	public void testPlayerHand() {
+		//Create a dummy human player.
+		Player testPlayer = new HumanPlayer("Test", Color.BLACK);
+		//Get it's hand.
+		Set<Card> testHand = testPlayer.getHand();
+		//It should be empty at the start.
+		assertEquals(new HashSet<Card>(), testHand);
+		
+		//Define a small deck of cards to work with.
+		Card[] cards = new Card[4];
+		cards[0] = new Card("Card0", CardType.ROOM);
+		cards[1] = new Card("Card1", CardType.ROOM);
+		cards[2] = new Card("Card2", CardType.ROOM);
+		cards[3] = new Card("Card3", CardType.ROOM);
+		
+		//Give the dummy the first card, and get it's hand again.
+		testPlayer.updateHand(cards[0]);
+		testHand = testPlayer.getHand();
+		//It should be of length one and contain cards[0]
+		assertEquals(1, testHand.size());
+		assertTrue(testHand.contains(cards[0]));
+		
+		//Give the dummy the next card, and get it's hand again.
+		testPlayer.updateHand(cards[1]);
+		testHand = testPlayer.getHand();
+		//It should be of length two and contain cards[0] and cards[1]
+		assertEquals(2, testHand.size());
+		assertTrue(testHand.contains(cards[0]));
+		assertTrue(testHand.contains(cards[1]));
+		
+		//Give the dummy the next card, and get it's hand again.
+		testPlayer.updateHand(cards[2]);
+		testHand = testPlayer.getHand();
+		//It should be of length three and contain cards[0]-cards[2]
+		assertEquals(3, testHand.size());
+		assertTrue(testHand.contains(cards[0]));
+		assertTrue(testHand.contains(cards[1]));
+		assertTrue(testHand.contains(cards[2]));
+		
+		//Try to give the dummy the next card, and get it's hand again.
+		testPlayer.updateHand(cards[3]);
+		testHand = testPlayer.getHand();
+		//It should be of length three and contain cards[0]-cards[2]. It should not hold the 4th card.
+		assertEquals(3, testHand.size());
+		assertTrue(testHand.contains(cards[0]));
+		assertTrue(testHand.contains(cards[1]));
+		assertTrue(testHand.contains(cards[2]));
+	}
 	
 	/**
 	 * Test to ensure that the solution to the game is always valid, and that cards are not both in the solution and the hand of a player.
