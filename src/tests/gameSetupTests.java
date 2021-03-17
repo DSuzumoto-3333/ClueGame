@@ -155,7 +155,6 @@ class gameSetupTests {
 		correctPlayers[3] = new ComputerPlayer("Blake Greene", color4);
 		correctPlayers[4] = new ComputerPlayer("Rosalie Vaughn", color5);
 		correctPlayers[5] = new ComputerPlayer("Fernando Elliot", color6);
-		
 		//Ensure that every player is properly loaded in.
 		int i = 0;
 		for(Player player : players) {
@@ -166,8 +165,35 @@ class gameSetupTests {
 	/**
 	 * Test to ensure that the player's hand updates and behaves as expected.
 	 */
-	
+	@Test
+	public void testPlayerHand() {
+		// Make sure that the player's hand updates when cards are added to it
+		Set<Player> players = board.getPlayers();
+
+		// Each player should have an empty hand at the beginning
+		for (Player p: players) {
+			assert(p.getHand().size() == 0);
+		}
+		
+
+	}
 	/**
 	 * Test to ensure that the solution to the game is always valid, and that cards are not both in the solution and the hand of a player.
 	 */
+	@Test
+	public void testSolution() {
+		// Make sure that the cards aren't in both the player's deck and the solution
+		Set<Card> solution = board.getSolution();
+		Set<Player> players = board.getPlayers();
+		
+		// ensures that each card in each players hand does not match with any card found in the solution
+		for (Player p: players) {
+			for (Card playerCard: p.getHand()) {
+				for (Card solutionCard: solution) {
+					assertFalse(playerCard.equals(solutionCard));
+				}
+			}
+		}
+	}
+	
 }
