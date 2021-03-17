@@ -170,12 +170,29 @@ class gameSetupTests {
 		// Make sure that the player's hand updates when cards are added to it
 		Set<Player> players = board.getPlayers();
 
-		// Each player should have 3 cards at the beginning
+		// Each player should at least some cards at the beginning
 		for (Player p: players) {
-			assert(p.getHand().size() == 3);
+			assert(p.getHand().size() > 0);
 		}
 		
-
+		int maxDiffAlloweable = 2; // the most number of cards that are allowed to differ by player without being considered an error
+		int firstNum = players.iterator().next().getHand().size(); // the first player in the set will be considered the "baseline"
+		for (Player p: players) {
+			assert(Math.abs(p.getHand().size() - firstNum) < maxDiffAlloweable); // the difference between the current player's hand and the baseline
+		}
+		
+		// Ensures each card each player has is unique by going through every player, their deck, and matching it with each other player's decks and makes sure that they are each unique.
+		for (Player p1: players) {
+			for (Card playerCard: p1.getHand()) {
+				for(Player p2: players) {
+					for(Card playerCard2: p2.getHand()) {
+						if (!p1.equals(p2)) {
+							assertFalse(playerCard.equals(playerCard2));
+						}
+					}
+				}
+			}
+		}
 	}
 	/**
 	 * Test to ensure that the solution to the game is always valid, and that cards are not both in the solution and the hand of a player.
