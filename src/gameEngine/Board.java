@@ -531,8 +531,26 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Returns true if the accusation set contains the same elements as the solution set, indicating the player made
+	 * a correct accusation.
+	 * @param accusation - A set of cards representing the accusation being made.
+	 * @return
+	 */
 	public boolean checkAccusation(Set<Card> accusation) {
-		return false;
+		//Iterate through each card in both set
+			for(Card solutionCard : solution) {
+				for(Card accusationCard : accusation) {
+					//If they are the same type of card but are not equal, return false.
+					if(solutionCard.getType().equals(accusationCard.getType())) {
+						if(!(accusationCard.equals(solutionCard))) {
+							return false;
+						}
+					}
+				}
+			}
+			//If the loop does not find an incorrect card, return true
+			return true;
 	}
 	
 	/**
@@ -622,6 +640,6 @@ public class Board {
 	 * @param soln - The desired solution to the game as a set
 	 */
 	public void setSolution(Set<Card> soln) {
-		solution = soln;
+		solution = new HashSet<Card>(soln);
 	}
 }
