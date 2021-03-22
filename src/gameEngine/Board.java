@@ -531,6 +531,10 @@ public class Board {
 		}
 	}
 	
+	public boolean checkAccusation(Set<Card> accusation) {
+		return false;
+	}
+	
 	/**
 	 * Returns the instance of the board, saved in boardInstance. This is the easiest way for us to access the singleton instance of the game board.
 	 * @return - The static, single Board object instance.
@@ -612,5 +616,12 @@ public class Board {
 	 */
 	public Set<Card> getSolution(){
 		return solution;
+	}
+	/**
+	 * Set the solution to the game, for testing purposes.
+	 * @param soln - The desired solution to the game as a set
+	 */
+	public void setSolution(Set<Card> soln) {
+		solution = soln;
 	}
 }

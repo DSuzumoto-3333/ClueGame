@@ -21,7 +21,7 @@ import gameEngine.*;
  * @author Luke Wakumoto
  */
 
-class gameSetupTests {
+class GameSetupTests {
 	private static Board board;
 	
 	/**
