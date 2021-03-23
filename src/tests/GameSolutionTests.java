@@ -126,11 +126,9 @@ class GameSolutionTests {
 		player5.updateHand(cPerson);
 		player5.updateHand(wRoom);
 		player5.updateHand(cWeapon);
-		//calling disproveSuggestion() should return either cPerson or cRoom
-		Set<Card> possibleReturns = new HashSet<Card>();
-		possibleReturns.add(cPerson);
-		possibleReturns.add(cRoom);
-		assertTrue(possibleReturns.contains(player5.disproveSuggestion(sug)));
+		//calling disproveSuggestion() should return either cPerson or cWeapon
+		Card returned = player5.disproveSuggestion(sug);
+		assertTrue((returned.equals(cPerson)) || (returned.equals(cWeapon)));
 	}
 }
 
