@@ -556,11 +556,11 @@ public class Board {
 	 * @param suggestor - The person who made the suggestion
 	 * @return - The card that debunks the suggestion, null if none found.
 	 */
-	public Card handleSuggestion(Set<Card> suggestion, Player suggestor) {
+	public Card handleSuggestion(Set<Card> suggestion, Player suggester) {
 		//Check every player's hand
 		for(Player player : players) {
-			//If the player isn't the suggestor, and the player has a debunking card
-			if(!player.equals(suggestor)) {
+			//If the player isn't the suggester, and the player has a debunking card
+			if(!player.equals(suggester)) {
 				Card match = player.disproveSuggestion(suggestion);
 				if(match != null) {
 					return match;

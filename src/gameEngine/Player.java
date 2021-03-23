@@ -11,8 +11,8 @@ import java.util.HashSet;
  *
  */
 public abstract class Player {
-	//The player's current position
-	private int row, col;
+	//The player's current position cell
+	private BoardCell pos;
 	//The player's name
 	private String name;
 	//A color to signify the player
@@ -20,12 +20,20 @@ public abstract class Player {
 	//The player's hand, and the maximum number of cards they can hold, 3
 	private Set<Card> hand;
 	public static final int MAX_CARDS = 3;
-	
+	//A set of all cards seen by the players
+	public static Set<Card> seen;
+	/**
+	 * The player object is used to represent either a Human player or an NPC. It contains the ability to hold cards,
+	 * disprove suggestions, and move about the board.
+	 * @param playerName - The name of the player
+	 * @param playerColor - The color the player will be indicated by.
+	 */
 	public Player(String playerName, Color playerColor) {
 		super();
 		name = playerName;
 		color = playerColor;
 		hand = new HashSet<Card>();
+		seen = new HashSet<Card>();
 	}
 	
 	/**
@@ -87,6 +95,28 @@ public abstract class Player {
 	 */
 	public Color getColor() {
 		return color;
+	}
+	
+	/**
+	 * Method to set the player object's position.
+	 * @param position - The board cell the player occupies.
+	 */
+	public void setPosition(BoardCell position) {
+		pos = position;
+	}
+	/**
+	 * Method to get the player's position.
+	 */
+	public BoardCell getPosition() {
+		return pos;
+	}
+	
+	/**
+	 * Method to add a card to the seen set, shared by all players.
+	 * @param card - The card that has been seen.
+	 */
+	public void addSeen(Card card) {
+		seen.add(card);
 	}
 	
 	/**
