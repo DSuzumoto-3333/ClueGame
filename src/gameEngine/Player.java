@@ -71,7 +71,7 @@ public abstract class Player {
 	 * @param hand - The hand to be given to the player.
 	 */
 	public void setHand(Set<Card> hand) {
-		this.hand = hand;
+		this.hand = new HashSet<Card>(hand);
 	}
 	/**
 	 * A method to get the player's name as a string.

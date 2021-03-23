@@ -542,10 +542,8 @@ public class Board {
 			for(Card solutionCard : solution) {
 				for(Card accusationCard : accusation) {
 					//If they are the same type of card but are not equal, return false.
-					if(solutionCard.getType().equals(accusationCard.getType())) {
-						if(!(accusationCard.equals(solutionCard))) {
-							return false;
-						}
+					if(solutionCard.getType().equals(accusationCard.getType()) && !accusationCard.equals(solutionCard)) {
+						return false;
 					}
 				}
 			}
@@ -559,6 +557,17 @@ public class Board {
 	 * @return - The card that debunks the suggestion, null if none found.
 	 */
 	public Card handleSuggestion(Set<Card> suggestion, Player suggestor) {
+		//Check every player's hand
+		for(Player player : players) {
+			//If the player isn't the suggestor, and the player has a debunking card
+			if(!player.equals(suggestor)) {
+				Card match = player.disproveSuggestion(suggestion);
+				if(match != null) {
+					return match;
+				}
+			}
+		}
+		//If nothing is found, return null.
 		return null;
 	}
 	
