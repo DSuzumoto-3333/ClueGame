@@ -148,10 +148,13 @@ public class ComputerPlayer extends Player{
 			}
 		}
 		
-		//If there exists at least one room with
+		//If there exists at least one valid unseen room, pick randomly and return it
 		if(targets.size() > 0) {
 			return new BoardCell(-1,-1);
-		}else {
+		}
+		
+		//If not, pick a random cell from targets and return it.
+		else {
 			return new BoardCell(-1,-1);
 		}
 	}

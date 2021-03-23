@@ -180,6 +180,35 @@ class ComputerAITests {
 		for(BoardCell target : targets) {
 			assertTrue(counters.get(target) > 0);
 		}
+		
+		//Now, calculate a roll of length 4 from (9, 21)
+		board.calcTargets(board.getCell(9, 21), 4);
+		/*
+		 * The targets list should include 2 rooms, neither of which have been seen. They must be randomly chosen 
+		 * between as the only valid returns for selectTarget().
+		 */
+		BoardCell study = board.getRoom('S').getCenterCell();
+		BoardCell closet = board.getRoom('C').getCenterCell();
+		//Add the cells to a set for easy testing.
+		Set<BoardCell> rooms = new HashSet<BoardCell>();
+		rooms.add(study);
+		rooms.add(closet);
+		//Test and arbitrarily sized sample group
+		int studyCount = 0, closetCount = 0;
+		for(int i = 0; i < 200; i++) {
+			BoardCell returnedCell = player.selectTarget();
+			//The returned cell must be either of the two rooms.
+			assertTrue(rooms.contains(returnedCell));
+			//Increment the counters properly.
+			if(returnedCell.equals(study)) {
+				studyCount += 1;
+			}else if (returnedCell.equals(closet)) {
+				closetCount += 1;
+			}
+		}
+		//Both counts must be greater than 0
+		assertTrue(studyCount > 0);
+		assertTrue(closetCount > 0);
 	}
 }
 
