@@ -482,6 +482,8 @@ public class Board {
 		if(types.size() == 3) {
 			//Allocate memory for the solution set.
 			solution = new HashSet<Card>();
+			//Create a copy of deck
+			ArrayList<Card> deckCopy = new ArrayList<Card>(deck);
 			
 		
 			//Add one card of each type to the set, removing each card from the deck so it is not used again.
@@ -497,6 +499,9 @@ public class Board {
 					deck.remove(random);
 				}
 			}
+			
+			//Restore the deck.
+			deck = deckCopy;
 		}
 		//If not, throw a new BadConfigFormatException.
 		else {
@@ -659,5 +664,9 @@ public class Board {
 	 */
 	public void setSolution(Set<Card> soln) {
 		solution = new HashSet<Card>(soln);
+	}
+	
+	public ArrayList<Card> getDeck(){
+		return deck;
 	}
 }

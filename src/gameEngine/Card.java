@@ -27,5 +27,9 @@ public class Card {
 	public CardType getType() {
 		return type;
 	}
+
+	public Object getName() {
+		return name;
+	}
 	
 }

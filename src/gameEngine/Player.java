@@ -21,7 +21,7 @@ public abstract class Player {
 	private Set<Card> hand;
 	public static final int MAX_CARDS = 3;
 	//A set of all cards seen by the players
-	public static Set<Card> seen;
+	private Set<Card> seen;
 	/**
 	 * The player object is used to represent either a Human player or an NPC. It contains the ability to hold cards,
 	 * disprove suggestions, and move about the board.
@@ -117,6 +117,10 @@ public abstract class Player {
 	 */
 	public void addSeen(Card card) {
 		seen.add(card);
+	}
+	
+	public Set<Card> getSeen() {
+		return seen;
 	}
 	
 	/**
