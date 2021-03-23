@@ -148,14 +148,38 @@ public class ComputerPlayer extends Player{
 			}
 		}
 		
+		//Create a new random object
+		Random random = new Random();
 		//If there exists at least one valid unseen room, pick randomly and return it
-		if(targets.size() > 0) {
-			return new BoardCell(-1,-1);
+		if(rooms.size() > 0) {
+			//Pick a random index
+			int rand = random.nextInt(rooms.size());
+			int i = 0;
+			//Iterate to that index and return the cell.
+			for(BoardCell room : rooms) {
+				if(rand == i) {
+					return room;
+				}
+				i++;
+			}
+			//This should never execute
+			return null;
 		}
 		
 		//If not, pick a random cell from targets and return it.
 		else {
-			return new BoardCell(-1,-1);
+			//Pick a random index
+			int rand = random.nextInt(targets.size());
+			int i = 0;
+			//Iterate to that index and return the cell.
+			for(BoardCell target : targets) {
+				if(rand == i) {
+					return target;
+				}
+				i++;
+			}
+			//This should never execute
+			return null;
 		}
 	}
 }
