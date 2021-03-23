@@ -22,6 +22,8 @@ public abstract class Player {
 	public static final int MAX_CARDS = 3;
 	//A set of all cards seen by the players
 	private Set<Card> seen;
+	//The game board, for use with calculating moves and suggestions
+	private Board board = Board.getInstance();
 	/**
 	 * The player object is used to represent either a Human player or an NPC. It contains the ability to hold cards,
 	 * disprove suggestions, and move about the board.
@@ -63,6 +65,7 @@ public abstract class Player {
 	public void updateHand(Card card) {
 		if(!(hand.size() == MAX_CARDS)) {
 			hand.add(card);
+			seen.add(card);
 		}
 	}
 	
@@ -80,6 +83,7 @@ public abstract class Player {
 	 */
 	public void setHand(Set<Card> hand) {
 		this.hand = new HashSet<Card>(hand);
+		seen.addAll(hand);
 	}
 	/**
 	 * A method to get the player's name as a string.
@@ -121,6 +125,10 @@ public abstract class Player {
 	
 	public Set<Card> getSeen() {
 		return seen;
+	}
+	
+	public Board getBoard() {
+		return board;
 	}
 	
 	/**

@@ -12,7 +12,9 @@ import java.util.Random;
 import java.util.Set;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 class ComputerAITests {
 
@@ -44,9 +46,17 @@ class ComputerAITests {
 		seen.add(new Card("Pistol", CardType.WEAPON));
 		seen.add(new Card("Ramona Rodriguez", CardType.PERSON));
 		seen.add(new Card("Leland Blake", CardType.PERSON));
-		//Add each of these cards to the seen list for the player
+		//Add each of these cards to the seen list for the player, adding some to the hand as well
+		int i = 0;
 		for(Card card : seen) {
-			suggester.addSeen(card);
+			//Add the first 3 cards to the seen set
+			if(i < 3) {
+				suggester.addSeen(card);
+			}
+			//Add the last 3 to the player's hand, which should update the seen set
+			else {
+				suggester.updateHand(card);
+			}
 		}
 		
 		/* 
@@ -126,5 +136,50 @@ class ComputerAITests {
 		assertEquals(0, sug.size());
 	}
 	
+	/**
+	 * Test to verify that the computer player moves to new locations on the board correctly, prioritizing entering new 
+	 * rooms that have yet to be seen, otherwise randomly selecting a target from the list.
+	 */
+	@Test
+	public void testSelectTarget() {
+		//Create a new test player
+		ComputerPlayer player = new ComputerPlayer("Test Player", Color.black);
+		//We will always calculate a roll-length of 2 starting from (11,16) on the board.
+		board.calcTargets(board.getCell(11, 16), 2);
+		/*
+		 * This should give us 5 targets, the center of the pool room and 4 walkway tiles. Since our player does not have
+		 * a seen card for the pool room, he must always go to the pool room.
+		 */
+		//Test an arbitrarily sized sample group.
+		Room room = board.getRoom('O');
+		BoardCell roomCell = room.getCenterCell();
+		for(int i = 0; i < 200; i++) {
+			//The only cell returned must be the center of the pool room.
+			assertEquals(roomCell, player.selectTarget());
+		}
+		
+		//Now, add the room's card to the seen list.
+		player.addSeen(new Card(room.getName(), CardType.ROOM));
+		//Now, any cell returned by board.getTargets() is a valid location to go to.
+		Set<BoardCell> targets = board.getTargets();
+		//Create a map to hold counters for how often each target is encountered.
+		Map<BoardCell, Integer> counters = new HashMap<BoardCell, Integer>();
+		for(BoardCell target : targets) {
+			counters.put(target, 0);
+		}
+		//Test an arbitrarily sized sample group
+		for(int i = 0; i < 200; i++) {
+			//Get the cell returned by the computer player
+			BoardCell returnedCell = player.selectTarget();
+			//All returned cells must be valid elements from targets
+			assertTrue(targets.contains(returnedCell));
+			//Increment the respective counters
+			counters.put(returnedCell, counters.get(returnedCell) + 1);
+		}
+		//Ensure that all counter entries > 0.
+		for(BoardCell target : targets) {
+			assertTrue(counters.get(target) > 0);
+		}
+	}
 }
 
