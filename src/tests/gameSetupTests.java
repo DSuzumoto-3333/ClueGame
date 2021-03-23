@@ -176,6 +176,34 @@ class GameSetupTests {
 	 */
 	@Test
 	public void testPlayerHand() {
+<<<<<<< HEAD
+		// Make sure that the player's hand updates when cards are added to it
+		Set<Player> players = board.getPlayers();
+
+		// Each player should at least some cards at the beginning
+		for (Player p: players) {
+			assert(p.getHand().size() > 0);
+		}
+		
+		int maxDiffAlloweable = 2; // the most number of cards that are allowed to differ by player without being considered an error
+		int firstNum = players.iterator().next().getHand().size(); // the first player in the set will be considered the "baseline"
+		for (Player p: players) {
+			assert(Math.abs(p.getHand().size() - firstNum) < maxDiffAlloweable); // the difference between the current player's hand and the baseline
+		}
+		
+		// Ensures each card each player has is unique by going through every player, their deck, and matching it with each other player's decks and makes sure that they are each unique.
+		for (Player p1: players) {
+			for (Card playerCard: p1.getHand()) {
+				for(Player p2: players) {
+					for(Card playerCard2: p2.getHand()) {
+						if (!p1.equals(p2)) {
+							assertFalse(playerCard.equals(playerCard2));
+						}
+					}
+				}
+			}
+		}
+=======
 		//Create a dummy human player.
 		Player testPlayer = new HumanPlayer("Test", Color.BLACK);
 		//Get it's hand.
@@ -222,6 +250,7 @@ class GameSetupTests {
 		assertTrue(testHand.contains(cards[0]));
 		assertTrue(testHand.contains(cards[1]));
 		assertTrue(testHand.contains(cards[2]));
+>>>>>>> 38052842015eb2b2269cbc7eee71c37ed1d0aeb6
 	}
 
 	/**
