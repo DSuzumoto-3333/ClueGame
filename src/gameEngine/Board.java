@@ -29,7 +29,7 @@ public class Board {
 	private Map<Character, Room> roomMap;
 	private static Board boardInstance = new Board();
 	//Set to hold all player objects involved in the game
-	private Set<Player> players;
+	private ArrayList<Player> players;
 	//ArrayList to hold all the cards in the game's deck.
 	private ArrayList<Card> deck;
 	//A set to hold the answer to the game's mystery, or the solution.
@@ -63,7 +63,7 @@ public class Board {
 		targets = new HashSet<BoardCell>();
 		visited = new Stack<BoardCell>();
 		roomMap = new HashMap<Character, Room>();
-		players = new HashSet<Player>();
+		players = new ArrayList<Player>();
 		deck = new ArrayList<Card>();
 		
 		//Try to load the setup and layout config files, and initialize the game instance variables. Catch and handle BadConfigFormatExceptions here.
@@ -414,7 +414,7 @@ public class Board {
 				!(nextTo.getInitial() == 'W') &&
 				current.getDoorDirection().equals(direction)){
 			BoardCell center = getRoom(nextTo).getCenterCell();
-			current.addAdjacency(center);;
+			current.addAdjacency(center);
 			center.addAdjacency(current);
 		}		
 		
@@ -482,6 +482,8 @@ public class Board {
 		if(types.size() == 3) {
 			//Allocate memory for the solution set.
 			solution = new HashSet<Card>();
+			//Create a copy of deck
+			ArrayList<Card> deckCopy = new ArrayList<Card>(deck);
 			
 		
 			//Add one card of each type to the set, removing each card from the deck so it is not used again.
@@ -497,6 +499,9 @@ public class Board {
 					deck.remove(random);
 				}
 			}
+			
+			//Restore the deck.
+			deck = deckCopy;
 		}
 		//If not, throw a new BadConfigFormatException.
 		else {
@@ -529,6 +534,46 @@ public class Board {
 				return card;
 			}
 		}
+	}
+	
+	/**
+	 * Returns true if the accusation set contains the same elements as the solution set, indicating the player made
+	 * a correct accusation.
+	 * @param accusation - A set of cards representing the accusation being made.
+	 * @return
+	 */
+	public boolean checkAccusation(Set<Card> accusation) {
+		//Iterate through each card in both set
+			for(Card solutionCard : solution) {
+				for(Card accusationCard : accusation) {
+					//If they are the same type of card but are not equal, return false.
+					if(solutionCard.getType().equals(accusationCard.getType()) && !accusationCard.equals(solutionCard)) {
+						return false;
+					}
+				}
+			}
+			//If the loop does not find an incorrect card, return true
+			return true;
+	}
+	/**
+	 * 
+	 * @param suggestion - The suggestion made by a player being handled.
+	 * @param suggestor - The person who made the suggestion
+	 * @return - The card that debunks the suggestion, null if none found.
+	 */
+	public Card handleSuggestion(Set<Card> suggestion, Player suggester) {
+		//Check every player's hand
+		for(Player player : players) {
+			//If the player isn't the suggester, and the player has a debunking card
+			if(!player.equals(suggester)) {
+				Card match = player.disproveSuggestion(suggestion);
+				if(match != null) {
+					return match;
+				}
+			}
+		}
+		//If nothing is found, return null.
+		return null;
 	}
 	
 	/**
@@ -603,7 +648,7 @@ public class Board {
 	 * Returns the list of players in the game.
 	 * @return
 	 */
-	public Set<Player> getPlayers(){
+	public ArrayList<Player> getPlayers(){
 		return players;
 	}
 	/**
@@ -612,5 +657,16 @@ public class Board {
 	 */
 	public Set<Card> getSolution(){
 		return solution;
+	}
+	/**
+	 * Set the solution to the game, for testing purposes.
+	 * @param soln - The desired solution to the game as a set
+	 */
+	public void setSolution(Set<Card> soln) {
+		solution = new HashSet<Card>(soln);
+	}
+	
+	public ArrayList<Card> getDeck(){
+		return deck;
 	}
 }

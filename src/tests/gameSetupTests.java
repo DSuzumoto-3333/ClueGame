@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import java.awt.Color;
 
@@ -21,7 +22,7 @@ import gameEngine.*;
  * @author Luke Wakumoto
  */
 
-class gameSetupTests {
+class GameSetupTests {
 	private static Board board;
 	
 	/**
@@ -40,7 +41,7 @@ class gameSetupTests {
 	@Test
 	void testCards() {
 		//Get the set of players and the solution set from the board.
-		Set<Player> players = board.getPlayers();
+		ArrayList<Player> players = board.getPlayers();
 		Set<Card> cards = board.getSolution();
 		//Ensure the sets are not empty.
 		assertFalse(players == null);
@@ -120,7 +121,7 @@ class gameSetupTests {
 	@Test
 	public void testPlayers() {
 		//Get the set of players from the board.
-		Set<Player> players = board.getPlayers();
+		ArrayList<Player> players = board.getPlayers();
 		
 		//The set should have 6 objects,
 		assertEquals(6, players.size());
@@ -140,33 +141,42 @@ class gameSetupTests {
 		
 		//Ensure the players have the proper data
 		//Create a hard-coded list of correct player objects.
-		Player[] correctPlayers = new Player[6];
+		Set<Player> correctPlayers = new HashSet<Player>();
 		//Create all the necessary colors
 		Color color1 = new Color(86, 42, 144);
 		Color color2 = new Color(247, 39, 34);
 		Color color3 = new Color(60, 141, 47);
 		Color color4 = new Color(242, 241, 38);
 		Color color5 = new Color(37, 78, 165);
-		Color color6 = new Color(25, 116, 0);
+		Color color6 = new Color(255, 116, 0);
 		//Create correct player objects with the proper names and colors.
-		correctPlayers[0] = new HumanPlayer("Ramona Rodriguez", color1);
-		correctPlayers[1] = new ComputerPlayer("Leland Blake", color2);
-		correctPlayers[2] = new ComputerPlayer("Irene Wright", color3);
-		correctPlayers[3] = new ComputerPlayer("Blake Greene", color4);
-		correctPlayers[4] = new ComputerPlayer("Rosalie Vaughn", color5);
-		correctPlayers[5] = new ComputerPlayer("Fernando Elliot", color6);
+		correctPlayers.add(new HumanPlayer("Ramona Rodriguez", color1));
+		correctPlayers.add(new ComputerPlayer("Leland Blake", color2));
+		correctPlayers.add(new ComputerPlayer("Irene Wright", color3));
+		correctPlayers.add(new ComputerPlayer("Blake Greene", color4));
+		correctPlayers.add(new ComputerPlayer("Rosalie Vaughn", color5));
+		correctPlayers.add(new ComputerPlayer("Fernando Elliot", color6));
+		
+		//Check each player in players against each player in correctPlayers. If they are equal, add to foundInBoth.
+		Set<Player> foundInBoth = new HashSet<Player>();
 		//Ensure that every player is properly loaded in.
 		int i = 0;
 		for(Player player : players) {
-			assertTrue(player.equals(correctPlayers[i]));
-			i++;
+			for(Player player2 : correctPlayers) {
+				if(player.equals(player2)) {
+					foundInBoth.add(player);
+				}
+			}
 		}
+		//All 6 players should appear here.
+		assertEquals(6, foundInBoth.size());	
 	}
 	/**
 	 * Test to ensure that the player's hand updates and behaves as expected.
 	 */
 	@Test
 	public void testPlayerHand() {
+<<<<<<< HEAD
 		// Make sure that the player's hand updates when cards are added to it
 		Set<Player> players = board.getPlayers();
 
@@ -193,7 +203,56 @@ class gameSetupTests {
 				}
 			}
 		}
+=======
+		//Create a dummy human player.
+		Player testPlayer = new HumanPlayer("Test", Color.BLACK);
+		//Get it's hand.
+		Set<Card> testHand = testPlayer.getHand();
+		//It should be empty at the start.
+		assertEquals(new HashSet<Card>(), testHand);
+		
+		//Define a small deck of cards to work with.
+		Card[] cards = new Card[4];
+		cards[0] = new Card("Card0", CardType.ROOM);
+		cards[1] = new Card("Card1", CardType.ROOM);
+		cards[2] = new Card("Card2", CardType.ROOM);
+		cards[3] = new Card("Card3", CardType.ROOM);
+		
+		//Give the dummy the first card, and get it's hand again.
+		testPlayer.updateHand(cards[0]);
+		testHand = testPlayer.getHand();
+		//It should be of length one and contain cards[0]
+		assertEquals(1, testHand.size());
+		assertTrue(testHand.contains(cards[0]));
+		
+		//Give the dummy the next card, and get it's hand again.
+		testPlayer.updateHand(cards[1]);
+		testHand = testPlayer.getHand();
+		//It should be of length two and contain cards[0] and cards[1]
+		assertEquals(2, testHand.size());
+		assertTrue(testHand.contains(cards[0]));
+		assertTrue(testHand.contains(cards[1]));
+		
+		//Give the dummy the next card, and get it's hand again.
+		testPlayer.updateHand(cards[2]);
+		testHand = testPlayer.getHand();
+		//It should be of length three and contain cards[0]-cards[2]
+		assertEquals(3, testHand.size());
+		assertTrue(testHand.contains(cards[0]));
+		assertTrue(testHand.contains(cards[1]));
+		assertTrue(testHand.contains(cards[2]));
+		
+		//Try to give the dummy the next card, and get it's hand again.
+		testPlayer.updateHand(cards[3]);
+		testHand = testPlayer.getHand();
+		//It should be of length three and contain cards[0]-cards[2]. It should not hold the 4th card.
+		assertEquals(3, testHand.size());
+		assertTrue(testHand.contains(cards[0]));
+		assertTrue(testHand.contains(cards[1]));
+		assertTrue(testHand.contains(cards[2]));
+>>>>>>> 38052842015eb2b2269cbc7eee71c37ed1d0aeb6
 	}
+
 	/**
 	 * Test to ensure that the solution to the game is always valid, and that cards are not both in the solution and the hand of a player.
 	 */
@@ -201,16 +260,39 @@ class gameSetupTests {
 	public void testSolution() {
 		// Make sure that the cards aren't in both the player's deck and the solution
 		Set<Card> solution = board.getSolution();
-		Set<Player> players = board.getPlayers();
+		ArrayList<Player> players = board.getPlayers();
+		
+		// Verify the solution is the correct length
+		assertEquals(3,solution.size());
 		
 		// ensures that each card in each players hand does not match with any card found in the solution
-		for (Player p: players) {
-			for (Card playerCard: p.getHand()) {
+		for (Player player: players) {
+			for (Card playerCard: player.getHand()) {
 				for (Card solutionCard: solution) {
 					assertFalse(playerCard.equals(solutionCard));
 				}
 			}
 		}
+		
+		//Make sure the solution has one card of each type
+		//Declare counters
+		int roomCount = 0;
+		int playerCount = 0;
+		int weaponCount = 0;
+		//Check every card
+		for(Card card : solution) {
+			if(card.getType() == CardType.PERSON) {
+				playerCount++;
+			} else if(card.getType() == CardType.ROOM) {
+				roomCount++;
+			} else if(card.getType() == CardType.WEAPON) {
+				weaponCount++;
+			}
+		}
+		//Ensure there is exactly one of each type
+		assertEquals(1,roomCount);
+		assertEquals(1,playerCount);
+		assertEquals(1,weaponCount);
 	}
 	
 }
