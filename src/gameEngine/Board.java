@@ -29,7 +29,7 @@ public class Board {
 	private Map<Character, Room> roomMap;
 	private static Board boardInstance = new Board();
 	//Set to hold all player objects involved in the game
-	private Set<Player> players;
+	private ArrayList<Player> players;
 	//ArrayList to hold all the cards in the game's deck.
 	private ArrayList<Card> deck;
 	//A set to hold the answer to the game's mystery, or the solution.
@@ -63,7 +63,7 @@ public class Board {
 		targets = new HashSet<BoardCell>();
 		visited = new Stack<BoardCell>();
 		roomMap = new HashMap<Character, Room>();
-		players = new HashSet<Player>();
+		players = new ArrayList<Player>();
 		deck = new ArrayList<Card>();
 		
 		//Try to load the setup and layout config files, and initialize the game instance variables. Catch and handle BadConfigFormatExceptions here.
@@ -552,6 +552,15 @@ public class Board {
 			//If the loop does not find an incorrect card, return true
 			return true;
 	}
+	/**
+	 * 
+	 * @param suggestion - The suggestion made by a player being handled.
+	 * @param suggestor - The person who made the suggestion
+	 * @return - The card that debunks the suggestion, null if none found.
+	 */
+	public Card handleSuggestion(Set<Card> suggestion, Player suggestor) {
+		return null;
+	}
 	
 	/**
 	 * Returns the instance of the board, saved in boardInstance. This is the easiest way for us to access the singleton instance of the game board.
@@ -625,7 +634,7 @@ public class Board {
 	 * Returns the list of players in the game.
 	 * @return
 	 */
-	public Set<Player> getPlayers(){
+	public ArrayList<Player> getPlayers(){
 		return players;
 	}
 	/**

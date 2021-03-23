@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import java.awt.Color;
 
@@ -40,7 +41,7 @@ class GameSetupTests {
 	@Test
 	void testCards() {
 		//Get the set of players and the solution set from the board.
-		Set<Player> players = board.getPlayers();
+		ArrayList<Player> players = board.getPlayers();
 		Set<Card> cards = board.getSolution();
 		//Ensure the sets are not empty.
 		assertFalse(players == null);
@@ -120,7 +121,7 @@ class GameSetupTests {
 	@Test
 	public void testPlayers() {
 		//Get the set of players from the board.
-		Set<Player> players = board.getPlayers();
+		ArrayList<Player> players = board.getPlayers();
 		
 		//The set should have 6 objects,
 		assertEquals(6, players.size());
@@ -230,7 +231,7 @@ class GameSetupTests {
 	public void testSolution() {
 		// Make sure that the cards aren't in both the player's deck and the solution
 		Set<Card> solution = board.getSolution();
-		Set<Player> players = board.getPlayers();
+		ArrayList<Player> players = board.getPlayers();
 		
 		// Verify the solution is the correct length
 		assertEquals(3,solution.size());

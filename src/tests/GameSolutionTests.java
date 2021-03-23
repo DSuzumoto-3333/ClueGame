@@ -11,6 +11,7 @@ import java.awt.Color;
 
 import java.util.Random;
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 class GameSolutionTests {
@@ -129,6 +130,69 @@ class GameSolutionTests {
 		//calling disproveSuggestion() should return either cPerson or cWeapon
 		Card returned = player5.disproveSuggestion(sug);
 		assertTrue((returned.equals(cPerson)) || (returned.equals(cWeapon)));
+	}
+	
+	/**
+	 * Test to ensure that suggestions are handled in Board.java properly
+	 */
+	@Test
+	public void testSuggestions() {
+		//Get the list of players from the board.
+		ArrayList<Player> players = board.getPlayers();
+		//Create a "deck" of cards, capable of having solutions and non-solutions (repeat cards are unimportant in this case)
+		Card cPerson = new Card("Correct Person", CardType.PERSON);
+		Card cRoom = new Card("Correct Room", CardType.ROOM);
+		Card cWeapon = new Card("Correct Weapon", CardType.WEAPON);
+		Card wPerson = new Card("Wrong Person", CardType.PERSON);
+		Card wRoom = new Card("Wrong Room", CardType.ROOM);
+		Card wWeapon = new Card("Wrong Weapon", CardType.WEAPON);
+		//Set up the suggestion set
+		Set<Card> sug = new HashSet<Card>();
+		sug.add(cPerson);
+		sug.add(cRoom);
+		sug.add(cWeapon);
+		
+		//Make sure no players have cards that would dispute the suggestion
+		Set<Card> hand = new HashSet<Card>();
+		hand.add(wPerson);
+		hand.add(wRoom);
+		hand.add(wWeapon);
+		for(Player player : players) {
+			player.setHand(hand);
+		}
+		//The handleSuggestion() method should return null (We are using player 6 as the accuser)
+		assertEquals(null, board.handleSuggestion(sug, players.get(5)));
+		
+		//Give the accuser a card that would allow them to disprove their own suggestion.
+		hand.remove(wPerson);
+		hand.add(cPerson);
+		players.get(5).setHand(hand);
+		//Ensure that null is still returned, as a player shouldn't be able to debunk their own suggestion.
+		assertEquals(null, board.handleSuggestion(sug, players.get(5)));
+		
+		//Give the first player (HumanPlayer instance) a correct person card
+		hand.remove(wPerson);
+		hand.add(cPerson);
+		players.get(0).setHand(hand);
+		//The method should now return cPerson
+		assertEquals(cPerson, board.handleSuggestion(sug, players.get(5)));
+		
+		//Set the first player's hand back to all wrong cards.
+		hand.remove(cPerson);
+		hand.add(wPerson);
+		players.get(0).setHand(hand);
+		//Give the 3rd player the correct room card
+		hand.remove(wRoom);
+		hand.add(cRoom);
+		players.get(2).setHand(hand);
+		//Give the 5th player the correct weapon card
+		hand.remove(cRoom);
+		hand.add(wRoom);
+		hand.remove(wWeapon);
+		hand.add(cWeapon);
+		players.get(4).setHand(hand);
+		//The 3nd player should beat the 5th to challenging the suggestion, and the method should return cRoom
+		assertEquals(cRoom, board.handleSuggestion(sug, players.get(5)));
 	}
 }
 

@@ -67,6 +67,13 @@ public abstract class Player {
 	}
 	
 	/**
+	 * A method to set the player's hand immediately. Used for testing.
+	 * @param hand - The hand to be given to the player.
+	 */
+	public void setHand(Set<Card> hand) {
+		this.hand = hand;
+	}
+	/**
 	 * A method to get the player's name as a string.
 	 * @return - The player's name
 	 */
