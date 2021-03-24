@@ -13,30 +13,30 @@ public class GameControlPanel extends JPanel {
 		JPanel top = createTop();
 		JPanel bottom = createBottom();
 		//Add them to the outermost panel.
-		add(top, BorderLayout.NORTH);
-		add(bottom, BorderLayout.SOUTH);
-
+		JPanel wrapper = new JPanel(new GridLayout(2, 1));
+		add(top);
+		add(bottom);
 	}
 	
 	public JPanel createBottom() {
 		//Create the guess panel
-		JPanel guessPanel = new JPanel(new GridLayout(2,1));
+		JPanel guessPanel = new JPanel(new BorderLayout());
 		JLabel guessLabel = new JLabel("Guess");
-		guessPanel.add(guessLabel);
+		guessPanel.add(guessLabel, BorderLayout.NORTH);
 		guessField = new JTextField();
-		guessPanel.add(guessField);
+		guessPanel.add(guessField, BorderLayout.CENTER);
 		
 		//Create the guessResult panel
-		JPanel guessResultPanel = new JPanel(new GridLayout(2,1));
+		JPanel guessResultPanel = new JPanel(new BorderLayout());
 		JLabel guessResultLabel = new JLabel("Guess Result");
-		guessResultPanel.add(guessResultLabel);
+		guessResultPanel.add(guessResultLabel, BorderLayout.NORTH);
 		guessResultField = new JTextField();
-		guessResultPanel.add(guessResultField);
+		guessResultPanel.add(guessResultField, BorderLayout.CENTER);
 		
 		//Create the bottom panel
 		JPanel bottom = new JPanel(new GridLayout(1,2));
-		add(guessPanel);
-		add(guessResultPanel);
+		bottom.add(guessPanel);
+		bottom.add(guessResultPanel);
 		return bottom;
 	}
 	
@@ -50,24 +50,30 @@ public class GameControlPanel extends JPanel {
 		
 
 		//Create the roll panel
-		JPanel rollPanel = new JPanel(new GridLayout(1,2));
+		JPanel rollPanel = new JPanel();
 		JLabel rollLabel = new JLabel("Roll:");
 		rollPanel.add(rollLabel);
-		rollField = new JTextField();
+		rollField = new JTextField(5);
 		rollPanel.add(rollField);
 
+		JPanel dataPanel = new JPanel(new GridLayout(1,2));
+		dataPanel.add(turnPanel);
+		dataPanel.add(rollPanel);
+		
 		//Create the accuse button
 		JButton accuseButton = new JButton("Acuse!");
 
 		//Create the next button
 		JButton nextButton = new JButton("Next!");
 		
+		JPanel buttonPanel = new JPanel(new GridLayout(1,2));
+		buttonPanel.add(accuseButton);
+		buttonPanel.add(nextButton);
+		
 		//Create the top panel
-		JPanel top = new JPanel(new GridLayout(1,4));
-		add(turnPanel);
-		add(rollPanel);
-		add(accuseButton);
-		add(nextButton);
+		JPanel top = new JPanel(new GridLayout(1,2));
+		top.add(dataPanel);
+		top.add(buttonPanel);
 		return top;
 	}
 	/**
