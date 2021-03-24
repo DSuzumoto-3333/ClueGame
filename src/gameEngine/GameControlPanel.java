@@ -5,6 +5,13 @@ import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
+/**
+ * GUI Component that displays important information about the game, including current turn, roll, guess, and guess result.
+ * Also holds interaction buttons for accusing and moving to next turn.
+ * @author Derek Suzumoto
+ * @author Luke Wakumoto
+ *
+ */
 public class GameControlPanel extends JPanel {
 	private JTextField guessField, guessResultField, turnField, rollField;
 

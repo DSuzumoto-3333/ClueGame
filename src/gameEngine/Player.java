@@ -123,10 +123,18 @@ public abstract class Player {
 		seen.add(card);
 	}
 	
+	/**
+	 * Method to get the set of all cards this particular player has seen.
+	 * @return - Set of cards representing the cards this player has seen.
+	 */
 	public Set<Card> getSeen() {
 		return seen;
 	}
 	
+	/**
+	 * Method to get the instance of the game board saved in the player object.
+	 * @return - A Board object representing the current game board.
+	 */
 	public Board getBoard() {
 		return board;
 	}

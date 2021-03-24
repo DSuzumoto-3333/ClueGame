@@ -666,6 +666,10 @@ public class Board {
 		solution = new HashSet<Card>(soln);
 	}
 	
+	/**
+	 * Method to get the game's card deck from the board.
+	 * @return - An arraylist representing the deck of cards in play.
+	 */
 	public ArrayList<Card> getDeck(){
 		return deck;
 	}
