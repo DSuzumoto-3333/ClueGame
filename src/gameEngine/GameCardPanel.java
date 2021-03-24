@@ -161,6 +161,15 @@ public class GameCardPanel extends JPanel {
 		panel.removeSeenCardGUI(room6);
 		panel.removeSeenCardGUI(weap3);
 		panel.removeSeenCardGUI(weap5);
+		
+		//Ensure removers do not error on bad removes
+		panel.removeHandCardGUI(person2);
+		panel.removeHandCardGUI(room2);
+		panel.removeHandCardGUI(weap1);
+		
+		panel.removeSeenCardGUI(person4);
+		panel.removeSeenCardGUI(room4);
+		panel.removeSeenCardGUI(weap3);
 	}
 }
 

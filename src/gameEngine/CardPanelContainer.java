@@ -2,7 +2,9 @@ package gameEngine;
 
 import java.awt.GridLayout;
 import java.awt.Color;
+import java.awt.Component;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -18,12 +20,12 @@ import java.util.ArrayList;
  * @author Luke Wakumoto
  */
 public class CardPanelContainer extends JPanel{
-	//Create the 2 panels contained.
-	JPanel handPanel, seenPanel;
 	//Create array lists to hold the text fields we'll be updating.
 	ArrayList<JTextField> inHand, inSeen;
 	//Declare some "None" text fields to add and remove as game changes.
 	JTextField noneHand, noneSeen;
+	//Declare the "In Hand:" and "Seen:" labels
+	JLabel handLabel, seenLabel;
 	
 	/**
 	 * Create a container object that will be capable of displaying all cards the player has, and that the player's seen.
@@ -31,43 +33,33 @@ public class CardPanelContainer extends JPanel{
 	 */
 	public CardPanelContainer(String labelName) {
 		//Set basic properties about the container panel.
-		this.setLayout(new GridLayout(2,1));
+		this.setLayout(new GridLayout(0,1));
 		this.setBorder(new TitledBorder(new EtchedBorder(), labelName));
 		
 		//Instantiate our ArrayLists
 		inHand = new ArrayList<JTextField>();
 		inSeen = new ArrayList<JTextField>();
-		
-		//Create the panel that will display what is in our hand
-		handPanel = new JPanel(new GridLayout(0,1));
+
 		//Create the "In Hand:" label
-		JLabel handLabel = new JLabel("In Hand:");
-		handPanel.add(handLabel);
+		handLabel = new JLabel("In Hand:");
 		//Create a field for "None"
 		noneHand = new JTextField();
 		noneHand.setText("None");
-		handPanel.add(noneHand);
 		inHand.add(noneHand);
 		
-		//Create the panel that will display what has been seen
-		seenPanel = new JPanel(new GridLayout(0,1));
 		//Create the "Seen:" label
-		JLabel seenLabel = new JLabel("Seen:");
-		seenPanel.add(seenLabel);
+		seenLabel = new JLabel("Seen:");
 		//Create a field for "None"
 		noneSeen = new JTextField();
 		noneSeen.setText("None");
-		seenPanel.add(noneSeen);
 		inSeen.add(noneSeen);
 		
-		this.add(handPanel);
-		this.add(seenPanel);
+		redrawContainer();
 	}
 	
 	public void addInHand(String cardName) {
 		//Remove the "None" element if present.
 		if(inHand.contains(noneHand)) {
-			handPanel.remove(noneHand);
 			inHand.remove(noneHand);
 		}
 		
@@ -76,48 +68,35 @@ public class CardPanelContainer extends JPanel{
 		card.setText(cardName);
 		
 		//Add to the panel and save in the arrayList.
-		handPanel.add(card);
 		inHand.add(card);
 		
 		//Update the panel
-		this.revalidate();
-		this.repaint();
+		redrawContainer();
 	}
 	
 	public void removeFromHand(String cardName) {
 		//Search the ArrayList for the element.
 		int i = 0;
-		//Set a null object to store the card in if found
-		JTextField cardToRemove = null;
 		for(JTextField card : inHand) {
 			if(card.getText().equals(cardName)) {
-				cardToRemove = inHand.get(i);
+				inHand.remove(i);
 				break;
 			}
 			i++;
 		}
 		
-		//If the card is found, remove it from the panel and the array list.
-		if(!(cardToRemove == null)) {
-			handPanel.remove(cardToRemove);
-			inHand.remove(cardToRemove);
-		}
-		
 		//If the panel is empty, add the "None" field to it.
 		if(inHand.size() == 0) {
-			handPanel.add(noneHand);
 			inHand.add(noneHand);
 		}
 		
 		//Update the panel
-		this.revalidate();
-		this.repaint();
+		redrawContainer();
 	}
 	
 	public void addInSeen(String cardName, Color color) {
 		//Remove the "None" element if present.
 		if(inSeen.contains(noneSeen)) {
-			seenPanel.remove(noneSeen);
 			inSeen.remove(noneSeen);
 		}
 
@@ -126,46 +105,58 @@ public class CardPanelContainer extends JPanel{
 		card.setText(cardName);
 		card.setBackground(color);
 		
-		//Add to the panel and save in the array list.
-		seenPanel.add(card);
+		//Add to the array list
 		inSeen.add(card);
 		
 		//Update the panel
-		this.revalidate();
-		this.repaint();
+		redrawContainer();
 	}
 	
 	public void removeFromSeen(String cardName) {
 		//Search the ArrayList for the element.
 		int i = 0;
 		//Set a null object to store the card in if found
-		JTextField cardToRemove = null;
 		for(JTextField card : inSeen) {
 			if(card.getText().equals(cardName)) {
-				cardToRemove = inSeen.get(i);
+				inSeen.remove(i);
 				break;
 			}
 			i++;
 		}
 
-		//If the card is found, remove it from the panel and the array list.
-		if(!(cardToRemove == null)) {
-			seenPanel.remove(cardToRemove);
-			inSeen.remove(cardToRemove);
-		}
-
 		//If the panel is empty, add the "None" field to it.
 		if(inSeen.size() == 0) {
-			seenPanel.add(noneSeen);
 			inSeen.add(noneSeen);
+		}
+		
+		//Update the panel
+		redrawContainer();
+	}
+	
+	public void redrawContainer() {
+		//Get all components currently on the panel.
+		Component[] components = this.getComponents();
+		//Clear the panel
+		for(int i = 0; i < components.length; i++) {
+			this.remove(components[i]);
+		}
+		
+		//Add the "In Hand:" label
+		this.add(handLabel);
+		//Add all the card text fields in the hand
+		for(JTextField card : inHand) {
+			this.add(card);
+		}
+		
+		//Add the "Seen:" Label
+		this.add(seenLabel);
+		//Add all the card text fields seen
+		for(JTextField card : inSeen) {
+			this.add(card);
 		}
 		
 		//Update the panel
 		this.revalidate();
 		this.repaint();
-	}
-	
-	public void redrawContainer() {
-		
 	}
 }
