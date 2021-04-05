@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 
 public class ClueGame extends JFrame{
 	public ClueGame() {
-		setSize(1000, 1000);
+		setSize(930, 890);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("CSCI 306 Clue Game");
 	}
@@ -22,12 +22,10 @@ public class ClueGame extends JFrame{
 		ClueGame gameFrame = new ClueGame();
 		
 		GameControlPanel controlPanel = new GameControlPanel();
-		controlPanel.setSize(830,200);
 		
 		GameCardPanel cardPanel = new GameCardPanel();
-		cardPanel.setSize(150, 690);
 		
-		gameFrame.setContentPane(board);
+		gameFrame.add(board, BorderLayout.CENTER);
 		gameFrame.add(cardPanel, BorderLayout.EAST);
 		gameFrame.add(controlPanel, BorderLayout.SOUTH);
 		
