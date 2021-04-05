@@ -2,6 +2,8 @@ package gameEngine;
 
 import javax.swing.*;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
@@ -115,6 +117,28 @@ public class GameControlPanel extends JPanel {
 	 */
 	public void displayGuessResult(String result) {
 		guessResultField.setText(result);
+	}
+	
+	/**
+	 * A listener for the "Next!" button on the player's GUI.
+	 * @author Derek Suzumoto
+	 * @author Luke Wakumoto
+	 */
+	private class NextListener implements ActionListener{
+		public void actionPerformed(ActionEvent event) {
+			
+		}
+	}
+	
+	/**
+	 * A listener for the "Accuse!" button on the player's GUI.
+	 * @author Derek Suzumoto
+	 * @author Luke Wakumoto
+	 */
+	private class AccuseListener implements ActionListener{
+		public void actionPerformed(ActionEvent event) {
+			
+		}
 	}
 	
 	public static void main(String[] args) {

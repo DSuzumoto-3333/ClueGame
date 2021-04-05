@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -47,6 +48,12 @@ public class ClueGame extends JFrame{
 		gameFrame.add(board, BorderLayout.CENTER);
 		gameFrame.add(cardPanel, BorderLayout.EAST);
 		gameFrame.add(controlPanel, BorderLayout.SOUTH);
+		
+		//Show the splash screen
+		JOptionPane.showMessageDialog(gameFrame, 
+				"Welcome to Clue!\nYou are Ramona Rodriguez. \nCan you solve the mystery before the bots?",
+				"Welcome to clue",
+				JOptionPane.INFORMATION_MESSAGE);
 		
 		//Let the frame be visible.
 		gameFrame.setVisible(true);

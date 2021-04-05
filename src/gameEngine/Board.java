@@ -10,6 +10,8 @@ import java.io.*;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 /**
  * Represents the game board itself, and contains methods pertaining to player movement. Also handles loading in data from setup and layout files provided. The board uses a singleton design,
@@ -17,7 +19,7 @@ import java.awt.Graphics;
  * @author Derek Suzumoto
  * @author Luke Wakumoto
  */
-public class Board extends JPanel{
+public class Board extends JPanel implements MouseListener{
 	//Constants for grid size
 	private static int boardWidth;
 	private static int boardHeight;
@@ -610,6 +612,16 @@ public class Board extends JPanel{
 			player.draw(tileWidth, tileHeight, g);
 		}
 	}
+	
+	/**
+	 * Abstract Methods to handle all types of Mouse Events, since the board implements MouseListener. Most of these will
+	 * remain empty, as we don't want to perform any actions during them.
+	 */
+	public void mouseClicked(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {}
 	
 	/**
 	 * Returns the instance of the board, saved in boardInstance. This is the easiest way for us to access the singleton instance of the game board.
