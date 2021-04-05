@@ -89,12 +89,14 @@ public class BoardCell {
 				g.fillRect(xOffset, yOffset, tileWidth, 5);
 				break;
 			case DOWN:
-				g.fillRect(xOffset, yOffset + tileHeight, tileWidth, 5);
+				g.fillRect(xOffset, yOffset + tileHeight - 5, tileWidth, 5);
 				break;
 			case LEFT:
 				g.fillRect(xOffset, yOffset, 5, tileHeight);
+				break;
 			case RIGHT:
-				g.fillRect(xOffset + tileWidth, yOffset, 5, tileHeight);
+				g.fillRect(xOffset + tileWidth - 5, yOffset, 5, tileHeight);
+				break;
 			default:
 				break;
 			}
