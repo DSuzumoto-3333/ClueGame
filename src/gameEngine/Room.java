@@ -1,5 +1,9 @@
 package gameEngine;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+
 /**
  * Represents a room on the game board. Holds information for which tile is the center and which tile is the label tile.
  * @author Derek Suzumoto
@@ -16,6 +20,21 @@ public class Room {
 	public Room(String name) {
 		super();
 		this.name = name;
+	}
+	
+	/**
+	 * Method to draw labels in all rooms on the proper label cell.
+	 * @param tileWidth - Width of each tile on the board (For calculating offset)
+	 * @param tileHeight - Height of each tile on the board (For calculating offset)
+	 * @param g - The Graphics to draw on.
+	 */
+	public void draw(int tileWidth, int tileHeight, Graphics g) {
+		if(!(labelCell == null)) {
+			g.setColor(Color.blue);
+			Font font = new Font("Ariel", Font.PLAIN, 18);
+			g.setFont(font);
+			g.drawString(name, labelCell.getCol() * tileWidth, labelCell.getRow() * tileHeight);
+		}
 	}
 	/**
 	 * Sets the center cell to whatever cell is passed in.

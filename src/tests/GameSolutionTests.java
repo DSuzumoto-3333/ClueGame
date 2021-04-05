@@ -91,7 +91,7 @@ class GameSolutionTests {
 		sug.add(cWeapon);
 		
 		//Create a test person and populate their hand with the person from the suggestion.
-		Player player1 = new HumanPlayer("Player1", Color.blue);
+		Player player1 = new HumanPlayer("Player1", Color.blue, 0, 0);
 		player1.updateHand(cPerson);
 		player1.updateHand(wRoom);
 		player1.updateHand(wWeapon);
@@ -99,7 +99,7 @@ class GameSolutionTests {
 		assertEquals(cPerson, player1.disproveSuggestion(sug));
 
 		//Create a test person and populate their hand with the room from the suggestion.
-		Player player2 = new HumanPlayer("Player2", Color.blue);
+		Player player2 = new HumanPlayer("Player2", Color.blue, 0, 0);
 		player2.updateHand(wPerson);
 		player2.updateHand(cRoom);
 		player2.updateHand(wWeapon);
@@ -107,7 +107,7 @@ class GameSolutionTests {
 		assertEquals(cRoom, player2.disproveSuggestion(sug));
 		
 		//Create a test person and populate their hand with the weapon from the suggestion.
-		Player player3 = new HumanPlayer("Player3", Color.blue);
+		Player player3 = new HumanPlayer("Player3", Color.blue, 0, 0);
 		player3.updateHand(wPerson);
 		player3.updateHand(wRoom);
 		player3.updateHand(cWeapon);
@@ -115,7 +115,7 @@ class GameSolutionTests {
 		assertEquals(cWeapon, player3.disproveSuggestion(sug));
 		
 		//Create a test person and populate their hand with none of the cards from the suggestion.
-		Player player4 = new HumanPlayer("Player4", Color.blue);
+		Player player4 = new HumanPlayer("Player4", Color.blue, 0, 0);
 		player4.updateHand(wPerson);
 		player4.updateHand(wRoom);
 		player4.updateHand(wWeapon);
@@ -123,7 +123,7 @@ class GameSolutionTests {
 		assertEquals(null, player4.disproveSuggestion(sug));
 		
 		//Create a test person and populate their hand with two of the cards from the suggestion.
-		Player player5 = new HumanPlayer("Player4", Color.blue);
+		Player player5 = new HumanPlayer("Player4", Color.blue, 0, 0);
 		player5.updateHand(cPerson);
 		player5.updateHand(wRoom);
 		player5.updateHand(cWeapon);

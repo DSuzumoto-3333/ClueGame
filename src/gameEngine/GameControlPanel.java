@@ -16,6 +16,7 @@ public class GameControlPanel extends JPanel {
 	private JTextField guessField, guessResultField, turnField, rollField;
 
 	public GameControlPanel()  {
+		setLayout(new GridLayout(2,0));
 		//Get the top and bottom panels
 		JPanel top = createTop();
 		JPanel bottom = createBottom();
@@ -118,7 +119,6 @@ public class GameControlPanel extends JPanel {
 	
 	public static void main(String[] args) {
 		GameControlPanel panel = new GameControlPanel();  // create the panel
-		panel.setLayout(new GridLayout(2,0));
 		JFrame frame = new JFrame();  // create the frame 
 		frame.setContentPane(panel); // put the panel in the frame
 		frame.setSize(840, 200);  // size the frame
@@ -126,7 +126,7 @@ public class GameControlPanel extends JPanel {
 		frame.setVisible(true); // make it visible
 		
 		//Test setters.
-		panel.displayTurn(new ComputerPlayer("TestPlayer", Color.magenta));
+		panel.displayTurn(new ComputerPlayer("TestPlayer", Color.magenta, 0, 0));
 		panel.displayRoll(6);
 		panel.displayGuess("I do not have a guess");
 		panel.displayGuessResult("I do not have a result");

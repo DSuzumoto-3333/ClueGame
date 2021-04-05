@@ -13,6 +13,9 @@ import java.awt.Color;
 public class GameCardPanel extends JPanel {
 	CardPanelContainer peoplePanel, roomsPanel, weaponsPanel;
 	public GameCardPanel() {
+		setLayout(new GridLayout(3,1));
+		setBorder(new TitledBorder(new EtchedBorder(), "Known Cards"));
+		
 		peoplePanel = new CardPanelContainer("People");
 		roomsPanel = new CardPanelContainer("Rooms");
 		weaponsPanel = new CardPanelContainer("Weapons");
@@ -97,8 +100,6 @@ public class GameCardPanel extends JPanel {
 	
 	public static void main(String[] args) {
 		GameCardPanel panel = new GameCardPanel();  // create the panel
-		panel.setLayout(new GridLayout(3,1));
-		panel.setBorder(new TitledBorder(new EtchedBorder(), "Known Cards"));
 		JFrame frame = new JFrame();  // create the frame 
 		frame.setContentPane(panel); // put the panel in the frame
 		frame.setSize(250, 900);  // size the frame

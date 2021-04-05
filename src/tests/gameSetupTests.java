@@ -146,16 +146,16 @@ class GameSetupTests {
 		Color color1 = new Color(86, 42, 144);
 		Color color2 = new Color(247, 39, 34);
 		Color color3 = new Color(60, 141, 47);
-		Color color4 = new Color(242, 241, 38);
+		Color color4 = new Color(255, 192, 203);
 		Color color5 = new Color(37, 78, 165);
 		Color color6 = new Color(255, 116, 0);
 		//Create correct player objects with the proper names and colors.
-		correctPlayers.add(new HumanPlayer("Ramona Rodriguez", color1));
-		correctPlayers.add(new ComputerPlayer("Leland Blake", color2));
-		correctPlayers.add(new ComputerPlayer("Irene Wright", color3));
-		correctPlayers.add(new ComputerPlayer("Blake Greene", color4));
-		correctPlayers.add(new ComputerPlayer("Rosalie Vaughn", color5));
-		correctPlayers.add(new ComputerPlayer("Fernando Elliot", color6));
+		correctPlayers.add(new HumanPlayer("Ramona Rodriguez", color1, 0, 0));
+		correctPlayers.add(new ComputerPlayer("Leland Blake", color2, 0, 0));
+		correctPlayers.add(new ComputerPlayer("Irene Wright", color3, 0, 0));
+		correctPlayers.add(new ComputerPlayer("Blake Greene", color4, 0, 0));
+		correctPlayers.add(new ComputerPlayer("Rosalie Vaughn", color5, 0, 0));
+		correctPlayers.add(new ComputerPlayer("Fernando Elliot", color6, 0, 0));
 		
 		//Check each player in players against each player in correctPlayers. If they are equal, add to foundInBoth.
 		Set<Player> foundInBoth = new HashSet<Player>();
@@ -177,7 +177,7 @@ class GameSetupTests {
 	@Test
 	public void testPlayerHand() {
 		//Create a dummy human player.
-		Player testPlayer = new HumanPlayer("Test", Color.BLACK);
+		Player testPlayer = new HumanPlayer("Test", Color.BLACK, 0, 0);
 		//Get it's hand.
 		Set<Card> testHand = testPlayer.getHand();
 		//It should be empty at the start.

@@ -1,6 +1,7 @@
 package gameEngine;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -12,7 +13,7 @@ import java.util.HashSet;
  */
 public abstract class Player {
 	//The player's current position cell
-	private BoardCell pos;
+	private int rowPos, colPos;
 	//The player's name
 	private String name;
 	//A color to signify the player
@@ -30,12 +31,14 @@ public abstract class Player {
 	 * @param playerName - The name of the player
 	 * @param playerColor - The color the player will be indicated by.
 	 */
-	public Player(String playerName, Color playerColor) {
+	public Player(String playerName, Color playerColor, int row, int col) {
 		super();
 		name = playerName;
 		color = playerColor;
 		hand = new HashSet<Card>();
 		seen = new HashSet<Card>();
+		rowPos = row;
+		colPos = col;
 	}
 	
 	/**
@@ -56,6 +59,16 @@ public abstract class Player {
 		}
 		//If no match is found, return null.
 		return null;
+	}
+	/**
+	 * Method to draw players on the game board
+	 * @param tileWidth - The width of each tile being drawn on the game board
+	 * @param tileHeight - The height of each tile being drawn
+	 * @param g - The graphics to draw on.
+	 */
+	public void draw(int tileWidth, int tileHeight, Graphics g) {
+		g.setColor(color);
+		g.fillOval(colPos * tileWidth, rowPos * tileHeight, tileWidth, tileHeight);
 	}
 	
 	/**
@@ -106,13 +119,14 @@ public abstract class Player {
 	 * @param position - The board cell the player occupies.
 	 */
 	public void setPosition(BoardCell position) {
-		pos = position;
+		rowPos = position.getRow();
+		colPos = position.getCol();
 	}
 	/**
 	 * Method to get the player's position.
 	 */
 	public BoardCell getPosition() {
-		return pos;
+		return board.getCell(rowPos, colPos);
 	}
 	
 	/**

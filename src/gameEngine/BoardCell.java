@@ -1,6 +1,9 @@
 package gameEngine;
 
 import java.util.Set;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.util.HashSet;
 
 /**
@@ -50,12 +53,60 @@ public class BoardCell {
 	}
 	
 	/**
+	 * A method to draw each and every tile on the board.
+	 * @param tileWidth - The width to draw each tile.
+	 * @param tileHeight - The height to draw each tile.
+	 * @param xOffset - The x-coordinate of the top left corner of the tile
+	 * @param yOffset - The y-coordinate of the top left corner of the tile
+	 * @param g - The graphics object to draw on
+	 */
+	public void draw(int tileWidth, int tileHeight, int xOffset, int yOffset, Graphics g) {
+		//Room tiles are gray without a border
+		if(isInRoom) {
+			g.setColor(Color.gray);
+			g.fillRect(xOffset, yOffset, tileWidth, tileHeight);
+		}
+		//Unused tiles are black.
+		else if(roomInitial == 'X') {
+			g.setColor(Color.black);
+			g.fillRect(xOffset, yOffset, tileWidth, tileHeight);
+		}
+		//Walkways are yellow with a black border
+		else {
+			//Draw the tile
+			g.setColor(Color.yellow);
+			g.fillRect(xOffset, yOffset, tileWidth, tileHeight);
+			//Draw the boarder
+			g.setColor(Color.black);
+			g.drawRect(xOffset, yOffset, tileWidth, tileHeight);
+			
+			//Doorways have a blue door between the room and the walkway tile.
+			//Set the graphics color to blue to draw doors
+			g.setColor(Color.blue);
+			//Ensure the door is drawn on the right border.
+			switch(doorDirection) {
+			case UP:
+				g.fillRect(xOffset, yOffset, tileWidth, 5);
+				break;
+			case DOWN:
+				g.fillRect(xOffset, yOffset + tileHeight, tileWidth, 5);
+				break;
+			case LEFT:
+				g.fillRect(xOffset, yOffset, 5, tileHeight);
+			case RIGHT:
+				g.fillRect(xOffset + tileWidth, yOffset, 5, tileHeight);
+			default:
+				break;
+			}
+		}
+	}
+	
+	/**
 	 * Used to initialize a room instance. Carries all the data a room tile needs at minimum.
 	 * @param initial - The initial char of the room this tile is a part of.
 	 * @param label - A boolean representing if the cell is the label cell of the room.
 	 * @param center - A boolean representing if the cell is the center cell of the room.
-	 */
-	
+	 */	
 	public void setRoom(char initial, boolean label, boolean center) {
 		//If a tile is set as a room tile, ensure the tile is labels as in a room.
 		isInRoom = true;
@@ -185,5 +236,21 @@ public class BoardCell {
 	 */
 	public char getInitial() {
 		return roomInitial;
+	}
+	
+	/**
+	 * Get the row that the cell occupies
+	 * @return - int representing row that cell occupies.
+	 */
+	public int getRow() {
+		return rowPos;
+	}
+	
+	/**
+	 * Get the col that the cell occupies
+	 * @return - int representing column that cell occupies.
+	 */
+	public int getCol() {
+		return colPos;
 	}
 }

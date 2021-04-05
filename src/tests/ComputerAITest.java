@@ -35,7 +35,7 @@ class ComputerAITests {
 	@Test
 	public void testCreateSuggestion() {
 		//Create a test ComputerPlayer and put him in the center of the pool room.
-		ComputerPlayer suggester = new ComputerPlayer("Test NPC", Color.black);
+		ComputerPlayer suggester = new ComputerPlayer("Test NPC", Color.black, 0, 0);
 		suggester.setPosition(board.getRoom('O').getCenterCell());
 		//Set up a bunch of cards that we don't want to see in suggestions.
 		Set<Card> seen = new HashSet<Card>();
@@ -143,7 +143,7 @@ class ComputerAITests {
 	@Test
 	public void testSelectTarget() {
 		//Create a new test player
-		ComputerPlayer player = new ComputerPlayer("Test Player", Color.black);
+		ComputerPlayer player = new ComputerPlayer("Test Player", Color.black, 0, 0);
 		//We will always calculate a roll-length of 2 starting from (11,16) on the board.
 		board.calcTargets(board.getCell(11, 16), 2);
 		/*

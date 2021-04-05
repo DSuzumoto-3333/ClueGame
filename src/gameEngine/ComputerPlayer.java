@@ -18,8 +18,8 @@ public class ComputerPlayer extends Player{
 	 * @param playerName - The name of the player.
 	 * @param playerColor - The color used to signify the player.
 	 */
-	public ComputerPlayer(String playerName, Color playerColor) {
-		super(playerName, playerColor);
+	public ComputerPlayer(String playerName, Color playerColor, int row, int col) {
+		super(playerName, playerColor, row, col);
 	}
 	
 	@Override

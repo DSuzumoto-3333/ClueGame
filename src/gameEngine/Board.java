@@ -3,10 +3,13 @@ package gameEngine;
 import java.util.*;
 import java.util.Set;
 
+import javax.swing.JPanel;
+
 import java.util.HashSet;
 import java.io.*;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
 /**
  * Represents the game board itself, and contains methods pertaining to player movement. Also handles loading in data from setup and layout files provided. The board uses a singleton design,
@@ -14,7 +17,7 @@ import java.awt.Color;
  * @author Derek Suzumoto
  * @author Luke Wakumoto
  */
-public class Board {
+public class Board extends JPanel{
 	//Constants for grid size
 	private static int boardWidth;
 	private static int boardHeight;
@@ -170,14 +173,16 @@ public class Board {
 						
 					case "Player":
 						
-						if(data.length == 5) {
+						if(data.length == 7) {
 							//Create a new person object
 							//Read in all the RGB values the file provides, and convert them to ints.
 							int redVal = Integer.parseInt(data[2].replaceFirst("\\s+","").replace(",",""));
 							int greenVal = Integer.parseInt(data[3].replaceFirst("\\s+","").replace(",",""));
 							int blueVal = Integer.parseInt(data[4].replaceFirst("\\s+","").replace(",",""));
+							int playerRow = Integer.parseInt(data[5].replaceFirst("\\s+","").replace(",",""));
+							int playerCol = Integer.parseInt(data[6].replaceFirst("\\s+","").replace(",",""));
 							//Create the new player object.
-							players.add(new HumanPlayer(name, new Color(redVal, greenVal, blueVal)));
+							players.add(new HumanPlayer(name, new Color(redVal, greenVal, blueVal), playerRow, playerCol));
 							
 							//Add a new weapon card to the deck.
 							deck.add(new Card(name, CardType.PERSON));
@@ -190,14 +195,16 @@ public class Board {
 						break;
 						
 					case "NPC":
-						if(data.length == 5) {
+						if(data.length == 7) {
 							//Create a new person object
 							//Read in all the RGB values the file provides, and convert them to ints.
 							int redVal = Integer.parseInt(data[2].replaceFirst("\\s+","").replace(",",""));
 							int greenVal = Integer.parseInt(data[3].replaceFirst("\\s+","").replace(",",""));
 							int blueVal = Integer.parseInt(data[4].replaceFirst("\\s+","").replace(",",""));
+							int playerRow = Integer.parseInt(data[5].replaceFirst("\\s+","").replace(",",""));
+							int playerCol = Integer.parseInt(data[6].replaceFirst("\\s+","").replace(",",""));
 							//Create the new player object.
-							players.add(new ComputerPlayer(name, new Color(redVal, greenVal, blueVal)));
+							players.add(new ComputerPlayer(name, new Color(redVal, greenVal, blueVal), playerRow, playerCol));
 							
 							//Add a new weapon card to the deck.
 							deck.add(new Card(name, CardType.PERSON));
@@ -574,6 +581,34 @@ public class Board {
 		}
 		//If nothing is found, return null.
 		return null;
+	}
+	
+	/**
+	 * A method used to draw the game board and the objects moving along it as the game plays
+	 * @param g - The graphics object to draw on.
+	 */
+	public void paintComponent(Graphics g) {
+		//Call the superclass
+		super.paintComponent(g);
+		//Calculate the tile sizes
+		int tileWidth = getWidth() / 26;
+		int tileHeight = getHeight() / 23;
+		//Draw the board
+		for(int i = 0; i < 23; i++) {
+			for(int j = 0; j < 26; j++) {
+				int xOffset = tileWidth * j;
+				int yOffset = tileHeight * i;
+				gameBoard[i][j].draw(tileWidth, tileHeight, xOffset, yOffset, g);
+			}
+		}
+		//Draw the room labels
+		for(Map.Entry<Character, Room> entry : roomMap.entrySet()) {
+			entry.getValue().draw(tileWidth, tileHeight, g);
+		}
+		//Draw the players
+		for(Player player : players) {
+			player.draw(tileWidth, tileHeight, g);
+		}
 	}
 	
 	/**

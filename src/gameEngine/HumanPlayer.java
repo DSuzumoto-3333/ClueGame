@@ -12,8 +12,8 @@ import java.util.HashSet;
  */
 public class HumanPlayer extends Player{
 
-	public HumanPlayer(String name, Color color) {
-		super(name, color);
+	public HumanPlayer(String name, Color color, int row, int col) {
+		super(name, color, row, col);
 	}
 	
 	/**
