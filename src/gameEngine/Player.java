@@ -67,6 +67,7 @@ public abstract class Player {
 	 * @param g - The graphics to draw on.
 	 */
 	public void draw(int tileWidth, int tileHeight, Graphics g) {
+		//Draw a circle/oval over the tile that the player occupies.
 		g.setColor(color);
 		g.fillOval(colPos * tileWidth, rowPos * tileHeight, tileWidth, tileHeight);
 	}

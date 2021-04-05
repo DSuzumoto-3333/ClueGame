@@ -29,10 +29,13 @@ public class Room {
 	 * @param g - The Graphics to draw on.
 	 */
 	public void draw(int tileWidth, int tileHeight, Graphics g) {
+		//Ensure the room has a label cell, as Walkway and Unused do not.
 		if(!(labelCell == null)) {
+			//Set the color and font
 			g.setColor(Color.blue);
 			Font font = new Font("Ariel", Font.PLAIN, 18);
 			g.setFont(font);
+			//Draw the name starting at the label cell.
 			g.drawString(name, labelCell.getCol() * tileWidth, labelCell.getRow() * tileHeight);
 		}
 	}
