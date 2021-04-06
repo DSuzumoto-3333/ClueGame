@@ -10,19 +10,34 @@ import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
+/**
+ * Class to represent the panel on the GUI that displays the cards the player has in hand, and the cards the player has seen.
+ * @author Derek Suzumoto
+ * @author Luke Wakumoto
+ */
 public class GameCardPanel extends JPanel {
-	CardPanelContainer peoplePanel, roomsPanel, weaponsPanel;
-	public GameCardPanel() {
+	//The 3 Sub-panels that will hold the Seen and In-Hand cards for each type of card
+	private CardPanelContainer peoplePanel, roomsPanel, weaponsPanel;
+	//The game frame.
+	private ClueGame frame;
+	
+	public GameCardPanel(ClueGame gameFrame) {
+		//Set some basic properties for the main panel
 		setLayout(new GridLayout(3,1));
 		setBorder(new TitledBorder(new EtchedBorder(), "Known Cards"));
 		
+		//Create the 3 sub-panels
 		peoplePanel = new CardPanelContainer("People");
 		roomsPanel = new CardPanelContainer("Rooms");
 		weaponsPanel = new CardPanelContainer("Weapons");
 		
+		//Add them to the main panel
 		add(peoplePanel);
 		add(roomsPanel);
 		add(weaponsPanel);
+		
+		//Save the game frame.
+		frame = gameFrame;
 	}
 	
 	public void addHandCardGUI(Card card) {
@@ -99,8 +114,8 @@ public class GameCardPanel extends JPanel {
 	
 	
 	public static void main(String[] args) {
-		GameCardPanel panel = new GameCardPanel();  // create the panel
-		JFrame frame = new JFrame();  // create the frame 
+		ClueGame frame = new ClueGame();  // create the frame 
+		GameCardPanel panel = new GameCardPanel(frame);  // create the panel
 		frame.setContentPane(panel); // put the panel in the frame
 		frame.setSize(250, 900);  // size the frame
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // allow it to close

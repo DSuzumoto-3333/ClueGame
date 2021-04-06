@@ -15,9 +15,13 @@ import java.awt.Color;
  *
  */
 public class GameControlPanel extends JPanel {
+	//Create the text fields that will need to be updated for the GUI
 	private JTextField guessField, guessResultField, turnField, rollField;
+	//Save the board and the game frame.
+	public Board board = Board.getInstance();
+	public ClueGame frame;
 
-	public GameControlPanel()  {
+	public GameControlPanel(ClueGame gameFrame)  {
 		setLayout(new GridLayout(2,0));
 		//Get the top and bottom panels
 		JPanel top = createTop();
@@ -26,6 +30,8 @@ public class GameControlPanel extends JPanel {
 		JPanel wrapper = new JPanel(new GridLayout(2, 1));
 		add(top);
 		add(bottom);
+		//Save the JFrame
+		frame = gameFrame;
 	}
 	
 	public JPanel createBottom() {
@@ -72,9 +78,11 @@ public class GameControlPanel extends JPanel {
 		
 		//Create the accuse button
 		JButton accuseButton = new JButton("Acuse!");
+		accuseButton.addActionListener(new AccuseListener());
 
 		//Create the next button
 		JButton nextButton = new JButton("Next!");
+		nextButton.addActionListener(new NextListener());
 		
 		JPanel buttonPanel = new JPanel(new GridLayout(1,2));
 		buttonPanel.add(accuseButton);
@@ -126,7 +134,17 @@ public class GameControlPanel extends JPanel {
 	 */
 	private class NextListener implements ActionListener{
 		public void actionPerformed(ActionEvent event) {
-			
+			//Determine if the current turn is complete
+			if(board.getTurnComplete()) {
+				board.handleTurn();
+			}
+			//If not, throw an error
+			else {
+				JOptionPane.showMessageDialog(frame, 
+						"Error: You may not move on to the next turn before completing yours.",
+						"Complete your Turn",
+						JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 	
@@ -142,8 +160,8 @@ public class GameControlPanel extends JPanel {
 	}
 	
 	public static void main(String[] args) {
-		GameControlPanel panel = new GameControlPanel();  // create the panel
-		JFrame frame = new JFrame();  // create the frame 
+		ClueGame frame = new ClueGame();  // create the frame 
+		GameControlPanel panel = new GameControlPanel(frame);  // create the panel
 		frame.setContentPane(panel); // put the panel in the frame
 		frame.setSize(840, 200);  // size the frame
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // allow it to close

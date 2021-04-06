@@ -30,4 +30,11 @@ public class HumanPlayer extends Player{
 			return false;
 		}
 	}
+	
+	/**
+	 * Overrides .selectTarget() in Player.java 
+	 */
+	public BoardCell selectTarget() {
+		return null;
+	}
 }

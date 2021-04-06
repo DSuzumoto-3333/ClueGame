@@ -73,6 +73,11 @@ public abstract class Player {
 	}
 	
 	/**
+	 * Abstract method for players to move.
+	 */
+	public abstract BoardCell selectTarget();
+	
+	/**
 	 * A method to add a card to the player's hand.
 	 * @param card - The card to be added, assuming their hand is not already full.
 	 */

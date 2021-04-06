@@ -39,6 +39,10 @@ public class Board extends JPanel implements MouseListener{
 	private ArrayList<Card> deck;
 	//A set to hold the answer to the game's mystery, or the solution.
 	private Set<Card> solution;
+	//Variables to determine how the state of the turn engine
+	private boolean turnComplete;
+	private int currentPlayerNumber = 0, currentRoll;
+	private Player currentPlayer;
 	
 	/**
 	 * Since we're using a singleton pattern, our constructor is essentially empty. We will use .initialize() after setting and loading the configuration files.
@@ -565,7 +569,8 @@ public class Board extends JPanel implements MouseListener{
 			return true;
 	}
 	/**
-	 * 
+	 * A method to handle the made by a player. Checks all players that are not the accusor for the cards in their hand
+	 * to determine if the suggestion is valid.
 	 * @param suggestion - The suggestion made by a player being handled.
 	 * @param suggestor - The person who made the suggestion
 	 * @return - The card that debunks the suggestion, null if none found.
@@ -583,6 +588,32 @@ public class Board extends JPanel implements MouseListener{
 		}
 		//If nothing is found, return null.
 		return null;
+	}
+	
+	public void handleTurn() {
+		//Ensure that, while the turn is happening, the next turn cannot begin.
+		turnComplete = false;
+		//Set the current player.
+		currentPlayer = players.get(currentPlayerNumber);
+		
+		//Iterate to the next player, looping at 6
+		currentPlayerNumber++;
+		if(currentPlayerNumber == 6) {
+			currentPlayerNumber = 0;
+		}
+		
+		//Get a roll length 
+		Random rand = new Random();
+		currentRoll = rand.nextInt(7);
+		
+		//Calculate the possible targets for the player to move to.
+		calcTargets(currentPlayer.getPosition(), currentRoll);
+		
+		//If the player is a computer player, call currentPlayer.move() and note that the turn is over.
+		if(currentPlayer instanceof ComputerPlayer) {
+			currentPlayer.selectTarget();
+		}
+		//If it's a human, don't note that the turn is over yet.
 	}
 	
 	/**
@@ -719,5 +750,13 @@ public class Board extends JPanel implements MouseListener{
 	 */
 	public ArrayList<Card> getDeck(){
 		return deck;
+	}
+	
+	/**
+	 * Method to return if the current turn is complete.
+	 * @return - Boolean, true if turn is complete, false if not.
+	 */
+	public boolean getTurnComplete() {
+		return turnComplete;
 	}
 }
