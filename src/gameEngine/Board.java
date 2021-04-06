@@ -594,6 +594,7 @@ public class Board extends JPanel implements MouseListener{
 		//Ensure that, while the turn is happening, the next turn cannot begin.
 		turnComplete = false;
 		//Set the current player.
+		
 		currentPlayer = players.get(currentPlayerNumber);
 		
 		//Iterate to the next player, looping at 6
@@ -604,16 +605,33 @@ public class Board extends JPanel implements MouseListener{
 		
 		//Get a roll length 
 		Random rand = new Random();
-		currentRoll = rand.nextInt(7);
+		currentRoll = rand.nextInt(6) + 1;
 		
 		//Calculate the possible targets for the player to move to.
 		calcTargets(currentPlayer.getPosition(), currentRoll);
 		
 		//If the player is a computer player, call currentPlayer.move() and note that the turn is over.
 		if(currentPlayer instanceof ComputerPlayer) {
-			currentPlayer.selectTarget();
+			
+			
+			//TODO code for accusations
+			
+			
+			//Move the current player
+			currentPlayer.move();
+			
+			
+			//TODO Code for suggestions
+			
+			
+			//Repaint the board and let the turn end
+			repaint();
+			turnComplete = true;
 		}
-		//If it's a human, don't note that the turn is over yet.
+		//If it's a human, don't note that the turn is over yet and draw the targets.
+		else {
+			
+		}
 	}
 	
 	/**
@@ -758,5 +776,21 @@ public class Board extends JPanel implements MouseListener{
 	 */
 	public boolean getTurnComplete() {
 		return turnComplete;
+	}
+	
+	/**
+	 * Method to return the current roll for the current target set.
+	 * @return - Int representing the roll of a die.
+	 */
+	public int getCurrentRoll() {
+		return currentRoll;
+	}
+	
+	/**
+	 * Method to get the current turn's player.
+	 * @return - The player who's turn it is.
+	 */
+	public Player getCurrentPlayer() {
+		return currentPlayer;
 	}
 }

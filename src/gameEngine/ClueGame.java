@@ -61,5 +61,7 @@ public class ClueGame extends JFrame{
 		
 		//Start the game by launching the first turn.
 		board.handleTurn();
+		controlPanel.displayRoll(board.getCurrentRoll());
+		controlPanel.displayTurn(board.getCurrentPlayer());
 	}
 }

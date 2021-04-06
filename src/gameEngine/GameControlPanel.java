@@ -136,7 +136,11 @@ public class GameControlPanel extends JPanel {
 		public void actionPerformed(ActionEvent event) {
 			//Determine if the current turn is complete
 			if(board.getTurnComplete()) {
+				//If it is, run the next turn
 				board.handleTurn();
+				//Update the board
+				displayRoll(board.getCurrentRoll());
+				displayTurn(board.getCurrentPlayer());
 			}
 			//If not, throw an error
 			else {

@@ -125,6 +125,16 @@ public class ComputerPlayer extends Player{
 	}
 	
 	/**
+	 * Method to allow the NPC to update their location
+	 */
+	public void move() {
+		//Move to the next target
+		setPosition(selectTarget());
+		
+		System.out.println(this.getPosition().toString());
+	}
+	
+	/**
 	 * A method to calculate the next board cell the ComputerPlayerAI wants to move to. The AI prioritizes visiting rooms
 	 * that it has not yet seen the cards for first and foremost. If there are no rooms that it can navigate to that
 	 * satisfy that criteria, pick a random tile within it's range of motion.

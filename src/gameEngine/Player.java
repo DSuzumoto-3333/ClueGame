@@ -75,7 +75,7 @@ public abstract class Player {
 	/**
 	 * Abstract method for players to move.
 	 */
-	public abstract BoardCell selectTarget();
+	public abstract void move();
 	
 	/**
 	 * A method to add a card to the player's hand.

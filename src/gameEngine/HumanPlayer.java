@@ -32,9 +32,9 @@ public class HumanPlayer extends Player{
 	}
 	
 	/**
-	 * Overrides .selectTarget() in Player.java 
+	 * Method to handle human player's movement.
 	 */
-	public BoardCell selectTarget() {
-		return null;
+	public void move() {
+
 	}
 }
