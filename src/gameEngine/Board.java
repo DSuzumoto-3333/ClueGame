@@ -3,6 +3,7 @@ package gameEngine;
 import java.util.*;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.util.HashSet;
@@ -43,6 +44,8 @@ public class Board extends JPanel implements MouseListener{
 	private boolean turnComplete;
 	private int currentPlayerNumber = 0, currentRoll;
 	private Player currentPlayer;
+	//Save the game's JFrame
+	private ClueGame frame;
 	
 	/**
 	 * Since we're using a singleton pattern, our constructor is essentially empty. We will use .initialize() after setting and loading the configuration files.
@@ -74,6 +77,9 @@ public class Board extends JPanel implements MouseListener{
 		roomMap = new HashMap<Character, Room>();
 		players = new ArrayList<Player>();
 		deck = new ArrayList<Card>();
+		
+		//Add the mouse listener to the panel
+		addMouseListener(this);
 		
 		//Try to load the setup and layout config files, and initialize the game instance variables. Catch and handle BadConfigFormatExceptions here.
 		try {
@@ -670,7 +676,42 @@ public class Board extends JPanel implements MouseListener{
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
 	public void mouseReleased(MouseEvent e) {}
-	public void mousePressed(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {
+		//When the mouse is pressed, make sure it's the player's turn.
+		if(currentPlayer instanceof HumanPlayer) {
+			//Search for every cell in targets and see if the click landed inside of it.
+			BoardCell newTarget = null;
+			for(BoardCell cell : targets) {
+				if(cell.containsClick(e.getX(), e.getY())) {
+					newTarget = cell;
+				}
+			}
+			System.out.println(newTarget.toString());
+			//If no target was clicked, display an error.
+			if(newTarget == null) {
+				JOptionPane.showMessageDialog(frame, 
+						"Error: Please select a valid target.",
+						"Invalid Target",
+						JOptionPane.ERROR_MESSAGE);
+			}
+			//If a target was clicked, move the player to it and allow them to end their turn.
+			else {
+				((HumanPlayer) currentPlayer).setNewTarget(newTarget);
+				currentPlayer.move();
+				
+				//Repaint the board and end
+				repaint();
+				turnComplete = true;
+			}
+		}
+		//If not, display an error.
+		else {
+			JOptionPane.showMessageDialog(frame, 
+					"Error: You may not select a new position while it is not your turn.",
+					"Wait your Turn",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
 	
 	/**
 	 * Returns the instance of the board, saved in boardInstance. This is the easiest way for us to access the singleton instance of the game board.
@@ -792,5 +833,9 @@ public class Board extends JPanel implements MouseListener{
 	 */
 	public Player getCurrentPlayer() {
 		return currentPlayer;
+	}
+	
+	public void setFrame(ClueGame cluegame) {
+		frame = cluegame;
 	}
 }

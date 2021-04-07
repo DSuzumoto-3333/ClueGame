@@ -45,6 +45,9 @@ public class ClueGame extends JFrame{
 		//Create a new Card Panel
 		GameCardPanel cardPanel = new GameCardPanel(gameFrame);
 		
+		//Set the Board's game frame
+		board.setFrame(gameFrame);
+		
 		//Add everything to the Frame
 		gameFrame.add(board, BorderLayout.CENTER);
 		gameFrame.add(cardPanel, BorderLayout.EAST);

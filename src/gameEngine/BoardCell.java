@@ -4,6 +4,8 @@ import java.util.Set;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.HashSet;
 
 /**
@@ -26,6 +28,8 @@ public class BoardCell {
 	private char secretPassage;
 	//Set of cells adjacent to the current cell. 
 	private Set<BoardCell> adjacentCells;
+	//Dimensions of tile on GUI (For mouse events)
+	private int width, height;
 	
 	/**
 	 * Initializes a game tile that is not a part of any room. The position, occupancy, and initial are set here for walkway and unused tiles.
@@ -61,16 +65,22 @@ public class BoardCell {
 	 * @param g - The graphics object to draw on
 	 */
 	public void draw(int tileWidth, int tileHeight, int xOffset, int yOffset, Graphics g) {
+		//Save the width and height for use with mouse events
+		width = tileWidth;
+		height = tileHeight;
+		
 		//Room tiles are gray without a border
 		if(isInRoom) {
 			g.setColor(Color.gray);
 			g.fillRect(xOffset, yOffset, tileWidth, tileHeight);
 		}
+		
 		//Unused tiles are black.
 		else if(roomInitial == 'X') {
 			g.setColor(Color.black);
 			g.fillRect(xOffset, yOffset, tileWidth, tileHeight);
 		}
+		
 		//Walkways are yellow with a black border
 		else {
 			//Draw the tile
@@ -101,6 +111,17 @@ public class BoardCell {
 				break;
 			}
 		}
+	}
+	
+	/**
+	 * Method to determine if a mouse click is inside of a tile.
+	 * @param x - Mouse X Coordinate
+	 * @param y - Mouse Y Coordinate
+	 * @return - Boolean representing if the click was inside the tile.
+	 */
+	public boolean containsClick(int x, int y) {
+		Rectangle rect = new Rectangle(x, y, width, height);
+		return rect.contains(new Point(x,y));
 	}
 	
 	/**
@@ -254,5 +275,10 @@ public class BoardCell {
 	 */
 	public int getCol() {
 		return colPos;
+	}
+	
+	@Override
+	public String toString() {
+		return(rowPos + " " + colPos);
 	}
 }

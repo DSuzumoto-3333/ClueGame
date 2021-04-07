@@ -128,10 +128,13 @@ public class ComputerPlayer extends Player{
 	 * Method to allow the NPC to update their location
 	 */
 	public void move() {
-		//Move to the next target
-		setPosition(selectTarget());
-		
-		System.out.println(this.getPosition().toString());
+		//Unset the current tile's occupancy
+		this.getPosition().setOccupied(false);
+		//Get the next target
+		BoardCell target = selectTarget();
+		//Set it to occupied and move to it.
+		target.setOccupied(true);
+		setPosition(target);
 	}
 	
 	/**

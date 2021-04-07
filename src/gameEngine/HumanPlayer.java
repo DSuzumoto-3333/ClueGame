@@ -11,6 +11,7 @@ import java.util.HashSet;
  *
  */
 public class HumanPlayer extends Player{
+	private BoardCell newTarget;
 
 	public HumanPlayer(String name, Color color, int row, int col) {
 		super(name, color, row, col);
@@ -35,6 +36,17 @@ public class HumanPlayer extends Player{
 	 * Method to handle human player's movement.
 	 */
 	public void move() {
-
+		//Unset the current tile's occupancy
+		this.getPosition().setOccupied(false);
+		//Set the position to the new target and move to it.
+		newTarget.setOccupied(true);
+		setPosition(newTarget);
+	}
+	/**
+	 * Set the new target to move to when .move() is called.
+	 * @param target - The targe to move to.
+	 */
+	public void setNewTarget(BoardCell target) {
+		newTarget = target;
 	}
 }
