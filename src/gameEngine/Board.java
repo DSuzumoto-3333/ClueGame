@@ -636,7 +636,7 @@ public class Board extends JPanel implements MouseListener{
 		}
 		//If it's a human, don't note that the turn is over yet and draw the targets.
 		else {
-			
+			repaint();
 		}
 	}
 	
@@ -666,6 +666,14 @@ public class Board extends JPanel implements MouseListener{
 		for(Player player : players) {
 			player.draw(tileWidth, tileHeight, g);
 		}
+		
+		//Only draw the targets if the player is a human.
+		if(currentPlayer instanceof HumanPlayer) {
+			for(BoardCell target : targets) {
+				g.setColor(Color.white);
+				g.fillRect(target.getCol() * tileWidth, target.getRow() * tileHeight, tileWidth, tileHeight);
+			}
+		}
 	}
 	
 	/**
@@ -686,7 +694,6 @@ public class Board extends JPanel implements MouseListener{
 					newTarget = cell;
 				}
 			}
-			System.out.println(newTarget.toString());
 			//If no target was clicked, display an error.
 			if(newTarget == null) {
 				JOptionPane.showMessageDialog(frame, 
@@ -700,6 +707,8 @@ public class Board extends JPanel implements MouseListener{
 				currentPlayer.move();
 				
 				//Repaint the board and end
+				//Set currentPlayer to null to prevent re-drawing targets.
+				currentPlayer = null;
 				repaint();
 				turnComplete = true;
 			}
