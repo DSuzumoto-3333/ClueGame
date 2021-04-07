@@ -120,7 +120,7 @@ public class BoardCell {
 	 * @return - Boolean representing if the click was inside the tile.
 	 */
 	public boolean containsClick(int x, int y) {
-		Rectangle rect = new Rectangle(x, y, width, height);
+		Rectangle rect = new Rectangle(colPos * width, rowPos * height, width, height);
 		return rect.contains(new Point(x,y));
 	}
 	
