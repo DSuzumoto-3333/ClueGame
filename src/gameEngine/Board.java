@@ -48,6 +48,8 @@ public class Board extends JPanel implements MouseListener{
 	private Player currentDisprover;
 	//Save the game's JFrame
 	private ClueGame frame;
+	//Save the game's card panel
+	private GameCardPanel cardPanel;
 	
 	/**
 	 * Since we're using a singleton pattern, our constructor is essentially empty. We will use .initialize() after setting and loading the configuration files.
@@ -625,69 +627,87 @@ public class Board extends JPanel implements MouseListener{
 		
 		//If the player is a computer player, call currentPlayer.move() and note that the turn is over.
 		if(currentPlayer instanceof ComputerPlayer) {
-			//Move the current player
-			currentPlayer.move();
-			
-			//If the player has moved to a room, let them make a suggestion.
-			if(currentPlayer.getPosition().isRoomCenter()) {
-				//Create the suggestion
-				Set<Card> suggestion = ((ComputerPlayer) currentPlayer).createSuggestion();
+			//If the computer has figured out the solution, end the game
+			if(currentPlayer.getAccusation() != null) {
 				
-				//Move the suggested player to the room
-				Card suggestedPlayerCard = null;
-				for(Card card : suggestion) {
-					if(card.getType() == CardType.PERSON) {
-						suggestedPlayerCard = card;
-						break;
-					}
-				}
-				for(Player player : players) {
-					if(!(suggestedPlayerCard == null) && suggestedPlayerCard.getName().equals(player.getName())) {
-						player.setPosition(currentPlayer.getPosition());
-						//Ensure that the player can remain in the room on their next turn.
-						player.setCanStay(true);
-					}
-				}
+				//TODO handle accusations
+				System.out.println("Game won");
 				
-				//Create the suggestion message
-				Card suggestedRoomCard = null, suggestedWeaponCard = null;
-				for(Card card : suggestion) {
-					switch(card.getType()) {
-					case ROOM:
-						suggestedRoomCard = card;
-						break;
-					case WEAPON:
-						suggestedWeaponCard = card;
-						break;
-					default:
-						break;
-					}
-				}
-				currentSuggestion = suggestedPlayerCard.getName() + " in the " + suggestedRoomCard.getName() 
-									+ " with the " + suggestedWeaponCard.getName() + ".";
 				
-				//Determine if the suggestion is disproved.
-				Card isDisproved = handleSuggestion(suggestion, currentPlayer);
-				//If the suggestion is disproved, set the status message accordingly
-				if(isDisproved != null) {
-					currentStatus = "Suggestion has been disproved!";
-					//Update the current player's seen set
-					currentPlayer.addSeen(isDisproved);
-				}
-				//If not, set the status message to "Could not disprove suggestion"
-				else {
-					currentStatus = "Could not disprove suggestion.";
-					//Set the current player to remember their accusation
-					currentPlayer.setAccusation(suggestion);
-				}
 			}
-			
-			//Repaint the board and let the turn end
-			repaint();
-			turnComplete = true;
+			//If not, let the computer player continue.
+			else {
+				//Move the current player
+				currentPlayer.move();
+
+				//If the player has moved to a room, let them make a suggestion.
+				if(currentPlayer.getPosition().isRoomCenter()) {
+					//Create the suggestion
+					Set<Card> suggestion = ((ComputerPlayer) currentPlayer).createSuggestion();
+
+					//Move the suggested player to the room
+					Card suggestedPlayerCard = null;
+					for(Card card : suggestion) {
+						if(card.getType() == CardType.PERSON) {
+							suggestedPlayerCard = card;
+							break;
+						}
+					}
+					for(Player player : players) {
+						if(!(suggestedPlayerCard == null) && suggestedPlayerCard.getName().equals(player.getName())) {
+							player.setPosition(currentPlayer.getPosition());
+							//Ensure that the player can remain in the room on their next turn.
+							player.setCanStay(true);
+						}
+					}
+
+					//Create the suggestion message
+					Card suggestedRoomCard = null, suggestedWeaponCard = null;
+					for(Card card : suggestion) {
+						switch(card.getType()) {
+						case ROOM:
+							suggestedRoomCard = card;
+							break;
+						case WEAPON:
+							suggestedWeaponCard = card;
+							break;
+						default:
+							break;
+						}
+					}
+					currentSuggestion = suggestedPlayerCard.getName() + " in the " + suggestedRoomCard.getName() 
+					+ " with the " + suggestedWeaponCard.getName() + ".";
+
+					//Determine if the suggestion is disproved.
+					Card isDisproved = handleSuggestion(suggestion, currentPlayer);
+					//If the suggestion is disproved, set the status message accordingly
+					if(isDisproved != null) {
+						currentStatus = "Suggestion has been disproved!";
+						//Update the current player's seen set
+						currentPlayer.addSeen(isDisproved);
+					}
+					//If not, set the status message to "Could not disprove suggestion"
+					else {
+						currentStatus = "Could not disprove suggestion.";
+						//Set the current player to remember their accusation
+						currentPlayer.setAccusation(suggestion);
+					}
+				}
+
+				//Repaint the board and let the turn end
+				repaint();
+				turnComplete = true;
+			}
 		}
-		//If it's a human, don't note that the turn is over yet and draw the targets.
+		//If it's a human, don't note that the turn is over yet and handle some GUI stuff
 		else {
+			//If the player was moved to their current position by a suggestion, make sure that they can stay for 
+			//this turn, and that the target for their current position will be drawn.
+			if(currentPlayer.getCanStay()) {
+				targets.add(currentPlayer.getPosition());
+				currentPlayer.setCanStay(false);
+			}
+			//Draw the targets for the player to move to
 			repaint();
 		}
 	}
@@ -717,12 +737,6 @@ public class Board extends JPanel implements MouseListener{
 		
 		//Only draw the targets if the player is a human.
 		if(currentPlayer instanceof HumanPlayer) {
-			//If the player was moved to their current position by a suggestion, make sure that they can stay for 
-			//this turn, and that the target for their current position will be drawn.
-			if(currentPlayer.getCanStay()) {
-				targets.add(currentPlayer.getPosition());
-				currentPlayer.setCanStay(false);
-			}
 			for(BoardCell target : targets) {
 				g.setColor(Color.white);
 				g.fillRect(target.getCol() * tileWidth, target.getRow() * tileHeight, tileWidth, tileHeight);
@@ -934,5 +948,13 @@ public class Board extends JPanel implements MouseListener{
 	 */
 	public void setFrame(ClueGame cluegame) {
 		frame = cluegame;
+	}
+	
+	/**
+	 * A method to set the game's GameCardPanel, for use in updating the GUI as the game plays.
+	 * @param panel - The game's card panel.
+	 */
+	public void setCardPanel(GameCardPanel panel) {
+		cardPanel = panel;
 	}
 }

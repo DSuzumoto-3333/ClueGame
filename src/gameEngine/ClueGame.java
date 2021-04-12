@@ -1,5 +1,7 @@
 package gameEngine;
 import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -42,8 +44,28 @@ public class ClueGame extends JFrame{
 		//Create a new Card Panel
 		GameCardPanel cardPanel = new GameCardPanel();
 		
-		//Set the Board's game frame
+		//Set the Board's game frame and card panel
 		board.setFrame(gameFrame);
+		board.setCardPanel(cardPanel);
+		
+		//Add the initial hand cards to the GUI before starting
+		//Get the HumanPlayer instance.
+		ArrayList<Player> players = board.getPlayers();
+		Player humanPlayer = null;
+		for(Player player : players) {
+			if(player instanceof HumanPlayer) {
+				humanPlayer = player;
+				break;
+			}
+		}
+		//Get the player's hand
+		if(!(humanPlayer == null)) {
+			Set<Card> hand = humanPlayer.getHand();
+			//Add all the cards to the GUI
+			for(Card card : hand) {
+				cardPanel.addHandCardGUI(card, humanPlayer.getColor());
+			}
+		}
 		
 		//Add everything to the Frame
 		gameFrame.add(board, BorderLayout.CENTER);

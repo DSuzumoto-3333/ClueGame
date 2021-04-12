@@ -32,20 +32,20 @@ public class GameCardPanel extends JPanel {
 		add(weaponsPanel);
 	}
 	
-	public void addHandCardGUI(Card card) {
+	public void addHandCardGUI(Card card, Color playerColor) {
 		//Determine the card's type
 		switch(card.getType()) {
 		case PERSON:
 			//Add a person to peoplePanel's hand
-			peoplePanel.addInHand(card.getName());
+			peoplePanel.addInHand(card.getName(), playerColor);
 			break;
 		case ROOM:
 			//Add a room to roomPanel's hand
-			roomsPanel.addInHand(card.getName());
+			roomsPanel.addInHand(card.getName(), playerColor);
 			break;
 		case WEAPON:
 			//Add a weapon to weaponPanel's hand
-			weaponsPanel.addInHand(card.getName());
+			weaponsPanel.addInHand(card.getName(), playerColor);
 			break;
 		}
 	}

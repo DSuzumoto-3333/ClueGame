@@ -56,7 +56,7 @@ public class CardPanelContainer extends JPanel{
 		redrawContainer();
 	}
 	
-	public void addInHand(String cardName) {
+	public void addInHand(String cardName, Color color) {
 		//Remove the "None" element if present.
 		if(inHand.contains(noneHand)) {
 			inHand.remove(noneHand);
@@ -65,6 +65,7 @@ public class CardPanelContainer extends JPanel{
 		//Create a new text field for the card.
 		JTextField card = new JTextField();
 		card.setText(cardName);
+		card.setBackground(color);
 		
 		//Add to the panel and save in the arrayList.
 		inHand.add(card);
