@@ -1,11 +1,8 @@
 package gameEngine;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 /**
  * Main entrypoint for the game, primarily handles drawing the GUI here.
@@ -43,7 +40,7 @@ public class ClueGame extends JFrame{
 		GameControlPanel controlPanel = new GameControlPanel(gameFrame);
 		
 		//Create a new Card Panel
-		GameCardPanel cardPanel = new GameCardPanel(gameFrame);
+		GameCardPanel cardPanel = new GameCardPanel();
 		
 		//Set the Board's game frame
 		board.setFrame(gameFrame);

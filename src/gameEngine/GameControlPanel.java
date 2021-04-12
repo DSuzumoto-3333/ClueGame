@@ -27,7 +27,6 @@ public class GameControlPanel extends JPanel {
 		JPanel top = createTop();
 		JPanel bottom = createBottom();
 		//Add them to the outermost panel.
-		JPanel wrapper = new JPanel(new GridLayout(2, 1));
 		add(top);
 		add(bottom);
 		//Save the JFrame
@@ -115,16 +114,26 @@ public class GameControlPanel extends JPanel {
 	 * Method to display the current guess, in string form, in the "Guess" field of the control panel.
 	 * @param guess - A string representing the guess to display.
 	 */
-	public void displayGuess(String guess) {
+	public void displayGuess(String guess, Player player) {
 		guessField.setText(guess);
+		if(!(player == null) && !(guess.equals(""))) {
+			guessField.setBackground(player.getColor());
+		}else {
+			guessField.setBackground(Color.white);
+		}
 	}
 	
 	/**
 	 * Method to display the current guess result, in string form, in the "Guess Result" field of the control panel.
 	 * @param result - A string representing the result of the last guess to be displayed.
 	 */
-	public void displayGuessResult(String result) {
+	public void displayGuessResult(String result, Player player) {
 		guessResultField.setText(result);
+		if(!(player == null)) {
+			guessResultField.setBackground(player.getColor());
+		}else {
+			guessResultField.setBackground(Color.white);
+		}
 	}
 	
 	/**
@@ -141,12 +150,14 @@ public class GameControlPanel extends JPanel {
 				//Update the board
 				displayRoll(board.getCurrentRoll());
 				displayTurn(board.getCurrentPlayer());
+				displayGuess(board.getCurrentSuggestion(), board.getCurrentPlayer());
+				displayGuessResult(board.getCurrentStatus(), board.getCurrentDisprover());
 			}
 			//If not, throw an error
 			else {
 				JOptionPane.showMessageDialog(frame, 
 						"Error: You may not move on to the next turn before completing yours.",
-						"Complete your Turn",
+						"Complete Your Turn",
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -159,7 +170,17 @@ public class GameControlPanel extends JPanel {
 	 */
 	private class AccuseListener implements ActionListener{
 		public void actionPerformed(ActionEvent event) {
-			
+			//Make sure the player has not moved yet
+			if(!board.getTurnComplete()) {
+				//Allow the player to make an accusation
+			}
+			//If not, inform the player it's not their turn to accuse
+			else {
+				JOptionPane.showMessageDialog(frame, 
+						"Error: It is not your turn to make an accusation.",
+						"Wait Your Turn",
+						JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 	
@@ -174,7 +195,7 @@ public class GameControlPanel extends JPanel {
 		//Test setters.
 		panel.displayTurn(new ComputerPlayer("TestPlayer", Color.magenta, 0, 0));
 		panel.displayRoll(6);
-		panel.displayGuess("I do not have a guess");
-		panel.displayGuessResult("I do not have a result");
+		panel.displayGuess("I do not have a guess", null);
+		panel.displayGuessResult("I do not have a result", null);
 	}
 }

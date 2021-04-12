@@ -4,10 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import gameEngine.GameControlPanel;
-
 import java.awt.GridLayout;
-import java.awt.BorderLayout;
 import java.awt.Color;
 
 /**
@@ -18,10 +15,8 @@ import java.awt.Color;
 public class GameCardPanel extends JPanel {
 	//The 3 Sub-panels that will hold the Seen and In-Hand cards for each type of card
 	private CardPanelContainer peoplePanel, roomsPanel, weaponsPanel;
-	//The game frame.
-	private ClueGame frame;
 	
-	public GameCardPanel(ClueGame gameFrame) {
+	public GameCardPanel() {
 		//Set some basic properties for the main panel
 		setLayout(new GridLayout(3,1));
 		setBorder(new TitledBorder(new EtchedBorder(), "Known Cards"));
@@ -35,9 +30,6 @@ public class GameCardPanel extends JPanel {
 		add(peoplePanel);
 		add(roomsPanel);
 		add(weaponsPanel);
-		
-		//Save the game frame.
-		frame = gameFrame;
 	}
 	
 	public void addHandCardGUI(Card card) {
@@ -114,6 +106,7 @@ public class GameCardPanel extends JPanel {
 	
 	
 	public static void main(String[] args) {
+		/*
 		ClueGame frame = new ClueGame();  // create the frame 
 		GameCardPanel panel = new GameCardPanel(frame);  // create the panel
 		frame.setContentPane(panel); // put the panel in the frame
@@ -186,6 +179,7 @@ public class GameCardPanel extends JPanel {
 		panel.removeSeenCardGUI(person4);
 		panel.removeSeenCardGUI(room4);
 		panel.removeSeenCardGUI(weap3);
+		*/
 	}
 }
 

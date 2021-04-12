@@ -23,8 +23,13 @@ public abstract class Player {
 	public static final int MAX_CARDS = 3;
 	//A set of all cards seen by the players
 	private Set<Card> seen;
+	//A set to hold the player's accusation
+	private Set<Card> accusation;
 	//The game board, for use with calculating moves and suggestions
 	private Board board = Board.getInstance();
+	//A boolean to indicate if the player can stay in the room they are in (set if they are dragged to a room via a suggestion)
+	private boolean canStayOnTile;
+	
 	/**
 	 * The player object is used to represent either a Human player or an NPC. It contains the ability to hold cards,
 	 * disprove suggestions, and move about the board.
@@ -158,6 +163,21 @@ public abstract class Player {
 	public Board getBoard() {
 		return board;
 	}
+	/**
+	 * Method to set the players accusation set when they are ready to make an accusation.
+	 * @param accusationSet - A set of cards representing a possible solution.
+	 */
+	public void setAccusation(Set<Card> accusationSet) {
+		accusation = accusationSet;
+	}
+	
+	/**
+	 * Method to return the player's accusation.
+	 * @return - A set of 3 cards representing a possible solution.
+	 */
+	public Set<Card> getAccusation(){
+		return accusation;
+	}
 	
 	/**
 	 * A method to determine if one player is equal to another. Abstract since only HumanPlayer and ComputerPlayer
@@ -166,4 +186,21 @@ public abstract class Player {
 	 * @return
 	 */
 	public abstract boolean equals (Player player);
+	
+	/**
+	 * A method to set the flag denoting that the player may stay in the room they are currently in (called when the
+	 * player is dragged to a room via a suggestion.)
+	 * @param canStay - Boolean whether or not a player can stay on their tile for the next turn.
+	 */
+	public void setCanStay(boolean canStay) {
+		canStayOnTile = canStay;
+	}
+	
+	/**
+	 * A method to get the flag denoting if a player may remain in the room they are in for the current turn.
+	 * @return - A boolean, true if the player may stay on the tile they are currently occupying.
+	 */
+	public boolean getCanStay() {
+		return canStayOnTile;
+	}
 }

@@ -1,8 +1,6 @@
 package gameEngine;
 
 import java.awt.Color;
-import java.util.Set;
-import java.util.HashSet;
 
 /**
  * A simple class to contain methods unique to the Human player.
