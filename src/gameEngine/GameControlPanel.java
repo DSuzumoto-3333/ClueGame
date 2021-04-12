@@ -173,6 +173,10 @@ public class GameControlPanel extends JPanel {
 			//Make sure the player has not moved yet
 			if(!board.getTurnComplete()) {
 				//Allow the player to make an accusation
+				
+				//TODO implement accusation handler
+				
+				
 			}
 			//If not, inform the player it's not their turn to accuse
 			else {

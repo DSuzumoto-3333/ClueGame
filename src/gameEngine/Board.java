@@ -777,12 +777,20 @@ public class Board extends JPanel implements MouseListener{
 			}
 			//If a target was clicked, move the player to it and allow them to end their turn.
 			else {
+				//If the new target is a room, force the player to make a suggestion
+				if(newTarget.isRoomCenter()) {
+					
+					//TODO create suggestion dialogue box here, if user cancels return and do not move.
+					
+				}
+				//If not, just move the player.
 				((HumanPlayer) currentPlayer).setNewTarget(newTarget);
 				currentPlayer.move();
-				
-				//Repaint the board and end
+
 				//Set currentPlayer to null to prevent re-drawing targets.
 				currentPlayer = null;
+
+				//Repaint the board and end the turn
 				repaint();
 				turnComplete = true;
 			}
