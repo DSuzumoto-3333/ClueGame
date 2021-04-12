@@ -19,7 +19,7 @@ Weapon, Pistol
 Weapon, Hunting Rifle
 Weapon, Shurikens
 // Players
-Player, Ramona Rodriguez, 86, 42, 144, 0, 4
+Player, Ramona Rodriguez, 136, 92, 194, 0, 4
 NPC, Leland Blake, 247, 39, 34, 0, 15
 NPC, Irene Wright, 60, 141, 47, 7, 22
 NPC, Blake Greene, 255, 192, 203, 22, 14
