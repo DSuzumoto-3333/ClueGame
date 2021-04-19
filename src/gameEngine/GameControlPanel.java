@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
@@ -39,6 +40,7 @@ public class GameControlPanel extends JPanel {
 		JLabel guessLabel = new JLabel("Guess");
 		guessPanel.add(guessLabel, BorderLayout.NORTH);
 		guessField = new JTextField();
+		guessField.setEditable(false);
 		guessPanel.add(guessField, BorderLayout.CENTER);
 		
 		//Create the guessResult panel
@@ -46,6 +48,7 @@ public class GameControlPanel extends JPanel {
 		JLabel guessResultLabel = new JLabel("Guess Result");
 		guessResultPanel.add(guessResultLabel, BorderLayout.NORTH);
 		guessResultField = new JTextField();
+		guessResultField.setEditable(false);
 		guessResultPanel.add(guessResultField, BorderLayout.CENTER);
 		
 		//Create the bottom panel
@@ -61,6 +64,7 @@ public class GameControlPanel extends JPanel {
 		JLabel turnLabel = new JLabel("Who's Turn?");
 		turnPanel.add(turnLabel);
 		turnField = new JTextField();
+		turnField.setEditable(false);
 		turnPanel.add(turnField);
 		
 
@@ -69,6 +73,7 @@ public class GameControlPanel extends JPanel {
 		JLabel rollLabel = new JLabel("Roll:");
 		rollPanel.add(rollLabel);
 		rollField = new JTextField(5);
+		rollField.setEditable(false);
 		rollPanel.add(rollField);
 
 		JPanel dataPanel = new JPanel(new GridLayout(1,2));
@@ -76,7 +81,7 @@ public class GameControlPanel extends JPanel {
 		dataPanel.add(rollPanel);
 		
 		//Create the accuse button
-		JButton accuseButton = new JButton("Acuse!");
+		JButton accuseButton = new JButton("Accuse!");
 		accuseButton.addActionListener(new AccuseListener());
 
 		//Create the next button
@@ -173,8 +178,10 @@ public class GameControlPanel extends JPanel {
 			//Make sure the player has not moved yet
 			if(!board.getTurnComplete()) {
 				//Allow the player to make an accusation
+				AccuseDialog dialog = new AccuseDialog();
+				dialog.setVisible(true);
 				
-				//TODO implement accusation handler
+
 				
 				
 			}

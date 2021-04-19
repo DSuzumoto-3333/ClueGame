@@ -64,4 +64,11 @@ public class Card {
 		return name;
 	}
 	
+	/**
+	 * Overridden toString method, for use with printing in ComboBoxes.
+	 */
+	@Override
+	public String toString() {
+		return name;
+	}
 }

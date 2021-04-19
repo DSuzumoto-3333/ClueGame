@@ -613,7 +613,7 @@ public class Board extends JPanel implements MouseListener{
 		
 		//Iterate to the next player, looping at 6
 		currentPlayerNumber++;
-		if(currentPlayerNumber == 6) {
+		if(currentPlayerNumber == players.size()) {
 			currentPlayerNumber = 0;
 		}
 		
@@ -720,8 +720,8 @@ public class Board extends JPanel implements MouseListener{
 		//Call the superclass
 		super.paintComponent(g);
 		//Calculate the tile sizes
-		int tileWidth = getWidth() / 26;
-		int tileHeight = getHeight() / 23;
+		int tileWidth = getWidth() / gameBoard[0].length;
+		int tileHeight = getHeight() / gameBoard.length;
 		//Draw the board
 		for(int i = 0; i < 23; i++) {
 			for(int j = 0; j < 26; j++) {
@@ -740,6 +740,8 @@ public class Board extends JPanel implements MouseListener{
 			for(BoardCell target : targets) {
 				g.setColor(Color.white);
 				g.fillRect(target.getCol() * tileWidth, target.getRow() * tileHeight, tileWidth, tileHeight);
+				g.setColor(Color.blue);
+				g.drawRect(target.getCol() * tileWidth, target.getRow() * tileHeight, tileWidth, tileHeight);
 			}
 		}
 		

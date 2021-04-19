@@ -72,6 +72,14 @@ public class BoardCell {
 		if(isInRoom) {
 			g.setColor(Color.gray);
 			g.fillRect(xOffset, yOffset, tileWidth, tileHeight);
+			
+			//Draw the secret passages.
+			if(secretPassage != 'X') {
+				g.setColor(Color.red);
+				g.fillRect(xOffset, yOffset, tileWidth, tileHeight);
+				g.setColor(Color.cyan);
+				g.drawRect(xOffset, yOffset, tileWidth, tileHeight);
+			}
 		}
 		
 		//Unused tiles are black.

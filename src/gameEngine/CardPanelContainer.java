@@ -44,6 +44,7 @@ public class CardPanelContainer extends JPanel{
 		//Create a field for "None"
 		noneHand = new JTextField();
 		noneHand.setText("None");
+		noneHand.setEditable(false);
 		inHand.add(noneHand);
 		
 		//Create the "Seen:" label
@@ -51,6 +52,7 @@ public class CardPanelContainer extends JPanel{
 		//Create a field for "None"
 		noneSeen = new JTextField();
 		noneSeen.setText("None");
+		noneSeen.setEditable(false);
 		inSeen.add(noneSeen);
 		
 		redrawContainer();
@@ -66,6 +68,7 @@ public class CardPanelContainer extends JPanel{
 		JTextField card = new JTextField();
 		card.setText(cardName);
 		card.setBackground(color);
+		card.setEditable(false);
 		
 		//Add to the panel and save in the arrayList.
 		inHand.add(card);
@@ -104,6 +107,7 @@ public class CardPanelContainer extends JPanel{
 		JTextField card = new JTextField();
 		card.setText(cardName);
 		card.setBackground(color);
+		card.setEditable(false);
 		
 		//Add to the array list
 		inSeen.add(card);
