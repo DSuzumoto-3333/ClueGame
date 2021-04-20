@@ -143,7 +143,7 @@ class GameSetupTests {
 		//Create a hard-coded list of correct player objects.
 		Set<Player> correctPlayers = new HashSet<Player>();
 		//Create all the necessary colors
-		Color color1 = new Color(86, 42, 144);
+		Color color1 = new Color(136, 92, 194);
 		Color color2 = new Color(247, 39, 34);
 		Color color3 = new Color(60, 141, 47);
 		Color color4 = new Color(255, 192, 203);
@@ -169,6 +169,9 @@ class GameSetupTests {
 			}
 		}
 		//All 6 players should appear here.
+		for(Player player : foundInBoth) {
+			System.out.println(player.getName());
+		}
 		assertEquals(6, foundInBoth.size());	
 	}
 	/**

@@ -161,21 +161,21 @@ class GameSolutionTests {
 			player.setHand(hand);
 		}
 		//The handleSuggestion() method should return null (We are using player 6 as the accuser)
-		assertEquals(null, board.handleSuggestion(sug, players.get(5)));
+		assertEquals(null, board.checkSuggestion(sug, players.get(5)));
 		
 		//Give the accuser a card that would allow them to disprove their own suggestion.
 		hand.remove(wPerson);
 		hand.add(cPerson);
 		players.get(5).setHand(hand);
 		//Ensure that null is still returned, as a player shouldn't be able to debunk their own suggestion.
-		assertEquals(null, board.handleSuggestion(sug, players.get(5)));
+		assertEquals(null, board.checkSuggestion(sug, players.get(5)));
 		
 		//Give the first player (HumanPlayer instance) a correct person card
 		hand.remove(wPerson);
 		hand.add(cPerson);
 		players.get(0).setHand(hand);
 		//The method should now return cPerson
-		assertEquals(cPerson, board.handleSuggestion(sug, players.get(5)));
+		assertEquals(cPerson, board.checkSuggestion(sug, players.get(5)));
 		
 		//Set the first player's hand back to all wrong cards.
 		hand.remove(cPerson);
@@ -192,7 +192,7 @@ class GameSolutionTests {
 		hand.add(cWeapon);
 		players.get(4).setHand(hand);
 		//The 3nd player should beat the 5th to challenging the suggestion, and the method should return cRoom
-		assertEquals(cRoom, board.handleSuggestion(sug, players.get(5)));
+		assertEquals(cRoom, board.checkSuggestion(sug, players.get(5)));
 	}
 }
 

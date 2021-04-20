@@ -46,6 +46,7 @@ public class ClueGame extends JFrame{
 		
 		//Set the Board's game frame and card panel
 		board.setFrame(gameFrame);
+		board.setControlPanel(controlPanel);
 		board.setCardPanel(cardPanel);
 		
 		//Add the initial hand cards to the GUI before starting
