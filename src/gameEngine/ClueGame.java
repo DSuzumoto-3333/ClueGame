@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 public class ClueGame extends JFrame{
 	
 	/**
-	 * Creates a new type of JFrame object known as ClueGame
+	 * Creates a new type of JFrame object known as ClueGame. This will be frame where all of the game's panels and dialog boxes are drawn.
 	 */
 	public ClueGame() {
 		//Set default window properties like size and exit behaviors.
@@ -25,7 +25,8 @@ public class ClueGame extends JFrame{
 	}
 	
 	/**
-	 * The main entry point for our game.
+	 * The main entry point for our game. Creates a new ClueGame frame, populates itself with the main 3 components that it requires, mainly the
+	 * board, control panel, and card panel, presents the splash screen dialogue, then launches the first turn.
 	 * @param args
 	 */
 	public static void main (String[] args) {

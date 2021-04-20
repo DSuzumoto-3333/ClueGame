@@ -65,7 +65,7 @@ public class Card {
 	}
 	
 	/**
-	 * Overridden toString method, for use with printing in ComboBoxes.
+	 * Overridden toString method, for use with printing in ComboBoxes while being displayed in the GUI.
 	 */
 	@Override
 	public String toString() {

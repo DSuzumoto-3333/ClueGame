@@ -236,6 +236,7 @@ public class BoardCell {
 	public DoorDirection getDoorDirection() {
 		return doorDirection;
 	}
+	
 	/**
 	 * Returns whether the tile is the room center or not.
 	 * @return - A boolean representing if the tile is the room center.
@@ -282,10 +283,5 @@ public class BoardCell {
 	 */
 	public int getCol() {
 		return colPos;
-	}
-	
-	@Override
-	public String toString() {
-		return(rowPos + " " + colPos);
 	}
 }

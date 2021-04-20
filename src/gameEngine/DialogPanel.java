@@ -16,7 +16,6 @@ import javax.swing.JOptionPane;
  * @author Derek Suzumoto
  * @author Luke Wakumoto
  */
-
 public abstract class DialogPanel extends JDialog {
 	//The instance of the game board.
 	private Board board = Board.getInstance();

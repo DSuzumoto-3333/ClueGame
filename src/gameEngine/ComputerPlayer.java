@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
+
 /**
  * Object that simulates another player in the game, ran entirely by the computer. Contains much of the same data 
  * and functions as HumanPlayer, so the Player abstract class is shared between them.
@@ -12,6 +13,7 @@ import java.util.Random;
  * @author Luke Wakumoto
  */
 public class ComputerPlayer extends Player{
+	
 	/**
 	 * The NPC version of the Player class. Has the capability to make suggestions for the game without input, and is
 	 * played entirely by the computer.
@@ -37,6 +39,7 @@ public class ComputerPlayer extends Player{
 			return false;
 		}
 	}
+	
 	/**
 	 * A method used to create a suggestion set based on all the cards the player has not seen, and the room that it
 	 * currently occupies.

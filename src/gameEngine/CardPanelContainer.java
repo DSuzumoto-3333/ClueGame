@@ -59,6 +59,13 @@ public class CardPanelContainer extends JPanel{
 	}
 	
 	public void addInHand(String cardName, Color color) {
+		//Make sure we're not re-adding the same card
+		for(JTextField field : inHand) {
+			if(field.getText().equals(cardName)) {
+				return;
+			}
+		}
+		
 		//Remove the "None" element if present.
 		if(inHand.contains(noneHand)) {
 			inHand.remove(noneHand);
@@ -98,6 +105,13 @@ public class CardPanelContainer extends JPanel{
 	}
 	
 	public void addInSeen(String cardName, Color color) {
+		//Make sure we're not re-adding the same card
+		for(JTextField field : inSeen) {
+			if(field.getText().equals(cardName)) {
+				return;
+			}
+		}
+		
 		//Remove the "None" element if present.
 		if(inSeen.contains(noneSeen)) {
 			inSeen.remove(noneSeen);

@@ -457,6 +457,7 @@ public class Board extends JPanel implements MouseListener{
 		visited.clear();
 		calcTargetsRecursive(startCell, length);
 	}
+	
 	/**
 	 * Moves through the board, checking for all possible paths a player could take away from the starting cell, and
 	 * adds all possible locations to targets. Adds tiles that have already been visited by the calculation function, 
@@ -496,6 +497,7 @@ public class Board extends JPanel implements MouseListener{
 		//Pop the tile once all the paths branching from below are analyzed so that a different path can use this tile again.
 		visited.pop();
 	}
+	
 	/**
 	 * Method to generate the game's solution, then deal the remaining cards amongst the players.
 	 */
@@ -586,6 +588,7 @@ public class Board extends JPanel implements MouseListener{
 			//If the loop does not find an incorrect card, return true
 			return true;
 	}
+	
 	/**
 	 * A method to check a suggestion. Checks all players that are not the accuser for the cards in their hand
 	 * to determine if the suggestion is valid.
@@ -680,6 +683,11 @@ public class Board extends JPanel implements MouseListener{
 		}
 	}
 	
+	/**
+	 *  Method to handle each turn in the game. Most logic for ComputerPlayer turns is done here, as their turns are processed instantly.
+	 *  Turns for HumanPlayers are also started here, but much of the logic is separated into the GUI component classes as the HumanPlayer
+	 *  turn is mainly event-driven.
+	 */
 	public void handleTurn() {
 		//Ensure that, while the turn is happening, the next turn cannot begin.
 		turnComplete = false;
@@ -845,6 +853,11 @@ public class Board extends JPanel implements MouseListener{
 		}
 	}
 	
+	/**
+	 * Forces the Control Panel and Card Panel GUI components to update. Called after a player creates a suggestion, as the event for a
+	 * player to submit the suggestion happens after the next button is pressed, where the GUI typically updates.
+	 * @param newSeen - The card that was shown to the HumanPlayer to disprove their suggestion. It must be added here.
+	 */
 	public void ShowHumanPlayerSuggestion(Card newSeen) {
 		controlPanel.displayGuess(currentSuggestion, humanPlayer);
 		controlPanel.displayGuessResult(currentStatus, currentDisprover);
@@ -910,6 +923,7 @@ public class Board extends JPanel implements MouseListener{
 	public Room getRoom(BoardCell cell) {
 		return roomMap.get(cell.getInitial());
 	}
+	
 	/**
 	 * Returns the adjacency list of the tile at the position provided.
 	 * @param row - The row position of the desired cell
@@ -919,6 +933,7 @@ public class Board extends JPanel implements MouseListener{
 	public Set<BoardCell> getAdjList(int row, int col){
 		return gameBoard[row][col].getAdjList();
 	}
+	
 	/**
 	 * Returns the list of players in the game.
 	 * @return
@@ -926,6 +941,7 @@ public class Board extends JPanel implements MouseListener{
 	public ArrayList<Player> getPlayers(){
 		return players;
 	}
+	
 	/**
 	 * Returns the solution to the game.
 	 * @return
@@ -933,6 +949,7 @@ public class Board extends JPanel implements MouseListener{
 	public Set<Card> getSolution(){
 		return solution;
 	}
+	
 	/**
 	 * Set the solution to the game, for testing purposes.
 	 * @param soln - The desired solution to the game as a set
