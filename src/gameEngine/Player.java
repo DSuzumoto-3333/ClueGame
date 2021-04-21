@@ -29,6 +29,10 @@ public abstract class Player {
 	private Board board = Board.getInstance();
 	//A boolean to indicate if the player can stay in the room they are in (set if they are dragged to a room via a suggestion)
 	private boolean canStayOnTile;
+	//A static int to calculate the tile offset for a player instance
+	static int playerOffsetIndex = -3;
+	//The individual player's offset to be drawn.
+	private int drawOffset;
 	
 	/**
 	 * The player object is used to represent either a Human player or an NPC. It contains the ability to hold cards,
@@ -44,6 +48,8 @@ public abstract class Player {
 		seen = new HashSet<Card>();
 		rowPos = row;
 		colPos = col;
+		drawOffset = playerOffsetIndex * 5;
+		playerOffsetIndex += 1;
 	}
 	
 	/**
@@ -72,9 +78,16 @@ public abstract class Player {
 	 * @param g - The graphics to draw on.
 	 */
 	public void draw(int tileWidth, int tileHeight, Graphics g) {
-		//Draw a circle/oval over the tile that the player occupies.
-		g.setColor(color);
-		g.fillOval(colPos * tileWidth, rowPos * tileHeight, tileWidth, tileHeight);
+		//Determine if the player is in a room.
+		if(board.getCell(rowPos, colPos).isRoomCenter()) {
+			//Draw a circle/oval over the tile that the player occupies with the necessary room offset.
+			g.setColor(color);
+			g.fillOval(colPos * tileWidth + drawOffset, rowPos * tileHeight, tileWidth, tileHeight);
+		}else {
+			//Draw a circle/oval over the tile that the player occupies.
+			g.setColor(color);
+			g.fillOval(colPos * tileWidth, rowPos * tileHeight, tileWidth, tileHeight);
+		}
 	}
 	
 	/**

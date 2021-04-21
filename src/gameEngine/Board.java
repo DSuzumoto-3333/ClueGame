@@ -714,6 +714,8 @@ public class Board extends JPanel implements MouseListener{
 		
 		//If the player is a computer player, run all the necessary computer player methods.
 		if(currentPlayer instanceof ComputerPlayer) {
+			//The turn will be over in an instant.
+			turnComplete = true;
 			//If the computer has figured out the solution, end the game
 			if(currentPlayer.getAccusation() != null) {
 				//At this point, the game should always be lost. Notify the player and exit the game.
@@ -739,7 +741,6 @@ public class Board extends JPanel implements MouseListener{
 
 				//Repaint the board and let the turn end
 				repaint();
-				turnComplete = true;
 			}
 		}
 		//If it's a human, don't note that the turn is over yet and handle some GUI stuff
@@ -822,6 +823,13 @@ public class Board extends JPanel implements MouseListener{
 			}
 			//If a target was clicked, move the player to it and allow them to end their turn.
 			else {
+				//Move the player
+				((HumanPlayer) currentPlayer).setNewTarget(newTarget);
+				currentPlayer.move();
+				
+				//Repaint so that the player moves
+				repaint();
+				
 				//If the new target is a room, prompt the player to make a suggestion
 				if(newTarget.isRoomCenter()) {
 					//Get the room card.
@@ -832,13 +840,9 @@ public class Board extends JPanel implements MouseListener{
 					dialog.setVisible(true);
 				}
 				
-				//Move the player
-				((HumanPlayer) currentPlayer).setNewTarget(newTarget);
-				currentPlayer.move();
-
 				//Set currentPlayer to null to prevent re-drawing targets.
 				currentPlayer = null;
-
+				
 				//Repaint the board and end the turn
 				repaint();
 				turnComplete = true;
@@ -861,7 +865,9 @@ public class Board extends JPanel implements MouseListener{
 	public void ShowHumanPlayerSuggestion(Card newSeen) {
 		controlPanel.displayGuess(currentSuggestion, humanPlayer);
 		controlPanel.displayGuessResult(currentStatus, currentDisprover);
-		cardPanel.addSeenCardGUI(newSeen, currentDisprover.getColor());
+		if(currentDisprover != null) {
+			cardPanel.addSeenCardGUI(newSeen, currentDisprover.getColor());
+		}
 	}
 	
 	/**
